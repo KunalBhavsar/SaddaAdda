@@ -20,7 +20,7 @@
                       android:layout_height="wrap_content"
                       android:text="EMI"
                       android:textColor="@color/red_login"
-                      android:textSize="40sp"
+                      android:textSize="50sp"
                       android:textStyle="bold|italic"
             />
 
@@ -30,7 +30,7 @@
                       android:layout_toRightOf="@id/txt_emi"
                       android:text="ADDA"
                       android:textColor="@color/blue_login_btn"
-                      android:textSize="40sp"
+                      android:textSize="50sp"
                       android:textStyle="bold|italic"
             />
         </RelativeLayout>

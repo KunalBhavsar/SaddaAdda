@@ -18,9 +18,14 @@
     <string name="logout">Logout</string>
     <string name="shopping_cart">Shopping Cart</string>
 
-    <string name="fashion">Fashion and Jewellery</string>
-    <string name="electronics">Electronics</string>
-    <string name="home">Home and Furniture</string>
-    <string name="lifestyle">Lifestyle and Travels</string>
-    <string name="wellness">Wellness and Beauty</string>
+    <string name="electronics">ELECTRONICS</string>
+    <string name="home">HOME</string>
+    <string name="men">MEN</string>
+    <string name="women">WOMEN</string>
+    <string name="kids">KIDS</string>
+    <string name="my_account">MY ACCOUNT</string>
+    <string name="track_order">TRACK MY ORDER</string>
+    <string name="policies">POLICIES</string>
+    <string name="home_living">HOME AND LIVING</string>
+    <string name="my_wish_list">MY WISH LIST</string>
 </resources>

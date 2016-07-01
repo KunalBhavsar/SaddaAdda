@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends ActionBarActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity
                 productAdapter.setProducts(eaProducts);
 
 
-        } else if (id == R.id.nav_fashion) {
+        } /*else if (id == R.id.nav_fashion) {
                 String data = loadProducts(2);
                 Log.i(TAG, "Json : "+data);
                 List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity
             }.getType());
             productAdapter.setProducts(eaProducts);
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

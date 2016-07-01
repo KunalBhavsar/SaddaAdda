@@ -3,39 +3,51 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_fashion"
+            android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/fashion"/>
+            android:title="@string/home"/>
+        <item
+            android:id="@+id/nav_men"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/men"/>
+        <item
+            android:id="@+id/nav_women"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/women"/>
+
+        <item
+            android:id="@+id/nav_kids"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/kids"/>
+
+        <item
+            android:id="@+id/nav_home_living"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/home_living"/>
         <item
             android:id="@+id/nav_electronics"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/electronics"/>
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/nav_my_wish_list"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/home"/>
+            android:title="@string/my_wish_list"/>
 
         <item
-            android:id="@+id/nav_wellness"
+            android:id="@+id/nav_my_account"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/wellness"/>
+            android:title="@string/my_account"/>
+
+        <item
+            android:id="@+id/nav_track_order"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/track_order"/>
+
+        <item
+            android:id="@+id/nav_policies"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/policies"/>
+
+
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/history"/>
-            <item
-                android:id="@+id/nav_shopping_cart"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/shopping_cart"/>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/logout"/>
-        </menu>
-    </item>
-
 </menu>
