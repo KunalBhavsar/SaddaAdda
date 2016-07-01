@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">SaddaAdda</string>
+    <string name="app_name">EMIAdda</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- ContentDescriptions -->
+    <string name="cd_product_image">This is product image</string>
+
+    <!--Product List activity-->
+    <string name="buy_now_text">BUY NOW : </string>
+    <string name="save_text">SAVE : </string>
+
+    <string name="history">History</string>
+    <string name="category">Category</string>
+    <string name="logout">Logout</string>
+    <string name="shopping_cart">Shopping Cart</string>
+
+    <string name="fashion">Fashion and Jewellery</string>
+    <string name="electronics">Electronics</string>
+    <string name="home">Home and Furniture</string>
+    <string name="lifestyle">Lifestyle and Travels</string>
+    <string name="wellness">Wellness and Beauty</string>
 </resources>
