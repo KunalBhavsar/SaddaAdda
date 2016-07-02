@@ -1,5 +1,8 @@
-<manifest package="com.emiadda"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.emiadda">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -18,11 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.AddressListActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".ui.MainActivity"
                   android:theme="@style/AppTheme.NoActionBar"
-                  android:screenOrientation="portrait"
-        />
+                  android:screenOrientation="portrait" />
 
     </application>
 

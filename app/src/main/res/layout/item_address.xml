@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="@dimen/_5dp"
+    android:layout_height="match_parent">
+    <!-- A CardView that contains a TextView -->
+    <RelativeLayout
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+<!--        card_view:cardCornerRadius="4dp">-->
+
+        <TextView
+            android:id="@+id/txt_user_name"
+            android:text="USER NAME"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/view_below_user_name"
+            android:layout_below="@+id/txt_user_name"
+            android:background="@color/normal_gray"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <TextView
+            android:textColor="@color/black"
+            android:layout_below="@+id/"
+            android:text="Default address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+</LinearLayout>
