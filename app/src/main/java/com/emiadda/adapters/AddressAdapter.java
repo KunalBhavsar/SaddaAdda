@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.emiadda.R;
 import com.emiadda.core.EAAddress;
@@ -37,7 +39,22 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        EAAddress eaAddress = eaAddressList.get(position);
+        if(eaAddress.isDefaultAddress()) {
+            holder.txtDefaultAddress.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.txtDefaultAddress.setVisibility(View.GONE);
+        }
 
+        holder.txtUserName.setText(eaAddress.getUserName());
+        holder.txtAddress.setText(eaAddress.getAddress());
+        holder.btnDeliverToAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: show toast or do something
+            }
+        });
     }
 
     @Override
@@ -46,10 +63,16 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
+        TextView txtUserName;
+        TextView txtDefaultAddress;
+        TextView txtAddress;
+        Button btnDeliverToAddress;
         public ViewHolder(View itemView) {
             super(itemView);
-
+            txtUserName = (TextView) itemView.findViewById(R.id.txt_user_name);
+            txtDefaultAddress = (TextView) itemView.findViewById(R.id.txt_default_address);
+            txtAddress = (TextView) itemView.findViewById(R.id.txt_address);
+            btnDeliverToAddress = (Button) itemView.findViewById(R.id.btn_deliver_to_address);
         }
     }
 }

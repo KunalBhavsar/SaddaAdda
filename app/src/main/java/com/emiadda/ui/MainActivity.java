@@ -69,8 +69,7 @@ public class MainActivity extends ActionBarActivity
 
         String data = loadProducts(1);
         Log.i(TAG, "Json : "+data);
-        List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {
-        }.getType());
+        List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {}.getType());
          productAdapter = new ProductAdapter(eaProducts, this);
         recyclerView.setAdapter(productAdapter);
     }

@@ -6,6 +6,7 @@ package com.emiadda.core;
 public class EAAddress extends EABase {
     private String userName;
     private String address;
+    private boolean defaultAddress;
 
     public String getUserName() {
         return userName;
@@ -21,5 +22,13 @@ public class EAAddress extends EABase {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isDefaultAddress() {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(boolean defaultAddress) {
+        this.defaultAddress = defaultAddress;
     }
 }

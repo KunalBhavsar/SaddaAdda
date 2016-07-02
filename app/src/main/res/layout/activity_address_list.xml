@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/normal_gray"
+    android:background="@color/light_gray"
     tools:context="com.emiadda.ui.AddressListActivity">
     <RelativeLayout
         android:layout_width="match_parent"

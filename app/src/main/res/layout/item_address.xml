@@ -1,36 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="@dimen/_5dp"
-    android:layout_height="match_parent">
-    <!-- A CardView that contains a TextView -->
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="@color/light_gray"
+    android:layout_margin="@dimen/_5dp"
+    card_view:cardCornerRadius="1dp">
+
     <RelativeLayout
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-<!--        card_view:cardCornerRadius="4dp">-->
+        android:layout_height="wrap_content"
+        >
 
         <TextView
             android:id="@+id/txt_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10dp"
             android:text="USER NAME"
             android:textColor="@color/black"
             android:textSize="17sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold" />
+
         <View
             android:id="@+id/view_below_user_name"
-            android:layout_below="@+id/txt_user_name"
-            android:background="@color/normal_gray"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-        <TextView
-            android:textColor="@color/black"
-            android:layout_below="@+id/"
-            android:text="Default address"
+            android:layout_height="1dp"
+            android:layout_below="@+id/txt_user_name"
+            android:background="@color/normal_gray" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"/>
+            android:layout_below="@+id/view_below_user_name"
+            android:padding="@dimen/_10dp">
+
+            <TextView
+                android:id="@+id/txt_default_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5dp"
+                android:text="Default address"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_default_address"
+                android:gravity="fill_horizontal"
+                android:padding="@dimen/_5dp"
+                android:text="ABC building 101, 3rd floor, xyz road, Boriwali (west), Mumbai - 400006"
+                android:textColor="@color/normal_gray"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btn_deliver_to_address"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/txt_address"
+                android:layout_margin="@dimen/_5dp"
+                android:background="@color/orange_btn_bg"
+                android:text="Deliver To This Address"
+                android:textColor="@color/white" />
+        </RelativeLayout>
     </RelativeLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView>
