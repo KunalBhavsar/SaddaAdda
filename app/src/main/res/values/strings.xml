@@ -10,8 +10,8 @@
     <string name="cd_product_image">This is product image</string>
 
     <!--Product List activity-->
-    <string name="buy_now_text">BUY NOW : </string>
-    <string name="save_text">SAVE : </string>
+    <string name="buy_now_text">BUY NOW :</string>
+    <string name="save_text">SAVE :</string>
 
     <string name="history">History</string>
     <string name="category">Category</string>

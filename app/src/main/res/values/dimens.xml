@@ -6,7 +6,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    
+
     <!-- HomeScreen -->
     <dimen name="product_item_height">240dp</dimen>
     <dimen name="product_desc_transparent_part_height">80dp</dimen>

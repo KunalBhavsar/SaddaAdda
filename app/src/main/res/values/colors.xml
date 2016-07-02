@@ -7,4 +7,6 @@
     <color name="gray_transparent">#80484848</color>
     <color name="red_login">#DC1E28</color>
     <color name="blue_login_btn">#18AFE6</color>
+    <color name="gray_product_bg">#d9d0d0</color>
+
 </resources>
