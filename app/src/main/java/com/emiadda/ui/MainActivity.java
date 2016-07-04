@@ -51,14 +51,15 @@ public class MainActivity extends ActionBarActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+
+        /*        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
 
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -67,7 +68,7 @@ public class MainActivity extends ActionBarActivity
         Log.i(TAG, "Json : "+data);
         List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {}.getType());
          productAdapter = new ProductAdapter(eaProducts, this);
-        recyclerView.setAdapter(productAdapter);
+        recyclerView.setAdapter(productAdapter);*/
     }
 
     public String loadProducts(int option) {

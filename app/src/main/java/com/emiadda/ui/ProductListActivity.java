@@ -9,13 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.emiadda.R;
-import com.emiadda.adapters.ProductGridAdapter;
 
 public class ProductListActivity extends AppCompatActivity {
 
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
-    private ProductGridAdapter productGridAdapter;
+//    private ProductGridAdapter productGridAdapter;
     private Toolbar toolbar;
 
     @Override
@@ -30,10 +29,10 @@ public class ProductListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new GridSpaceItemDecoration(10));
-        productGridAdapter = new ProductGridAdapter(this);
+  //      productGridAdapter = new ProductGridAdapter(this);
         layoutManager = new GridLayoutManager(ProductListActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(productGridAdapter);
+  //      recyclerView.setAdapter(productGridAdapter);
     }
 
     public class GridSpaceItemDecoration extends RecyclerView.ItemDecoration {

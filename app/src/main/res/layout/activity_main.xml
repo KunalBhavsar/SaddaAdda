@@ -9,20 +9,24 @@
     android:fitsSystemWindows="false"
     tools:openDrawer="start">
 
+    <!-- Your normal content view -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/container_toolbar"
+        <!-- We use a Toolbar so that our drawer can be displayed
+             in front of the action bar -->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_awesome_toolbar"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <include
-                layout="@layout/app_bar_main"
-            />
-        </LinearLayout>
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary">
+
+        </android.support.v7.widget.Toolbar>
+
+        <!-- The rest of your content view -->
         <include layout="@layout/content_main"/>
     </LinearLayout>
 
@@ -32,7 +36,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer"/>
 
