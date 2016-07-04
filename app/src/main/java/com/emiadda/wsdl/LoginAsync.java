@@ -7,7 +7,6 @@ import com.emiadda.wsdl.customerLogin.WBNCustomerloginBinding;
 import com.emiadda.wsdl.customerLogin.WBNExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.customerLogin.WBNparams;
 
-import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -21,9 +20,12 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
     String NAMESPACE = "http://www.mydevsystems.com";
 
     private ServerResponseInterface serverResponseInterface;
+    private int requestCode;
+    private int responseCode;
 
-    public LoginAsync(ServerResponseInterface serverResponseInterface) {
+    public LoginAsync(ServerResponseInterface serverResponseInterface, int requestCode) {
         this.serverResponseInterface = serverResponseInterface;
+        this.requestCode = requestCode;
     }
 
     @Override
@@ -55,10 +57,11 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
+            responseCode = ServerResponseInterface.RESPONSE_CODE_OK;
             return vfwCustomerloginBinding.CustomerLogin(new WBNparams(request, soapEnvelope));
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            responseCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
             Log.e(TAG, "Error: " + ex.getMessage(), ex);
         }
 
@@ -67,6 +70,6 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        serverResponseInterface.responseReceived(s);
+        serverResponseInterface.responseReceived(s, requestCode, responseCode);
     }
 }

@@ -4,5 +4,8 @@ package com.emiadda.wsdl;
  * Created by Kunal on 04/07/16.
  */
 public interface ServerResponseInterface {
-    void responseReceived(String response);
+    int RESPONSE_CODE_OK = 1;
+    int RESPONSE_CODE_EXCEPTION = 2;
+
+    void responseReceived(String response, int requestCode, int responseCode);
 }
