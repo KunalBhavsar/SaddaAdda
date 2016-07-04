@@ -1,5 +1,6 @@
 package com.emiadda.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -41,15 +42,6 @@ public class MainActivity extends ActionBarActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -63,6 +55,10 @@ public class MainActivity extends ActionBarActivity
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
         // use a linear layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -148,12 +144,9 @@ public class MainActivity extends ActionBarActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_electronics) {
-            String data = loadProducts(3);
-            Log.i(TAG, "Json : "+data);
-            List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {
-            }.getType());
-            productAdapter.setProducts(eaProducts);
+        if (id == R.id.nav_men) {
+            Intent intent = new Intent(MainActivity.this, ProductListActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_home) {
                 String data = loadProducts(4);
