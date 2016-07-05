@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_margin="2dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    
+    <RelativeLayout android:layout_width="match_parent"
+                    android:elevation="10dp"
+                    android:background="@drawable/rounded_rect"
+                    android:layout_height="45dp">
+        
+        <ImageView android:layout_width="45dp"
+                   android:src="@drawable/tshirt"
+                   android:padding="7dp"
+                   android:id="@+id/img_category"
+                   android:background="@drawable/rounded_rect_blue"
+                   android:layout_height="45dp"/>
+
+
+        <TextView android:layout_width="wrap_content"
+                  android:text="Clothing"
+                  android:gravity="center_vertical"
+                  android:textColor="@android:color/black"
+                  android:textSize="18sp"
+                  android:id="@+id/txt_category"
+                  android:paddingLeft="5dp"
+                  android:layout_toLeftOf="@+id/img_dropdown"
+                  android:layout_toRightOf="@+id/img_category"
+                  android:layout_height="match_parent"/>
+
+
+        <ImageView android:layout_width="45dp"
+                   android:src="@drawable/dropdown"
+                   android:layout_alignParentRight="true"
+                   android:id="@+id/img_dropdown"
+                   android:padding="12dp"
+                   android:layout_marginRight="10dp"
+                   android:layout_height="45dp"/>
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>
