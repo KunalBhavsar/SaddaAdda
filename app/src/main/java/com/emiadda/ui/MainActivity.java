@@ -20,6 +20,7 @@ import android.view.View;
 
 import com.emiadda.R;
 import com.emiadda.adapters.ProductAdapter;
+import com.emiadda.adapters.SubCategoryAdapter;
 import com.emiadda.core.EAProduct;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -149,12 +150,9 @@ public class MainActivity extends ActionBarActivity
             Intent intent = new Intent(MainActivity.this, ProductListActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_home) {
-                String data = loadProducts(4);
-                Log.i(TAG, "Json : "+data);
-                List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {
-                }.getType());
-                productAdapter.setProducts(eaProducts);
+        } else if (id == R.id.nav_kids) {
+            Intent intent = new Intent(MainActivity.this, SubCategoryActivity.class);
+            startActivity(intent);
 
 
         } /*else if (id == R.id.nav_fashion) {
