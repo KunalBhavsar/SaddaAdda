@@ -63,7 +63,15 @@
                 android:layout_height="@dimen/_5dp"
                 android:background="@color/colorAccent" />
 
-            <TableLayout
+            <GridView
+                android:id="@+id/grd_categories"
+                android:layout_width="match_parent"
+                android:layout_height="330dp"
+                android:numColumns="3"
+                android:layout_below="@+id/temp_top_view"
+                android:stretchMode="columnWidth"
+                android:gravity="center"/>
+<!--            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/temp_top_view"
@@ -262,7 +270,7 @@
 
                     </RelativeLayout>
                 </TableRow>
-            </TableLayout>
+            </TableLayout>-->
         </RelativeLayout>
 
         <RelativeLayout

@@ -13,15 +13,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.emiadda.R;
+import com.emiadda.adapters.CategoryAdapter;
 import com.emiadda.adapters.ProductAdapter;
-import com.emiadda.adapters.SubCategoryAdapter;
-import com.emiadda.core.EAProduct;
+import com.emiadda.core.EACategory;
 import com.emiadda.asynctasks.GetCategoriesAsync;
 import com.emiadda.interafaces.ServerResponseInterface;
-import com.emiadda.wsdl.categoriesAndProducts.CategoryModel;
+
+import com.emiadda.utils.KeyConstants;
+import com.emiadda.wsdl.CategoryModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,6 +36,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity
@@ -42,6 +48,9 @@ public class MainActivity extends ActionBarActivity
     ProductAdapter productAdapter;
     ProgressDialog progressDialog;
     Activity mActivityContext;
+
+    private GridView gridCategories;
+    private CategoryAdapter categoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,27 +70,28 @@ public class MainActivity extends ActionBarActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        gridCategories = (GridView) findViewById(R.id.grd_categories);
+        categoryAdapter = new CategoryAdapter(this);
+        gridCategories.setAdapter(categoryAdapter);
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
 
-        /*RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-
-
-        // use a linear layout manager
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        String data = loadProducts(1);
-        Log.i(TAG, "Json : "+data);
-        List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {}.getType());
-         productAdapter = new ProductAdapter(eaProducts, this);
-        recyclerView.setAdapter(productAdapter);*/
-
         progressDialog.show();
-        new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(20));
+
+        gridCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(categoryAdapter != null) {
+                    EACategory eaCategory = (EACategory) categoryAdapter.getItem(position);
+                    Intent intent = new Intent(MainActivity.this, SubCategoryActivity.class);
+                    intent.putExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, eaCategory.getId());
+                    startActivity(intent);
+                }
+            }
+        });
+        new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(0));
     }
 
     public String loadProducts(int option) {
@@ -90,7 +100,7 @@ public class MainActivity extends ActionBarActivity
         switch (option) {
             case 1:
                 inputStream = getResources().openRawResource(R.raw.master);
-            break;
+                break;
             case 2:
                 inputStream = getResources().openRawResource(R.raw.fashion);
                 break;
@@ -167,23 +177,7 @@ public class MainActivity extends ActionBarActivity
             startActivity(intent);
 
 
-        } /*else if (id == R.id.nav_fashion) {
-                String data = loadProducts(2);
-                Log.i(TAG, "Json : "+data);
-                List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {
-                }.getType());
-                productAdapter.setProducts(eaProducts);
-            }
-
-        else if (id == R.id.nav_wellness) {
-            String data = loadProducts(5);
-            Log.i(TAG, "Json : "+data);
-            List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {
-            }.getType());
-            productAdapter.setProducts(eaProducts);
-
-        }*/
-
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -191,27 +185,25 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void responseReceived(String response, int requestCode, int responseCode) {
-        Log.i(TAG, "Response of get categories : "+response);
-        if(requestCode == GET_CATEGORIES_REQUEST_CODE) {
-            if(progressDialog != null && progressDialog.isShowing()) {
+        Log.i(TAG, "Response of get categories : " + response);
+        if (requestCode == GET_CATEGORIES_REQUEST_CODE) {
+            if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
-                Log.i(TAG, "received response : "+response);
-                try {
-                    CategoryModel categoryModel = new Gson().fromJson(new JSONObject(response).toString(), CategoryModel.class);
-                    //TODO: store category model and log him into app
-
-
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    boolean falseResponse = Boolean.getBoolean(response);
-                    if(!falseResponse) {
-                        Toast.makeText(mActivityContext, "Invalid input", Toast.LENGTH_SHORT).show();
+            if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+                Log.i(TAG, "received response : " + response);
+                List<CategoryModel> categoryModelList = new Gson().fromJson(response, new TypeToken<ArrayList<CategoryModel>>() {
+                }.getType());
+                for (CategoryModel categoryModel : categoryModelList) {
+                    if (categoryAdapter != null) {
+                        EACategory eaCategory = new EACategory();
+                        eaCategory.setId(Long.parseLong(categoryModel.getCategory_id()));
+                        eaCategory.setCategoryName(categoryModel.getCategory_name());
+                        eaCategory.setCategoryImage(categoryModel.getCategory_image());
+                        categoryAdapter.addCategory(eaCategory);
                     }
                 }
-            }
-            else if(responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION){
+            } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
                 Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
             }
         }

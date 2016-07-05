@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.emiadda.R;
 import com.emiadda.asynctasks.LoginAsync;
 import com.emiadda.interafaces.ServerResponseInterface;
-import com.emiadda.wsdl.customerLogin.CustomerModel;
+import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
 
 import org.json.JSONException;

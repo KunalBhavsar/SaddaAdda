@@ -1,4 +1,4 @@
-package com.emiadda.wsdl.categoriesAndProducts;
+package com.emiadda.wsdl;
 
 import java.io.Serializable;
 

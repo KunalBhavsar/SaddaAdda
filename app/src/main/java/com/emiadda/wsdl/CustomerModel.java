@@ -1,4 +1,4 @@
-package com.emiadda.wsdl.customerLogin;
+package com.emiadda.wsdl;
 
 import java.io.Serializable;
 
