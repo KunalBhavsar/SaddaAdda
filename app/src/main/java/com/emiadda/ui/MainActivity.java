@@ -19,8 +19,8 @@ import com.emiadda.R;
 import com.emiadda.adapters.ProductAdapter;
 import com.emiadda.adapters.SubCategoryAdapter;
 import com.emiadda.core.EAProduct;
-import com.emiadda.wsdl.GetCategoriesAsync;
-import com.emiadda.wsdl.ServerResponseInterface;
+import com.emiadda.asynctasks.GetCategoriesAsync;
+import com.emiadda.interafaces.ServerResponseInterface;
 import com.emiadda.wsdl.categoriesAndProducts.CategoryModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -212,7 +212,6 @@ public class MainActivity extends ActionBarActivity
                 }
             }
             else if(responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION){
-                Log.e(TAG, "Error in login : "+response);
                 Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
             }
         }

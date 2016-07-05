@@ -1,8 +1,9 @@
-package com.emiadda.wsdl;
+package com.emiadda.asynctasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.emiadda.interafaces.ServerResponseInterface;
 import com.emiadda.wsdl.customerLogin.WBNCustomerloginBinding;
 import com.emiadda.wsdl.customerLogin.WBNExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.customerLogin.WBNparams;
@@ -16,8 +17,8 @@ import org.ksoap2.serialization.SoapObject;
  */
 public class LoginAsync extends AsyncTask<String, Void, String> {
     private static final String TAG = LoginAsync.class.getSimpleName();
-    String METHOD_NAME = "CustomerLogin";
-    String NAMESPACE = "http://www.mydevsystems.com";
+    private static final String METHOD_NAME = "CustomerLogin";
+    private static final String NAMESPACE = "http://www.mydevsystems.com";
 
     private ServerResponseInterface serverResponseInterface;
     private int requestCode;
@@ -70,6 +71,8 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        serverResponseInterface.responseReceived(s, requestCode, responseCode);
+        if(serverResponseInterface != null) {
+            serverResponseInterface.responseReceived(s, requestCode, responseCode);
+        }
     }
 }

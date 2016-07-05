@@ -1,8 +1,9 @@
-package com.emiadda.wsdl;
+package com.emiadda.asynctasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.emiadda.interafaces.ServerResponseInterface;
 import com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.categoriesAndProducts.ABMserverBinding;
 
@@ -15,11 +16,12 @@ import org.ksoap2.serialization.SoapObject;
  */
 public class GetCategoriesAsync extends AsyncTask<String, Void, String> {
     private static final String TAG = GetCategoriesAsync.class.getSimpleName();
+    private static final String METHOD_NAME = "getCategories";
+    private static final String NAMESPACE = "http://www.mydevsystems.com";
+
     private int requestCode;
     private int responseCode;
     private ServerResponseInterface serverResponseInterface;
-    String METHOD_NAME = "getCategories";
-    String NAMESPACE = "http://www.mydevsystems.com";
 
     public GetCategoriesAsync(ServerResponseInterface serverResponseInterface, int requestCode) {
         this.serverResponseInterface = serverResponseInterface;
@@ -49,6 +51,7 @@ public class GetCategoriesAsync extends AsyncTask<String, Void, String> {
                 return abmServerBinding.getCategories(params[0]);
         }
         catch (Exception e) {
+            requestCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
             Log.e(TAG, e.getMessage(), e);
         }
         return null;
@@ -56,6 +59,8 @@ public class GetCategoriesAsync extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        serverResponseInterface.responseReceived(s, requestCode, responseCode);
+        if (serverResponseInterface != null) {
+            serverResponseInterface.responseReceived(s, requestCode, responseCode);
+        }
     }
 }

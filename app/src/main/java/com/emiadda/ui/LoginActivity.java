@@ -3,7 +3,6 @@ package com.emiadda.ui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -15,11 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.emiadda.R;
-import com.emiadda.wsdl.LoginAsync;
-import com.emiadda.wsdl.ServerResponseInterface;
+import com.emiadda.asynctasks.LoginAsync;
+import com.emiadda.interafaces.ServerResponseInterface;
 import com.emiadda.wsdl.customerLogin.CustomerModel;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,8 +103,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
             }
             else if(responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION){
-                Log.e(TAG, "Error in login : "+response);
-                Toast.makeText(mActivityContext, "Error in loging in", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivityContext, "Error in logging in", Toast.LENGTH_SHORT).show();
             }
         }
     }

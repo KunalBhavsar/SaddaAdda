@@ -1,4 +1,4 @@
-package com.emiadda.wsdl;
+package com.emiadda.interafaces;
 
 /**
  * Created by Kunal on 04/07/16.
