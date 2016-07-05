@@ -1,4 +1,4 @@
-package com.emiadda.wsdl.getCategories;
+package com.emiadda.wsdl.categoriesAndProducts;
 
 
 

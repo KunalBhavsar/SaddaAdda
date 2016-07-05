@@ -1,13 +1,13 @@
-package com.emiadda.wsdl;
+package com.emiadda.asynctasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.emiadda.interafaces.ServerResponseInterface;
 import com.emiadda.wsdl.customerLogin.WBNCustomerloginBinding;
 import com.emiadda.wsdl.customerLogin.WBNExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.customerLogin.WBNparams;
 
-import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -17,13 +17,16 @@ import org.ksoap2.serialization.SoapObject;
  */
 public class LoginAsync extends AsyncTask<String, Void, String> {
     private static final String TAG = LoginAsync.class.getSimpleName();
-    String METHOD_NAME = "CustomerLogin";
-    String NAMESPACE = "http://www.mydevsystems.com";
+    private static final String METHOD_NAME = "CustomerLogin";
+    private static final String NAMESPACE = "http://www.mydevsystems.com";
 
     private ServerResponseInterface serverResponseInterface;
+    private int requestCode;
+    private int responseCode;
 
-    public LoginAsync(ServerResponseInterface serverResponseInterface) {
+    public LoginAsync(ServerResponseInterface serverResponseInterface, int requestCode) {
         this.serverResponseInterface = serverResponseInterface;
+        this.requestCode = requestCode;
     }
 
     @Override
@@ -32,21 +35,21 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
         try {
             //Using easysoap
             WBNCustomerloginBinding vfwCustomerloginBinding = new WBNCustomerloginBinding();
-            WBNparams vfWparams = new WBNparams();
-            vfWparams.email = "";
-            vfWparams.password = "";
+
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
             PropertyInfo emailProperty = new PropertyInfo();
             emailProperty.setName("email");
-            emailProperty.setValue(params[0]);
+            emailProperty.setValue("hardik.prajapati@geeconsystems.com");
+//            emailProperty.setValue(params[0]);
             emailProperty.setType(String.class);
             request.addProperty(emailProperty);
 
             PropertyInfo passwordProperty = new PropertyInfo();
             passwordProperty.setName("password");
-            passwordProperty.setValue(params[1]);
+            passwordProperty.setValue("123456");
+//            passwordProperty.setValue(params[1]);
             passwordProperty.setType(String.class);
             request.addProperty(passwordProperty);
 
@@ -55,10 +58,11 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
+            responseCode = ServerResponseInterface.RESPONSE_CODE_OK;
             return vfwCustomerloginBinding.CustomerLogin(new WBNparams(request, soapEnvelope));
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            responseCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
             Log.e(TAG, "Error: " + ex.getMessage(), ex);
         }
 
@@ -67,6 +71,8 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        serverResponseInterface.responseReceived(s);
+        if(serverResponseInterface != null) {
+            serverResponseInterface.responseReceived(s, requestCode, responseCode);
+        }
     }
 }
