@@ -90,6 +90,8 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 try {
                     CustomerModel customerModel = new Gson().fromJson(new JSONObject(response).toString(), CustomerModel.class);
                     //TODO: store customer model and log him into app
+
+
                     Toast.makeText(mActivityContext, "Welcome "+customerModel.getFirstname(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);

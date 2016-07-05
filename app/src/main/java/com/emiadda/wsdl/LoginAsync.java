@@ -34,21 +34,21 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
         try {
             //Using easysoap
             WBNCustomerloginBinding vfwCustomerloginBinding = new WBNCustomerloginBinding();
-            WBNparams vfWparams = new WBNparams();
-            vfWparams.email = "";
-            vfWparams.password = "";
+
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
             PropertyInfo emailProperty = new PropertyInfo();
             emailProperty.setName("email");
-            emailProperty.setValue(params[0]);
+            emailProperty.setValue("hardik.prajapati@geeconsystems.com");
+//            emailProperty.setValue(params[0]);
             emailProperty.setType(String.class);
             request.addProperty(emailProperty);
 
             PropertyInfo passwordProperty = new PropertyInfo();
             passwordProperty.setName("password");
-            passwordProperty.setValue(params[1]);
+            passwordProperty.setValue("123456");
+//            passwordProperty.setValue(params[1]);
             passwordProperty.setType(String.class);
             request.addProperty(passwordProperty);
 

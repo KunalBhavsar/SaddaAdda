@@ -1,29 +1,32 @@
 package com.emiadda.ui;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.adapters.ProductAdapter;
 import com.emiadda.adapters.SubCategoryAdapter;
 import com.emiadda.core.EAProduct;
+import com.emiadda.wsdl.GetCategoriesAsync;
+import com.emiadda.wsdl.ServerResponseInterface;
+import com.emiadda.wsdl.categoriesAndProducts.CategoryModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,15 +34,21 @@ import java.io.InputStream;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ServerResponseInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int GET_CATEGORIES_REQUEST_CODE = 12;
+
     ProductAdapter productAdapter;
+    ProgressDialog progressDialog;
+    Activity mActivityContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mActivityContext = this;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -51,6 +60,10 @@ public class MainActivity extends ActionBarActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCancelable(false);
 
         /*RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         // use this setting to improve performance if you know that changes
@@ -66,6 +79,9 @@ public class MainActivity extends ActionBarActivity
         List<EAProduct> eaProducts = new Gson().fromJson(data, new TypeToken<List<EAProduct>>() {}.getType());
          productAdapter = new ProductAdapter(eaProducts, this);
         recyclerView.setAdapter(productAdapter);*/
+
+        progressDialog.show();
+        new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(20));
     }
 
     public String loadProducts(int option) {
@@ -171,6 +187,35 @@ public class MainActivity extends ActionBarActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void responseReceived(String response, int requestCode, int responseCode) {
+        Log.i(TAG, "Response of get categories : "+response);
+        if(requestCode == GET_CATEGORIES_REQUEST_CODE) {
+            if(progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+                Log.i(TAG, "received response : "+response);
+                try {
+                    CategoryModel categoryModel = new Gson().fromJson(new JSONObject(response).toString(), CategoryModel.class);
+                    //TODO: store category model and log him into app
+
+
+                } catch (JSONException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    boolean falseResponse = Boolean.getBoolean(response);
+                    if(!falseResponse) {
+                        Toast.makeText(mActivityContext, "Invalid input", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            else if(responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION){
+                Log.e(TAG, "Error in login : "+response);
+                Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
 
