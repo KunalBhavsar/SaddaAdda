@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.emiadda.R;
+import com.emiadda.core.EACategory;
 import com.emiadda.core.EAProduct;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,13 +23,25 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     private static final String TAG = SubCategoryAdapter.class.getSimpleName();
     private Context context;
+    private List<EACategory> categories;
 
     public SubCategoryAdapter(Activity context) {
         this.context = context;
+        categories = new ArrayList<>();
     }
 
-    public void setProducts(List<EAProduct> eaProducts) {
-        notifyDataSetChanged();
+    public void addCategory(EACategory eaCategory) {
+        if(eaCategory != null) {
+            categories.add(eaCategory);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void addCategories(List<EACategory> eaCategories) {
+        if(eaCategories != null) {
+            this.categories.addAll(eaCategories);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -39,12 +53,14 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
+        EACategory eaCategory = categories.get(position);
+        holder.txtName.setText(eaCategory.getCategoryName().replaceAll("&amp;","&"));
+        //set image logic
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return categories.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

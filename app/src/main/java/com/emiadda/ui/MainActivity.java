@@ -30,9 +30,6 @@ import com.emiadda.wsdl.CategoryModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +42,6 @@ public class MainActivity extends ActionBarActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GET_CATEGORIES_REQUEST_CODE = 12;
 
-    ProductAdapter productAdapter;
     ProgressDialog progressDialog;
     Activity mActivityContext;
 
@@ -74,12 +70,6 @@ public class MainActivity extends ActionBarActivity
         categoryAdapter = new CategoryAdapter(this);
         gridCategories.setAdapter(categoryAdapter);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
-        progressDialog.setCancelable(false);
-
-        progressDialog.show();
-
         gridCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -91,6 +81,13 @@ public class MainActivity extends ActionBarActivity
                 }
             }
         });
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCancelable(false);
+
+        progressDialog.show();
+
         new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(0));
     }
 
