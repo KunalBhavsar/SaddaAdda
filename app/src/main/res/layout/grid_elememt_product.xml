@@ -34,6 +34,7 @@
               android:paddingLeft="@dimen/_5dp"
               android:paddingRight="@dimen/_5dp"
               android:text="New"
+              android:id="@+id/txt_new"
               android:textColor="@android:color/white"/>
 
     <TextView android:id="@+id/txt_brand"
@@ -47,7 +48,7 @@
               android:paddingLeft="@dimen/_10dp"
               android:text="brand name"
               android:textColor="@android:color/white"
-              android:textSize="16sp"/>
+              android:textSize="12sp"/>
 
     <TextView android:id="@+id/txt_price"
               android:layout_width="wrap_content"
@@ -59,6 +60,6 @@
               android:paddingRight="@dimen/_10dp"
               android:text="Rs. 5120"
               android:textColor="@android:color/white"
-              android:textSize="16sp"/>
+              android:textSize="12sp"/>
 
 </RelativeLayout>

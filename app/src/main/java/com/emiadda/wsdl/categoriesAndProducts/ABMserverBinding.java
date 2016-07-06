@@ -26,9 +26,9 @@ public class ABMserverBinding
 {
     interface ABMIWcfMethod
     {
-        ABMExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws java.lang.Exception;
+        com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws java.lang.Exception;
 
-        java.lang.Object ProcessResult(ABMExtendedSoapSerializationEnvelope __envelope,java.lang.Object result) throws java.lang.Exception;
+        java.lang.Object ProcessResult(com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope __envelope, java.lang.Object result) throws java.lang.Exception;
     }
 
     String url="http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/getCategories.php";
@@ -37,20 +37,20 @@ public class ABMserverBinding
     public List< HeaderProperty> httpHeaders;
     public boolean enableLogging;
 
-    ABMIServiceEvents callback;
+    com.emiadda.wsdl.categoriesAndProducts.ABMIServiceEvents callback;
     public ABMserverBinding(){}
 
-    public ABMserverBinding (ABMIServiceEvents callback)
+    public ABMserverBinding (com.emiadda.wsdl.categoriesAndProducts.ABMIServiceEvents callback)
     {
         this.callback = callback;
     }
-    public ABMserverBinding(ABMIServiceEvents callback,String url)
+    public ABMserverBinding(com.emiadda.wsdl.categoriesAndProducts.ABMIServiceEvents callback, String url)
     {
         this.callback = callback;
         this.url = url;
     }
 
-    public ABMserverBinding(ABMIServiceEvents callback,String url,int timeOut)
+    public ABMserverBinding(com.emiadda.wsdl.categoriesAndProducts.ABMIServiceEvents callback, String url, int timeOut)
     {
         this.callback = callback;
         this.url = url;
@@ -79,18 +79,18 @@ public class ABMserverBinding
         return null;
     }
     
-    protected ABMExtendedSoapSerializationEnvelope createEnvelope()
+    protected com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope createEnvelope()
     {
-        ABMExtendedSoapSerializationEnvelope envelope= new ABMExtendedSoapSerializationEnvelope(ABMExtendedSoapSerializationEnvelope.VER11);
+        com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope envelope= new com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope(com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope.VER11);
         return envelope;
     }
     
-    protected java.util.List sendRequest(String methodName,ABMExtendedSoapSerializationEnvelope envelope,org.ksoap2.transport.Transport transport  )throws java.lang.Exception
+    protected java.util.List sendRequest(String methodName, com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope envelope, org.ksoap2.transport.Transport transport  )throws java.lang.Exception
     {
         return transport.call(methodName, envelope, httpHeaders);
     }
 
-    java.lang.Object getResult(java.lang.Class destObj,java.lang.Object source,String resultName,ABMExtendedSoapSerializationEnvelope __envelope) throws java.lang.Exception
+    java.lang.Object getResult(java.lang.Class destObj, java.lang.Object source, String resultName, com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope __envelope) throws java.lang.Exception
     {
         if(source==null)
         {
@@ -133,8 +133,8 @@ public class ABMserverBinding
         return (String)execute(new ABMIWcfMethod()
         {
             @Override
-            public ABMExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ABMExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+            public com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+              com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope __envelope = createEnvelope();
                 SoapObject __soapReq = new SoapObject("urn:server", "getCategories");
                 __envelope.setOutputSoapObject(__soapReq);
                 
@@ -149,7 +149,7 @@ public class ABMserverBinding
             }
             
             @Override
-            public java.lang.Object ProcessResult(ABMExtendedSoapSerializationEnvelope __envelope,java.lang.Object __result)throws java.lang.Exception {
+            public java.lang.Object ProcessResult(com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope __envelope, java.lang.Object __result)throws java.lang.Exception {
                 SoapObject __soap=(SoapObject)__result;
                 java.lang.Object obj = __soap.getProperty("result");
                 if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -165,9 +165,9 @@ public class ABMserverBinding
         },"urn:server#getCategories");
     }
     
-    public android.os.AsyncTask< Void, Void, ABMOperationResult< String>> getCategoriesAsync(final String _params)
+    public android.os.AsyncTask< Void, Void, com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< String>> getCategoriesAsync(final String _params)
     {
-        return executeAsync(new ABMFunctions.IFunc< String>() {
+        return executeAsync(new com.emiadda.wsdl.categoriesAndProducts.ABMFunctions.IFunc< String>() {
             public String Func() throws java.lang.Exception {
                 return getCategories( _params);
             }
@@ -179,8 +179,8 @@ public class ABMserverBinding
         return (String)execute(new ABMIWcfMethod()
         {
             @Override
-            public ABMExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ABMExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+            public com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+              com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope __envelope = createEnvelope();
                 SoapObject __soapReq = new SoapObject("urn:server", "getProductsByCategory");
                 __envelope.setOutputSoapObject(__soapReq);
                 
@@ -195,7 +195,7 @@ public class ABMserverBinding
             }
             
             @Override
-            public java.lang.Object ProcessResult(ABMExtendedSoapSerializationEnvelope __envelope,java.lang.Object __result)throws java.lang.Exception {
+            public java.lang.Object ProcessResult(com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope __envelope, java.lang.Object __result)throws java.lang.Exception {
                 SoapObject __soap=(SoapObject)__result;
                 java.lang.Object obj = __soap.getProperty("result");
                 if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -211,9 +211,9 @@ public class ABMserverBinding
         },"urn:server#getProductsByCategory");
     }
     
-    public android.os.AsyncTask< Void, Void, ABMOperationResult< String>> getProductsByCategoryAsync(final String _params)
+    public android.os.AsyncTask< Void, Void, com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< String>> getProductsByCategoryAsync(final String _params)
     {
-        return executeAsync(new ABMFunctions.IFunc< String>() {
+        return executeAsync(new com.emiadda.wsdl.categoriesAndProducts.ABMFunctions.IFunc< String>() {
             public String Func() throws java.lang.Exception {
                 return getProductsByCategory( _params);
             }
@@ -226,9 +226,9 @@ public class ABMserverBinding
         return null;    
     }
     
-    public android.os.AsyncTask< Void, Void, ABMOperationResult< String>> getProductByProductIDAsync(final String _params)
+    public android.os.AsyncTask< Void, Void, com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< String>> getProductByProductIDAsync(final String _params)
     {
-        return executeAsync(new ABMFunctions.IFunc< String>() {
+        return executeAsync(new com.emiadda.wsdl.categoriesAndProducts.ABMFunctions.IFunc< String>() {
             public String Func() throws java.lang.Exception {
                 return getProductByProductID( _params);
             }
@@ -240,7 +240,7 @@ public class ABMserverBinding
     {
         org.ksoap2.transport.Transport __httpTransport=createTransport();
         __httpTransport.debug=enableLogging;
-        ABMExtendedSoapSerializationEnvelope __envelope=wcfMethod.CreateSoapEnvelope();
+        com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope __envelope=wcfMethod.CreateSoapEnvelope();
         try
         {
             sendRequest(methodName, __envelope, __httpTransport);
@@ -266,17 +266,17 @@ public class ABMserverBinding
         }
     }
     
-    protected < T> android.os.AsyncTask< Void, Void, ABMOperationResult< T>>  executeAsync(final ABMFunctions.IFunc< T> func)
+    protected < T> android.os.AsyncTask< Void, Void, com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< T>>  executeAsync(final com.emiadda.wsdl.categoriesAndProducts.ABMFunctions.IFunc< T> func)
     {
-        return new android.os.AsyncTask< Void, Void, ABMOperationResult< T>>()
+        return new android.os.AsyncTask< Void, Void, com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< T>>()
         {
             @Override
             protected void onPreExecute() {
                 callback.Starting();
             };
             @Override
-            protected ABMOperationResult< T> doInBackground(Void... params) {
-                ABMOperationResult< T> result = new ABMOperationResult< T>();
+            protected com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< T> doInBackground(Void... params) {
+                com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< T> result = new com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< T>();
                 try
                 {
                     result.Result= func.Func();
@@ -290,14 +290,14 @@ public class ABMserverBinding
             }
             
             @Override
-            protected void onPostExecute(ABMOperationResult< T> result)
+            protected void onPostExecute(com.emiadda.wsdl.categoriesAndProducts.ABMOperationResult< T> result)
             {
                 callback.Completed(result);
             }
         }.execute();
     }
         
-    java.lang.Exception convertToException(org.ksoap2.SoapFault fault,ABMExtendedSoapSerializationEnvelope envelope)
+    java.lang.Exception convertToException(org.ksoap2.SoapFault fault, com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope envelope)
     {
 
         return new java.lang.Exception(fault.faultstring);

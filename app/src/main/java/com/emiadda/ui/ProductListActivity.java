@@ -8,16 +8,33 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.emiadda.R;
+import com.emiadda.adapters.ProductGridAdapter;
+import com.emiadda.asynctasks.GetProductsByCategory;
+import com.emiadda.core.EACategory;
 import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.wsdl.CategoryModel;
+import com.emiadda.wsdl.ProductModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class ProductListActivity extends AppCompatActivity implements ServerResponseInterface {
 
+    private static final int GET_PRODUCT_REQUEST_CODE = 17;
+    private static final String TAG = ProductListActivity.class.getSimpleName();
+
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
-//    private ProductGridAdapter productGridAdapter;
+    private ProductGridAdapter productGridAdapter;
     private Toolbar toolbar;
     private ProgressDialog progressDialog;
     private Activity mActivityContext;
@@ -30,7 +47,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        mActivityContext = this;
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
@@ -39,15 +56,40 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new GridSpaceItemDecoration(10));
-  //      productGridAdapter = new ProductGridAdapter(this);
+        productGridAdapter = new ProductGridAdapter(mActivityContext);
         layoutManager = new GridLayoutManager(ProductListActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
-  //      recyclerView.setAdapter(productGridAdapter);
+        recyclerView.setAdapter(productGridAdapter);
+        new GetProductsByCategory(this, GET_PRODUCT_REQUEST_CODE).execute(String.valueOf("20"));
     }
 
     @Override
     public void responseReceived(String response, int requestCode, int responseCode) {
         progressDialog.dismiss();
+
+        if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+            Log.i(TAG, "received response : " + response);
+            if(!response.isEmpty()) {
+
+                HashMap<String, ProductModel> map = new HashMap<>();
+                try {
+                    map = new Gson().fromJson(response, new TypeToken<HashMap<String, ProductModel>>() {
+                    }.getType());
+                    if(map != null) {
+                        List<ProductModel> productModelList = new ArrayList<>();
+                        Set<String> set = map.keySet();
+                        for (String key : set) {
+                            productModelList.add(map.get(key));
+                        }
+                        productGridAdapter.setProducts(productModelList);
+                    }
+                }catch (Exception e) {
+                 Log.e(TAG, e.getMessage(), e);
+                }
+            }
+        } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
+            Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class GridSpaceItemDecoration extends RecyclerView.ItemDecoration {
