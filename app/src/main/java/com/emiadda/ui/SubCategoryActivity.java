@@ -48,7 +48,6 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         setContentView(R.layout.activity_sub_category);
         mActivityContext = this;
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

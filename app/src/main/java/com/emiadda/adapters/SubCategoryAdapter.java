@@ -90,8 +90,4 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
         void onItemClick(EACategory item);
     }
 
-    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
-
 }

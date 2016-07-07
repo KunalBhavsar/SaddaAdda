@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,10 +47,14 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         mActivityContext = this;
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
@@ -57,7 +62,13 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new GridSpaceItemDecoration(10));
-        productGridAdapter = new ProductGridAdapter(mActivityContext);
+        productGridAdapter = new ProductGridAdapter(mActivityContext, new ProductGridAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(ProductModel item) {
+                //TODO: launch product detail activity here
+                Toast.makeText(mActivityContext, "Selected product "+item.getName(),Toast.LENGTH_SHORT).show();
+            }
+        });
         layoutManager = new GridLayoutManager(ProductListActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productGridAdapter);
@@ -114,5 +125,16 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                 outRect.right = mVerticalSpaceHeight;
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

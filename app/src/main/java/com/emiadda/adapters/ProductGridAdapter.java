@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.emiadda.R;
 import com.emiadda.asynctasks.GetProductImageAsync;
+import com.emiadda.core.EACategory;
 import com.emiadda.core.EAProduct;
 import com.emiadda.interafaces.ServerResponseInterface;
 import com.emiadda.wsdl.ProductImageModel;
@@ -33,10 +34,12 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     private static final String TAG = ProductGridAdapter.class.getSimpleName();
     private Context context;
     private List<ProductModel> productList;
+    private OnItemClickListener mItemClickListener;
 
-    public ProductGridAdapter(Activity context) {
+    public ProductGridAdapter(Activity context, OnItemClickListener listener) {
         this.context = context;
         productList = new ArrayList<>();
+        this.mItemClickListener = listener;
     }
 
     public void setProducts(List<ProductModel> productList) {
@@ -55,6 +58,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         ProductModel productModel = productList.get(position);
+        holder.bind(productModel, mItemClickListener);
         holder.txtProductName.setText(productModel.getName().replaceAll("&amp;", "&"));
         holder.txtPrice.setText("Rs." + productModel.getPrice());
         if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
@@ -103,6 +107,17 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
             txtPrice = (TextView) v.findViewById(R.id.txt_price);
             txtNew = (TextView) v.findViewById(R.id.txt_new);
         }
+
+        public void bind(final ProductModel item, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(ProductModel item);
+    }
 }
