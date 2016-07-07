@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<EasyWSDL>
+  <Info>
+    <Version>4.5.7.1</Version>
+    <AccountType>Basic</AccountType>
+    <LibrariesFolder>libs/easywsdl</LibrariesFolder>
+    <MainClass>FELserverBinding</MainClass>
+  </Info>
+  <Settings>
+    <Url>http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/getCategories.php?wsdl</Url>
+    <ClassPrefix/>
+    <PackageName>com.emiadda.wsdl.productdetails</PackageName>
+    <AddDocumentation>false</AddDocumentation>
+    <EnableAdvancedFeatures>false</EnableAdvancedFeatures>
+    <EnableMTOM>false</EnableMTOM>
+    <EncodeIllegalCharacters>true</EncodeIllegalCharacters>
+    <GenerateAsyncOperations>true</GenerateAsyncOperations>
+    <ImplementSerializable>false</ImplementSerializable>
+    <AddAnyCollection>false</AddAnyCollection>
+    <UseJodaTime>false</UseJodaTime>
+    <Repackage/>
+    <GenerateHtmlDocumentation>true</GenerateHtmlDocumentation>
+  </Settings>
+  <Files>
+    <File>FELExtendedSoapSerializationEnvelope.java</File>
+    <File>FELIServiceEvents.java</File>
+    <File>FELFunctions.java</File>
+    <File>FELserverBinding.java</File>
+    <File>FELHelper.java</File>
+    <File>docs/Html/MTOMTransfer.html</File>
+    <File>docs/Html/Tips.html</File>
+    <File>docs/Html/FELserverBinding_methods.html</File>
+    <File>docs/Html/FELserverBinding.html</File>
+    <File>docs/Styles/Blueprint_Styles/Style.css</File>
+    <File>docs/Index.html</File>
+    <File>FELMarshalGuid.java</File>
+    <File>FELOperationResult.java</File>
+  </Files>
+  <Libraries>
+    <File>ksoap2-android-assembly-3.6.1-jar-with-dependencies.jar</File>
+  </Libraries>
+</EasyWSDL>
