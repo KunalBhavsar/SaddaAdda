@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     android:background="@color/gray_product_bg"
     android:orientation="vertical"
     tools:context="com.emiadda.ui.SubCategoryActivity">
@@ -18,16 +18,16 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/my_awesome_toolbar"
             android:layout_width="match_parent"
-            app:theme="@style/ThemeOverlay.AppCompat.Light"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
+            android:background="?attr/colorPrimary"
+            app:theme="@style/ThemeOverlay.AppCompat.Light">
 
             <ImageView
                 android:id="@+id/txt_title"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/logo"/>
+                android:src="@drawable/logo" />
 
             <ImageView
                 android:id="@+id/img_cart"
@@ -35,71 +35,71 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/cart"
-            />
+                android:src="@drawable/cart" />
         </android.support.v7.widget.Toolbar>
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="@dimen/_80dp"
+            android:padding="@dimen/_5dp"
             android:scaleType="fitXY"
-            app:layout_scrollFlags = "scroll|enterAlways"
-            android:src="@drawable/banner3"/>
+            android:src="@drawable/banner"
+            app:layout_scrollFlags="scroll|enterAlways" />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lin_bottom_banner"
+        android:layout_below="@+id/app_bar_layout"
+        android:layout_margin="@dimen/_5dp"
+        android:background="@color/white"
+        android:padding="5dp" />
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/lin_bottom_banner"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_weight="35"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:background="@android:color/white"
-        android:paddingTop="5dp">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/_5dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_80dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/banner" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="vertical">
+            android:layout_height="@dimen/_80dp"
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:layout_marginBottom="5dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
                 android:scaleType="fitXY"
-                android:src="@drawable/banner"/>
+                android:src="@drawable/banner1" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <View
+                android:layout_width="@dimen/_5dp"
+                android:layout_height="match_parent" />
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="2.5dp"
-                    android:layout_weight="50"
-                    android:src="@drawable/banner1"/>
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2.5dp"
-                    android:layout_weight="50"
-                    android:src="@drawable/banner2"/>
-            </LinearLayout>
-
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:scaleType="fitXY"
+                android:src="@drawable/banner2" />
         </LinearLayout>
-    </ScrollView>
 
+    </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,11 +24,13 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     private static final String TAG = SubCategoryAdapter.class.getSimpleName();
     private Context context;
-    private List<EACategory> categories;
+    public List<EACategory> categories;
+    private OnItemClickListener mItemClickListener;
 
-    public SubCategoryAdapter(Activity context) {
+    public SubCategoryAdapter(Activity context, OnItemClickListener listener) {
         this.context = context;
         categories = new ArrayList<>();
+        mItemClickListener = listener;
     }
 
     public void addCategory(EACategory eaCategory) {
@@ -54,6 +57,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         EACategory eaCategory = categories.get(position);
+        holder.bind(eaCategory, mItemClickListener);
         holder.txtName.setText(eaCategory.getCategoryName().replaceAll("&amp;","&"));
         //set image logic
     }
@@ -63,7 +67,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
         return categories.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtName;
         public ImageView imgCat;
 
@@ -72,6 +76,22 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
             txtName = (TextView) v.findViewById(R.id.txt_category);
             imgCat = (ImageView) v.findViewById(R.id.img_category);
         }
+
+        public void bind(final EACategory item, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(EACategory item);
+    }
+
+    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
     }
 
 }

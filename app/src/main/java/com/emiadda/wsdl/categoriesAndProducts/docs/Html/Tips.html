@@ -24,7 +24,7 @@
     </p>
     <pre>
     <code class="java">
-ABMserverBinding service = new ABMserverBinding();
+VOKserverBinding service = new VOKserverBinding();
 service.httpHeaders.add(new HeaderProperty("Authorization", "Basic " +
         org.kobjects.base64.Base64.encode("user:password".getBytes())));
 service.getCategories();
@@ -108,7 +108,7 @@ for (PropertyInfo info : profileInfo.any)
 
     <pre>
     <code class="java">
-public class MyService extends ABMserverBinding
+public class MyService extends VOKserverBinding
 {
     @Override
     protected Transport createTransport() {
@@ -147,7 +147,7 @@ public class MyService extends ABMserverBinding
 }
         </code>
 </pre>
-    <p>Now to connect to your web service you should use MyService class instead of ABMserverBinding.</p>
+    <p>Now to connect to your web service you should use MyService class instead of VOKserverBinding.</p>
 
 
 </body>

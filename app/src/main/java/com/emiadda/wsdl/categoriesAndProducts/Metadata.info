@@ -4,12 +4,12 @@
     <Version>4.5.7.1</Version>
     <AccountType>Basic</AccountType>
     <LibrariesFolder>libs/easywsdl</LibrariesFolder>
-    <MainClass>ABMserverBinding</MainClass>
+    <MainClass>VOKserverBinding</MainClass>
   </Info>
   <Settings>
     <Url>http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/getCategories.php?wsdl</Url>
     <ClassPrefix/>
-    <PackageName>com.emiadda.wsdl.categories</PackageName>
+    <PackageName>com.emiadda.wsdl.categoriesAndProducts</PackageName>
     <AddDocumentation>false</AddDocumentation>
     <EnableAdvancedFeatures>false</EnableAdvancedFeatures>
     <EnableMTOM>false</EnableMTOM>
@@ -22,19 +22,20 @@
     <GenerateHtmlDocumentation>true</GenerateHtmlDocumentation>
   </Settings>
   <Files>
-    <File>ABMExtendedSoapSerializationEnvelope.java</File>
-    <File>ABMFunctions.java</File>
-    <File>ABMHelper.java</File>
-    <File>ABMIServiceEvents.java</File>
-    <File>ABMMarshalGuid.java</File>
-    <File>ABMOperationResult.java</File>
-    <File>ABMserverBinding.java</File>
-    <File>docs/Html/ABMserverBinding.html</File>
-    <File>docs/Html/ABMserverBinding_methods.html</File>
     <File>docs/Html/MTOMTransfer.html</File>
     <File>docs/Html/Tips.html</File>
+    <File>docs/Html/VOKserverBinding.html</File>
+    <File>docs/Html/VOKserverBinding_methods.html</File>
     <File>docs/Index.html</File>
     <File>docs/Styles/Blueprint_Styles/Style.css</File>
+    <File>Metadata.info</File>
+    <File>VOKExtendedSoapSerializationEnvelope.java</File>
+    <File>VOKFunctions.java</File>
+    <File>VOKHelper.java</File>
+    <File>VOKIServiceEvents.java</File>
+    <File>VOKMarshalGuid.java</File>
+    <File>VOKOperationResult.java</File>
+    <File>VOKserverBinding.java</File>
   </Files>
   <Libraries>
     <File>ksoap2-android-assembly-3.6.1-jar-with-dependencies.jar</File>

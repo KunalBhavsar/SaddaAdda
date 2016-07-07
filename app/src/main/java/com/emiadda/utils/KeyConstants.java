@@ -5,4 +5,6 @@ package com.emiadda.utils;
  */
 public class KeyConstants {
     public static final String INTENT_CONSTANT_CATEGORY_ID = "category_id";
+    public static final String INTENT_CONSTANT_SUB_CATEGORY_ID = "sub_category_id";
+    public static final String INTENT_CONSTANT_PRODUCT_ID = "product_id";
 }

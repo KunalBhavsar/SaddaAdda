@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.emiadda.interafaces.ServerResponseInterface;
-import com.emiadda.wsdl.categoriesAndProducts.ABMExtendedSoapSerializationEnvelope;
-import com.emiadda.wsdl.categoriesAndProducts.ABMserverBinding;
+import com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope;
+import com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -33,7 +33,7 @@ public class GetProductsByCategory extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         try {
             //Using easysoap
-            ABMserverBinding abmServerBinding = new ABMserverBinding();
+            VOKserverBinding abmServerBinding = new VOKserverBinding();
 
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
@@ -43,7 +43,7 @@ public class GetProductsByCategory extends AsyncTask<String, Void, String> {
             propertyId.setType(Integer.class);
             request.addProperty(propertyId);
 
-            ABMExtendedSoapSerializationEnvelope soapEnvelope = new ABMExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            VOKExtendedSoapSerializationEnvelope soapEnvelope = new VOKExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.encodingStyle = SoapEnvelope.ENC;
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;

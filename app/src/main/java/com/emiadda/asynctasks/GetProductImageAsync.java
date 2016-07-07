@@ -4,33 +4,37 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope;
+import com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
 /**
- * Created by Kunal on 05/07/16.
+ * Created by Kunal on 08/07/16.
  */
-public class GetProductByProductId extends AsyncTask<String, Void, String> {
+public class GetProductImageAsync extends AsyncTask<String, Void, String> {
+
     private static final String TAG = GetProductsByCategory.class.getSimpleName();
-    private static final String METHOD_NAME = "getProductByProductID";
+    private static final String METHOD_NAME = "getProductImage";
     private static final String NAMESPACE = "http://www.mydevsystems.com";
 
     private int requestCode;
     private int responseCode;
     private ServerResponseInterface serverResponseInterface;
 
-    public GetProductByProductId(ServerResponseInterface serverResponseInterface, int requestCode) {
+    public GetProductImageAsync(ServerResponseInterface serverResponseInterface, int requestCode) {
         this.requestCode =requestCode;
         this.serverResponseInterface = serverResponseInterface;
     }
+
 
     @Override
     protected String doInBackground(String... params) {
         try {
             //Using easysoap
-            com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding vokServerBinding = new com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding();
+            VOKserverBinding abmServerBinding = new VOKserverBinding();
 
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
@@ -40,13 +44,13 @@ public class GetProductByProductId extends AsyncTask<String, Void, String> {
             propertyId.setType(Integer.class);
             request.addProperty(propertyId);
 
-            com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope soapEnvelope = new com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            VOKExtendedSoapSerializationEnvelope soapEnvelope = new VOKExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.encodingStyle = SoapEnvelope.ENC;
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
             responseCode = ServerResponseInterface.RESPONSE_CODE_OK;
-            return vokServerBinding.getProductByProductID(params[0]);
+            return abmServerBinding.getProductImage(params[0]);
         }
         catch (Exception e) {
             requestCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
@@ -61,4 +65,5 @@ public class GetProductByProductId extends AsyncTask<String, Void, String> {
             this.serverResponseInterface.responseReceived(s, requestCode, responseCode);
         }
     }
+
 }

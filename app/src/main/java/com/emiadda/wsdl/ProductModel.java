@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public class ProductModel implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String product_id;
     private String name;
     private String description;
@@ -54,6 +56,8 @@ public class ProductModel implements Serializable {
     private String otp_discount_rate;
     private String emi_discount_rate;
     private String show_payment_option;
+
+    private boolean loadingImage;
 
     public String getProduct_id() {
         return product_id;
@@ -429,5 +433,13 @@ public class ProductModel implements Serializable {
 
     public void setShow_payment_option(String show_payment_option) {
         this.show_payment_option = show_payment_option;
+    }
+
+    public boolean isLoadingImage() {
+        return loadingImage;
+    }
+
+    public void setLoadingImage(boolean loadingImage) {
+        this.loadingImage = loadingImage;
     }
 }

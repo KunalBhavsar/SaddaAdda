@@ -2,6 +2,7 @@ package com.emiadda.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import com.emiadda.R;
 import com.emiadda.adapters.SubCategoryAdapter;
 import com.emiadda.asynctasks.GetCategoriesAsync;
 import com.emiadda.asynctasks.GetProductByProductId;
+import com.emiadda.asynctasks.GetProductImageAsync;
 import com.emiadda.asynctasks.GetProductsByCategory;
 import com.emiadda.core.EACategory;
 import com.emiadda.interafaces.ServerResponseInterface;
@@ -45,6 +48,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         setContentView(R.layout.activity_sub_category);
         mActivityContext = this;
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -53,7 +57,15 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        subCategoryAdapter = new SubCategoryAdapter(this);
+        subCategoryAdapter = new SubCategoryAdapter(this, new SubCategoryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(EACategory item) {
+                Intent intent = new Intent(mActivityContext, ProductListActivity.class);
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, item.getId());
+                startActivity(intent);
+            }
+        });
+
         layoutManager = new LinearLayoutManager(SubCategoryActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(subCategoryAdapter);
