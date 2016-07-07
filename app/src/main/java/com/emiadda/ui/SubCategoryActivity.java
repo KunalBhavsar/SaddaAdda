@@ -2,12 +2,14 @@ package com.emiadda.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -43,9 +45,11 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         setContentView(R.layout.activity_sub_category);
         mActivityContext = this;
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -66,10 +70,10 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     @Override
     public void responseReceived(String response, int requestCode, int responseCode) {
         Log.i(TAG, "Response of get categories : " + response);
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
         if (requestCode == GET_CATEGORIES_REQUEST_CODE) {
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
             if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
                 Log.i(TAG, "received response : " + response);
                 if(!response.isEmpty()) {
@@ -89,5 +93,16 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                 Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
