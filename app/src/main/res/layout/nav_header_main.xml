@@ -1,72 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/_120dp"
-    android:background="@color/blue_login_btn">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
 
-    <com.emiadda.views.CircularImageView
-        android:id="@+id/img_app_owner"
-        android:layout_width="@dimen/_70dp"
-        android:layout_height="@dimen/_70dp"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/_5dp"
-        android:background="@color/blue_login_btn"
-        android:scaleType="fitXY"
-        android:src="@drawable/cartoon_face"
-        app:civ_border="true"
-        app:civ_borderColor="@color/white"
-        app:civ_borderWidth="2dp" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="2dp"
-        android:background="@color/blue_login_btn" />
+    <RelativeLayout android:id="@+id/rlt_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_120dp"
+                    android:background="@color/blue_login_btn">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_70dp"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/img_app_owner"
-        android:layout_toRightOf="@+id/img_app_owner"
-        android:padding="@dimen/_5dp">
+        <com.emiadda.views.CircularImageView
+            android:id="@+id/img_app_owner"
+            android:layout_width="@dimen/_70dp"
+            android:layout_height="@dimen/_70dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/_5dp"
+            android:background="@color/blue_login_btn"
+            android:scaleType="fitXY"
+            android:src="@drawable/cartoon_face"
+            app:civ_border="true"
+            app:civ_borderColor="@color/white"
+            app:civ_borderWidth="2dp"/>
 
-        <TextView
-            android:id="@+id/txt_name"
+        <View
+            android:id="@+id/view"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="2dp"
+            android:background="@color/blue_login_btn"/>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_30dp"
-            android:gravity="center_vertical"
-            android:padding="@dimen/_5dp"
-            android:lines="1"
-            android:text="Android Studio"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_height="@dimen/_70dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/img_app_owner"
+            android:layout_toRightOf="@+id/img_app_owner"
+            android:padding="@dimen/_5dp">
 
-        <TextView
-            android:id="@+id/txt_email"
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30dp"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:padding="@dimen/_5dp"
+                android:text="Android Studio"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/txt_email"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30dp"
+                android:layout_below="@+id/txt_name"
+                android:gravity="center_vertical"
+                android:lines="2"
+                android:padding="@dimen/_5dp"
+                android:text="android.studio@android.com"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_logout"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_30dp"
-            android:layout_below="@+id/txt_name"
-            android:gravity="center_vertical"
-            android:padding="@dimen/_5dp"
-            android:lines="2"
-            android:text="android.studio@android.com"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+            android:text="SIGN OUT"
+            android:textColor="@color/white"/>
+
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/transparent"
-        android:text="SIGN OUT"
-        android:textColor="@color/white" />
+    <View android:layout_width="match_parent"
+          android:background="@color/gray_product_bg"
+          android:layout_height="2dp"/>
 
-</RelativeLayout>
+    <TextView android:id="@+id/txt_home"
+              style="@style/DrawerText"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/_50dp"
+              android:drawableLeft="@drawable/home1"
+              android:text="@string/home"/>
+
+    <View android:layout_width="match_parent"
+          android:background="@color/gray_product_bg"
+          android:layout_height="1dp"/>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/recycler_view"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"/>
+
+</LinearLayout>

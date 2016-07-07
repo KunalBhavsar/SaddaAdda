@@ -3,14 +3,19 @@ package com.emiadda.ui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +26,7 @@ import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.adapters.CategoryAdapter;
+import com.emiadda.adapters.DrawerAdapter;
 import com.emiadda.core.EACategory;
 import com.emiadda.asynctasks.GetCategoriesAsync;
 import com.emiadda.interafaces.ServerResponseInterface;
@@ -32,13 +38,10 @@ import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ServerResponseInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -46,6 +49,9 @@ public class MainActivity extends ActionBarActivity
 
     ProgressDialog progressDialog;
     Activity mActivityContext;
+    private NavigationView navigationView;
+    private RecyclerView recyclerView;
+    private DrawerAdapter drawerAdapter;
 
     private GridView gridCategories;
     private CategoryAdapter categoryAdapter;
@@ -56,16 +62,23 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         mActivityContext = this;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        View mCustomView = mInflater.inflate(R.layout.menu_layout, null);
+        actionBar.setCustomView(mCustomView);
+        actionBar.setDisplayShowCustomEnabled(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        drawerAdapter = new DrawerAdapter(this);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         if(navigationView != null) {
             View headerView = navigationView.getHeaderView(0);
             CustomerModel appOwner = AppPreferences.getInstance().getAppOwnerData();
@@ -73,6 +86,7 @@ public class MainActivity extends ActionBarActivity
             txtName.setText(appOwner.getFirstname() + " " + appOwner.getLastname());
             TextView txtEmail = (TextView) headerView.findViewById(R.id.txt_email);
             txtEmail.setText(appOwner.getEmail());
+            recyclerView = (RecyclerView) headerView.findViewById(R.id.recycler_view);
             headerView.findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,42 +125,6 @@ public class MainActivity extends ActionBarActivity
         new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(0));
     }
 
-    public String loadProducts(int option) {
-
-        InputStream inputStream = null;
-        switch (option) {
-            case 1:
-                inputStream = getResources().openRawResource(R.raw.master);
-                break;
-            case 2:
-                inputStream = getResources().openRawResource(R.raw.fashion);
-                break;
-            case 3:
-                inputStream = getResources().openRawResource(R.raw.electronics);
-                break;
-            case 4:
-                inputStream = getResources().openRawResource(R.raw.home);
-                break;
-            case 5:
-                inputStream = getResources().openRawResource(R.raw.wellness);
-                break;
-
-        }
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        int ctr;
-        try {
-            ctr = inputStream.read();
-            while (ctr != -1) {
-                byteArrayOutputStream.write(ctr);
-                ctr = inputStream.read();
-            }
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return byteArrayOutputStream.toString();
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -157,12 +135,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -172,10 +144,6 @@ public class MainActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -218,12 +186,19 @@ public class MainActivity extends ActionBarActivity
                         eaCategory.setCategoryName(categoryModel.getCategory_name());
                         eaCategory.setCategoryImage(categoryModel.getCategory_image());
                         categoryAdapter.addCategory(eaCategory);
+                        drawerAdapter.addCategory(eaCategory);
                     }
                 }
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(mActivityContext));
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setAdapter(drawerAdapter);
+
             } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
                 Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 }
 
