@@ -16,17 +16,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.adapters.CategoryAdapter;
-import com.emiadda.adapters.ProductAdapter;
 import com.emiadda.core.EACategory;
 import com.emiadda.asynctasks.GetCategoriesAsync;
 import com.emiadda.interafaces.ServerResponseInterface;
 
+import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CategoryModel;
+import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -64,8 +66,26 @@ public class MainActivity extends ActionBarActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        if(navigationView != null) {
+            View headerView = navigationView.getHeaderView(0);
+            CustomerModel appOwner = AppPreferences.getInstance().getAppOwnerData();
+            TextView txtName = (TextView) headerView.findViewById(R.id.txt_name);
+            txtName.setText(appOwner.getFirstname() + " " + appOwner.getLastname());
+            TextView txtEmail = (TextView) headerView.findViewById(R.id.txt_email);
+            txtEmail.setText(appOwner.getEmail());
+            headerView.findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppPreferences.getInstance().setUserLoggegIn(false);
+                    AppPreferences.getInstance().remove(AppPreferences.APP_OWNER_DATA);
+                    Intent intent = new Intent(mActivityContext, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mActivityContext.startActivity(intent);
+                    finish();
+                }
+            });
+            navigationView.setNavigationItemSelectedListener(this);
+        }
         gridCategories = (GridView) findViewById(R.id.grd_categories);
         categoryAdapter = new CategoryAdapter(this);
         gridCategories.setAdapter(categoryAdapter);

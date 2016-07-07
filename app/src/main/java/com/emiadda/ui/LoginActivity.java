@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.emiadda.R;
 import com.emiadda.asynctasks.LoginAsync;
 import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
 
@@ -38,8 +39,14 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.actvity_login);
 
+        if(AppPreferences.getInstance().isUserLoggedIn()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        setContentView(R.layout.actvity_login);
         mActivityContext = this;
 
         edtEmail = (EditText) findViewById(R.id.edt_email);
@@ -87,12 +94,13 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 Log.i(TAG, "received response : "+response);
                 try {
                     CustomerModel customerModel = new Gson().fromJson(new JSONObject(response).toString(), CustomerModel.class);
-                    //TODO: store customer model and log him into app
-
+                    AppPreferences.getInstance().setUserLoggegIn(true);
+                    AppPreferences.getInstance().setAppOwnerData(customerModel);
 
                     Toast.makeText(mActivityContext, "Welcome "+customerModel.getFirstname(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage(), e);
                     boolean falseResponse = Boolean.getBoolean(response);

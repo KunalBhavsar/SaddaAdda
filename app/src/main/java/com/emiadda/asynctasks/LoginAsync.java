@@ -13,7 +13,7 @@ import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
 /**
- * Created by Rashmi on 04/07/16.
+ * Created by Kunal on 04/07/16.
  */
 public class LoginAsync extends AsyncTask<String, Void, String> {
     private static final String TAG = LoginAsync.class.getSimpleName();
@@ -41,15 +41,15 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
 
             PropertyInfo emailProperty = new PropertyInfo();
             emailProperty.setName("email");
-            emailProperty.setValue("hardik.prajapati@geeconsystems.com");
-//            emailProperty.setValue(params[0]);
+//            emailProperty.setValue("hardik.prajapati@geeconsystems.com");
+            emailProperty.setValue(params[0]);
             emailProperty.setType(String.class);
             request.addProperty(emailProperty);
 
             PropertyInfo passwordProperty = new PropertyInfo();
             passwordProperty.setName("password");
-            passwordProperty.setValue("123456");
-//            passwordProperty.setValue(params[1]);
+//            passwordProperty.setValue("123456");
+            passwordProperty.setValue(params[1]);
             passwordProperty.setType(String.class);
             request.addProperty(passwordProperty);
 

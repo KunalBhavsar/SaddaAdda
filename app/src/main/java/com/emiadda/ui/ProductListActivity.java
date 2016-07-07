@@ -18,7 +18,6 @@ import com.emiadda.asynctasks.GetProductsByCategory;
 import com.emiadda.core.EACategory;
 import com.emiadda.interafaces.ServerResponseInterface;
 import com.emiadda.wsdl.CategoryModel;
-import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -71,7 +70,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
             Log.i(TAG, "received response : " + response);
             if(!response.isEmpty()) {
 
-                HashMap<String, ProductModel> map = new HashMap<>();
+                /*HashMap<String, ProductModel> map = new HashMap<>();
                 try {
                     map = new Gson().fromJson(response, new TypeToken<HashMap<String, ProductModel>>() {
                     }.getType());
@@ -85,7 +84,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                     }
                 }catch (Exception e) {
                  Log.e(TAG, e.getMessage(), e);
-                }
+                }*/
             }
         } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
             Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();

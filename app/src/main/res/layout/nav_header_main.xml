@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:background="@color/blue_login_btn" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_120dp"
+    android:background="@color/blue_login_btn">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="60dp"
-        android:layout_height="70dp"
+    <com.emiadda.views.CircularImageView
+        android:id="@+id/img_app_owner"
+        android:layout_width="@dimen/_70dp"
+        android:layout_height="@dimen/_70dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/cartoon_face"/>
+        android:layout_margin="@dimen/_5dp"
+        android:background="@color/blue_login_btn"
+        android:scaleType="fitXY"
+        android:src="@drawable/cartoon_face"
+        app:civ_border="true"
+        app:civ_borderColor="@color/white"
+        app:civ_borderWidth="2dp" />
 
-    <View android:id="@+id/view"
-          android:layout_width="1dp"
-          android:layout_height="1dp"
-          android:layout_centerVertical="true"
-          android:layout_marginTop="2dp"
-          android:background="@color/blue_login_btn"
-    />
+    <View
+        android:id="@+id/view"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="2dp"
+        android:background="@color/blue_login_btn" />
 
-    <TextView
-        android:id="@+id/txt_name"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/view"
-        android:layout_marginRight="10dp"
-        android:layout_toRightOf="@+id/imageView"
-        android:text="Android Studio"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="18sp"/>
+        android:layout_height="@dimen/_70dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/img_app_owner"
+        android:layout_toRightOf="@+id/img_app_owner"
+        android:padding="@dimen/_5dp">
 
-    <TextView
-        android:id="@+id/textView"
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_5dp"
+            android:lines="1"
+            android:text="Android Studio"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_email"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30dp"
+            android:layout_below="@+id/txt_name"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_5dp"
+            android:lines="2"
+            android:text="android.studio@android.com"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txt_name"
-        android:layout_below="@+id/view"
-        android:layout_marginRight="10dp"
-        android:text="android.studio@android.com"
-        android:textSize="16sp"/>
-
-    <Button android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@android:color/transparent"
-            android:text="SIGN OUT"/>
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:text="SIGN OUT"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
