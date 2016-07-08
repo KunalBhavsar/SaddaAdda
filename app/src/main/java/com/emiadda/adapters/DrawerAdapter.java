@@ -1,6 +1,7 @@
 package com.emiadda.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,9 @@ import android.widget.TextView;
 
 import com.emiadda.R;
 import com.emiadda.core.EACategory;
+import com.emiadda.ui.MainActivity;
+import com.emiadda.ui.SubCategoryActivity;
+import com.emiadda.utils.KeyConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +26,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_ITEM = 1;
 
     private List<EACategory> categoryList;
+    private Context context;
 
     public DrawerAdapter(Context context) {
         categoryList = new ArrayList<>();
+        this.context = context;
     }
 
     public void addCategory(EACategory eaCategory) {
@@ -79,6 +85,15 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public ListHolder(View itemView) {
             super(itemView);
             txtCat = (TextView) itemView.findViewById(R.id.txt_category);
+            txtCat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EACategory eaCategory = categoryList.get(getAdapterPosition());
+                    Intent intent = new Intent(context, SubCategoryActivity.class);
+                    intent.putExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, eaCategory.getId());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 

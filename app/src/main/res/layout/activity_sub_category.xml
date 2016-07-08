@@ -43,7 +43,7 @@
             android:layout_height="@dimen/_80dp"
             android:padding="@dimen/_5dp"
             android:scaleType="fitXY"
-            android:src="@drawable/banner"
+            android:src="@drawable/banner2"
             app:layout_scrollFlags="scroll|enterAlways" />
     </android.support.design.widget.AppBarLayout>
 

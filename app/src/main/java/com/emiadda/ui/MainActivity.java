@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private RecyclerView recyclerView;
     private DrawerAdapter drawerAdapter;
+    private  DrawerLayout drawer;
 
     private GridView gridCategories;
     private CategoryAdapter categoryAdapter;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         //actionBar.setCustomView(mCustomView);
         //actionBar.setDisplayShowCustomEnabled(true);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -85,8 +86,18 @@ public class MainActivity extends AppCompatActivity
             CustomerModel appOwner = AppPreferences.getInstance().getAppOwnerData();
             TextView txtName = (TextView) headerView.findViewById(R.id.txt_name);
             txtName.setText(appOwner.getFirstname() + " " + appOwner.getLastname());
+
             TextView txtEmail = (TextView) headerView.findViewById(R.id.txt_email);
             txtEmail.setText(appOwner.getEmail());
+
+            TextView txtHome = (TextView) headerView.findViewById(R.id.txt_home);
+            txtHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    drawer.closeDrawers();
+                }
+            });
+
             recyclerView = (RecyclerView) headerView.findViewById(R.id.recycler_view);
             headerView.findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,5 +212,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onPause() {
+        drawer.closeDrawers();
+        super.onPause();
+    }
 }
 
