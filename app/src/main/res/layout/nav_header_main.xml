@@ -9,7 +9,7 @@
 
     <RelativeLayout android:id="@+id/rlt_nav"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_120dp"
+                    android:layout_height="@dimen/_140dp"
                     android:background="@color/blue_login_btn">
 
         <com.emiadda.views.CircularImageView
