@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +116,15 @@ public class MainActivity extends AppCompatActivity
         gridCategories = (GridView) findViewById(R.id.grd_categories);
         categoryAdapter = new CategoryAdapter(this);
         gridCategories.setAdapter(categoryAdapter);
+
+        ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
+        imgCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivityContext, CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         gridCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

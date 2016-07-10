@@ -23,4 +23,10 @@
         <item name="android:drawablePadding">18sp</item>
     </style>
 
+    <style name="CartText" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/normal_gray</item>
+        <item name="android:layout_marginBottom">@dimen/_5dp</item>
+    </style>
+
 </resources>

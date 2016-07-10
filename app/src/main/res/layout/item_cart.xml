@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="150dp"
+              android:orientation="horizontal">
+
+    <RelativeLayout android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="35">
+
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_margin="@dimen/_5dp"
+                   android:id="@+id/img_cart"
+                   android:background="@color/light_gray"
+                   android:src="@drawable/shirt"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/_5dp"
+                    android:layout_marginRight="@dimen/_5dp"
+                    android:layout_marginTop="@dimen/_5dp"
+                    android:layout_weight="65"
+                    android:background="@drawable/black_border"
+                    android:padding="@dimen/_5dp">
+
+        <TextView android:id="@+id/txt_brand_name"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Brand Name"
+                  android:textColor="@color/black"/>
+
+        <TextView android:id="@+id/txt_brand_name_value"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/txt_brand_name"
+                  android:text="Brand name"/>
+
+        <TextView android:id="@+id/txt_size"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/txt_brand_name_value"
+                  android:text="Size: "/>
+
+        <TextView android:id="@+id/txt_size_value"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/txt_brand_name_value"
+
+                  android:layout_toRightOf="@+id/txt_size"
+                  android:text="large"
+                  android:textColor="@color/black"/>
+
+
+        <TextView android:id="@+id/txt_qun"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/txt_size"
+                  android:text="Qty: "/>
+
+        <TextView android:id="@+id/txt_qun_value"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/txt_size"
+                  android:layout_toRightOf="@+id/txt_qun"
+                  android:text="5"
+                  android:textColor="@color/black"/>
+
+
+        <TextView android:id="@+id/txt_amount"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/txt_qun"
+                  android:text="Amount to pay: "/>
+
+        <TextView android:id="@+id/txt_amount_value"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/txt_qun"
+                  android:layout_toRightOf="@+id/txt_amount"
+                  android:text="Rs 455"
+                  android:textColor="@color/black"/>
+
+        <Button android:id="@+id/edt_edit"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/black_border"
+                android:text="EDIT"
+                android:textColor="@color/gray_dark"/>
+
+
+        <View android:id="@+id/view"
+              android:layout_width="10dp"
+              android:layout_height="10dp"
+              android:layout_alignParentBottom="true"
+              android:layout_centerHorizontal="true"
+              android:background="@android:color/transparent"/>
+
+        <Button android:id="@+id/edt_save"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/_5dp"
+                android:layout_toLeftOf="@+id/view"
+                android:background="@drawable/black_border"
+                android:text="SAVE"
+                android:textColor="@color/gray_dark"/>
+
+        <Button android:id="@+id/edt_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/_5dp"
+                android:layout_toRightOf="@+id/view"
+                android:background="@drawable/black_border"
+                android:text="REMOVE"
+                android:textColor="@color/gray_dark"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

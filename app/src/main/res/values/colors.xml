@@ -14,5 +14,5 @@
     <color name="orange_btn_bg">#FF8C00</color>
     <color name="circular_image_bg">#BAB399</color>
     <color name="gray_product_bg">#d9d0d0</color>
-
+    <color name="gray_dark">#545151</color>
 </resources>
