@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity
         gridCategories.setAdapter(categoryAdapter);
 
         ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
+        assert imgCart != null;
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

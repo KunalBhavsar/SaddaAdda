@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -72,8 +73,18 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
-
         progressDialog.show();
+
+        ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
+        assert imgCart != null;
+        imgCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivityContext, CartActivity.class);
+                startActivity(intent);
+            }
+        });
+
         long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, 0);
         new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(categoryId));
     }

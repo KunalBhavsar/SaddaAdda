@@ -10,7 +10,6 @@
         android:id="@+id/rlt_prod"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10dp"
         android:background="@color/gray_product_bg">
 
         <ImageView

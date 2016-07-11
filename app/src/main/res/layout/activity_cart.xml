@@ -72,6 +72,7 @@
                         android:layout_marginBottom="@dimen/_5dp"
                         android:layout_marginLeft="@dimen/_10dp"
                         android:layout_marginRight="@dimen/_10dp"
+                        android:layout_marginTop="@dimen/_5dp"
                         android:background="@drawable/black_border">
 
             <EditText android:id="@+id/edt_coupon"

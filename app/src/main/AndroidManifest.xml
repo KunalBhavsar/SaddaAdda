@@ -7,7 +7,7 @@
     <application
         android:name=".EAApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo1"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -25,6 +25,7 @@
         <activity
             android:name=".ui.ProductListActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.AddressListActivity"

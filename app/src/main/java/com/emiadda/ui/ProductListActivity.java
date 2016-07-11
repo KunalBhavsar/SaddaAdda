@@ -2,6 +2,7 @@ package com.emiadda.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -69,6 +71,17 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                 Toast.makeText(mActivityContext, "Selected product "+item.getName(),Toast.LENGTH_SHORT).show();
             }
         });
+
+        ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
+        assert imgCart != null;
+        imgCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivityContext, CartActivity.class);
+                startActivity(intent);
+            }
+        });
+
         layoutManager = new GridLayoutManager(ProductListActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productGridAdapter);
