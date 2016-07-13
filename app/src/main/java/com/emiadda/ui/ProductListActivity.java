@@ -21,6 +21,7 @@ import com.emiadda.asynctasks.GetCategoriesAsync;
 import com.emiadda.asynctasks.GetProductsByCategory;
 import com.emiadda.core.EACategory;
 import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CategoryModel;
 import com.emiadda.wsdl.ProductModel;
@@ -69,6 +70,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
             public void onItemClick(ProductModel item) {
                 //TODO: launch product detail activity here
                 Toast.makeText(mActivityContext, "Selected product "+item.getName(),Toast.LENGTH_SHORT).show();
+                AppPreferences.getInstance().setCartList(item);
             }
         });
 

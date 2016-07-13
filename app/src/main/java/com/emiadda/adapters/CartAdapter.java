@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.emiadda.R;
 import com.emiadda.core.EACategory;
+import com.emiadda.wsdl.ProductModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +23,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     private static final String TAG = CartAdapter.class.getSimpleName();
     private Context context;
-    public List<EACategory> categories;
+    public List<ProductModel> cartList;
 
     public CartAdapter(Activity context) {
         this.context = context;
-        categories = new ArrayList<>();
+        cartList = new ArrayList<>();
     }
 
-    public void addCategory(EACategory eaCategory) {
-        if(eaCategory != null) {
-            categories.add(eaCategory);
+    public void addProduct(List<ProductModel> productModelList) {
+        if(productModelList != null) {
+            cartList = productModelList;
             notifyDataSetChanged();
         }
     }
@@ -47,23 +48,31 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //set image logic
+        ProductModel model = cartList.get(position);
+        holder.txtBrandName.setText(model.getMeta_title());
+        holder.txtAmount.setText(model.getPrice());
+        //holder.txtQunt
     }
 
     @Override
     public int getItemCount() {
-        return 7;
+        if(cartList == null) {
+            return 0;
+        }
+        return cartList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtName;
+        public TextView txtBrandName, txtSize, txtQunt, txtAmount;
         public ImageView imgCat;
 
         public ViewHolder(View v) {
             super(v);
-            txtName = (TextView) v.findViewById(R.id.txt_brand_name);
+            txtBrandName = (TextView) v.findViewById(R.id.txt_brand_name_value);
+            txtSize = (TextView) v.findViewById(R.id.txt_size_value);
+            txtQunt = (TextView) v.findViewById(R.id.txt_qun_value);
+            txtAmount = (TextView) v.findViewById(R.id.txt_amount_value);
             imgCat = (ImageView) v.findViewById(R.id.img_cart);
         }
-
     }
-
 }

@@ -41,7 +41,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".ui.CartActivity">
+        <activity android:name=".ui.CartActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:windowSoftInputMode="stateHidden"
+        >
         </activity>
     </application>
 

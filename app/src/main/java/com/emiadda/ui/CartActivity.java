@@ -12,7 +12,10 @@ import android.widget.Toast;
 import com.emiadda.R;
 import com.emiadda.adapters.CartAdapter;
 import com.emiadda.adapters.ProductGridAdapter;
+import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.ProductModel;
+
+import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -40,6 +43,8 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(cartAdapter);
 
+        List<ProductModel> productModelList = AppPreferences.getInstance().getCartList();
+        cartAdapter.addProduct(productModelList);
     }
 
     @Override

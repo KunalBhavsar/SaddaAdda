@@ -4,8 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.emiadda.wsdl.CustomerModel;
+import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Kunal on 06/07/16.
@@ -19,6 +26,7 @@ public class AppPreferences {
 
     public static final String USER_LOGGED_IN = "user_logged_in";
     public static final String APP_OWNER_DATA = "app_owner_data";
+    public static final String CART_LIST = "cart_list";
 
     private AppPreferences(Context context) {
         this.context = context;
@@ -64,4 +72,34 @@ public class AppPreferences {
         editor.apply();
     }
 
+    public List<ProductModel> getCartList() {
+        String cartString = sharedPreferences.getString(CART_LIST, "");
+        if(cartString != null) {
+            Type listType = new TypeToken<ArrayList<ProductModel>>(){}.getType();
+            return new Gson().fromJson(cartString, listType);
+        }
+        return null;
+    }
+
+    public void setCartList(ProductModel item) {
+        List<ProductModel> modelArrayList = getCartList();
+        boolean flagAdd = true;
+        if(modelArrayList != null) {
+            for (ProductModel cart : modelArrayList) {
+                if (cart.getProduct_id().equals(item.getProduct_id())) {
+                    flagAdd = false;
+                    Collections.replaceAll(modelArrayList, cart, item);
+                    break;
+                }
+            }
+        } else {
+            modelArrayList = new ArrayList<>();
+        }
+        if(flagAdd) {
+            modelArrayList.add(item);
+        }
+        editor.putString(CART_LIST, new Gson().toJson(modelArrayList));
+        editor.apply();
+
+    }
 }
