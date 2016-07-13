@@ -68,9 +68,9 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         productGridAdapter = new ProductGridAdapter(mActivityContext, new ProductGridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ProductModel item) {
-                //TODO: launch product detail activity here
-                Toast.makeText(mActivityContext, "Selected product "+item.getName(),Toast.LENGTH_SHORT).show();
-                AppPreferences.getInstance().setCartList(item);
+                Intent intent = new Intent(mActivityContext, ProductDetailActivity.class);
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, item.getProduct_id());
+                mActivityContext.startActivity(intent);
             }
         });
 
@@ -100,11 +100,8 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
             Log.i(TAG, "received response : " + response);
             if(!response.isEmpty()) {
-
-                HashMap<String, ProductModel> map = new HashMap<>();
                 try {
-                    map = new Gson().fromJson(response, new TypeToken<HashMap<String, ProductModel>>() {
-                    }.getType());
+                    HashMap<String, ProductModel> map = new Gson().fromJson(response, new TypeToken<HashMap<String, ProductModel>>() {}.getType());
                     if(map != null) {
                         List<ProductModel> productModelList = new ArrayList<>();
                         Set<String> set = map.keySet();

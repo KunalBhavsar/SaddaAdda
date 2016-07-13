@@ -13,8 +13,11 @@
 
     <!-- Common -->
     <dimen name="_5dp">5dp</dimen>
+    <dimen name="_6dp">6dp</dimen>
     <dimen name="_10dp">10dp</dimen>
+    <dimen name="_15dp">15dp</dimen>
     <dimen name="_20dp">20dp</dimen>
+    <dimen name="_25dp">25dp</dimen>
     <dimen name="_30dp">30dp</dimen>
     <dimen name="_35dp">35dp</dimen>
     <dimen name="_40dp">40dp</dimen>
@@ -26,4 +29,6 @@
     <dimen name="_120dp">120dp</dimen>
     <dimen name="_140dp">140dp</dimen>
     <dimen name="_200dp">200dp</dimen>
+    <dimen name="_250dp">250dp</dimen>
+    <dimen name="_300dp">300dp</dimen>
 </resources>

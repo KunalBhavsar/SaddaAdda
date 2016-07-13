@@ -1,6 +1,8 @@
 package com.emiadda.wsdl;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Shraddha on 6/7/16.
@@ -42,8 +44,8 @@ public class ProductModel implements Serializable {
     private String height;
     private String length_class_id;
     private String subtract;
-    private String rating;
-    private String reviews;
+    private int rating;
+    private int reviews;
     private String minimum;
     private String sort_order;
     private String status;
@@ -56,6 +58,9 @@ public class ProductModel implements Serializable {
     private String otp_discount_rate;
     private String emi_discount_rate;
     private String show_payment_option;
+    private List<String> all_images;
+    private List<String> extra_options;
+    private List<PaymentOptionModel> payment_options;
 
     private boolean loadingImage;
 
@@ -323,19 +328,19 @@ public class ProductModel implements Serializable {
         this.subtract = subtract;
     }
 
-    public String getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
-    public String getReviews() {
+    public int getReviews() {
         return reviews;
     }
 
-    public void setReviews(String reviews) {
+    public void setReviews(int reviews) {
         this.reviews = reviews;
     }
 
@@ -441,5 +446,45 @@ public class ProductModel implements Serializable {
 
     public void setLoadingImage(boolean loadingImage) {
         this.loadingImage = loadingImage;
+    }
+
+    public List<String> getAll_images() {
+        return all_images;
+    }
+
+    public void setAll_images(List<String> all_images) {
+        this.all_images = all_images;
+    }
+
+    public List<String> getExtra_options() {
+        return extra_options;
+    }
+
+    public void setExtra_options(List<String> extra_options) {
+        this.extra_options = extra_options;
+    }
+
+    public List<PaymentOptionModel> getPayment_options() {
+        return payment_options;
+    }
+
+    public void setPayment_options(List<PaymentOptionModel> payment_options) {
+        this.payment_options = payment_options;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProductModel that = (ProductModel) o;
+
+        return product_id != null ? product_id.equals(that.product_id) : that.product_id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return product_id != null ? product_id.hashCode() : 0;
     }
 }

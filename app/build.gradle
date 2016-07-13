@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.squareup.picasso:picasso:2.3.2'
@@ -29,4 +29,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.3.0'
     compile 'com.android.support:gridlayout-v7:23.3.0'
     compile files('libs/easywsdl/ksoap2-android-assembly-3.6.1-jar-with-dependencies.jar')
+    compile 'com.google.android.support:wearable:1.4.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
+    compile 'com.android.support:support-v4:23.3.0'
 }

@@ -74,32 +74,23 @@ public class AppPreferences {
 
     public List<ProductModel> getCartList() {
         String cartString = sharedPreferences.getString(CART_LIST, "");
-        if(cartString != null) {
+        if(!cartString.isEmpty()) {
             Type listType = new TypeToken<ArrayList<ProductModel>>(){}.getType();
             return new Gson().fromJson(cartString, listType);
         }
-        return null;
+        return new ArrayList<>();
     }
 
-    public void setCartList(ProductModel item) {
-        List<ProductModel> modelArrayList = getCartList();
-        boolean flagAdd = true;
-        if(modelArrayList != null) {
-            for (ProductModel cart : modelArrayList) {
-                if (cart.getProduct_id().equals(item.getProduct_id())) {
-                    flagAdd = false;
-                    Collections.replaceAll(modelArrayList, cart, item);
-                    break;
-                }
-            }
-        } else {
-            modelArrayList = new ArrayList<>();
+    public void addProductToCartList(ProductModel item) {
+        List<ProductModel> productList = getCartList();
+        if (productList.contains(item)) {
+            productList.remove(productList.indexOf(item));
+            productList.add(item);
         }
-        if(flagAdd) {
-            modelArrayList.add(item);
+        else {
+            productList.add(item);
         }
-        editor.putString(CART_LIST, new Gson().toJson(modelArrayList));
+        editor.putString(CART_LIST, new Gson().toJson(productList));
         editor.apply();
-
     }
 }
