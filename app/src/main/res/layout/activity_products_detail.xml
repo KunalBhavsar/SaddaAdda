@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_gray">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:custom="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/light_gray"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary">
+
+        <ImageView
+            android:id="@+id/txt_title"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/logo"/>
+
+        <ImageView
+            android:id="@+id/img_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginRight="10dp"
+            android:focusable="true"
+            android:src="@drawable/cart"
+        />
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,7 +44,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="@color/blue_login_btn" />
+                android:background="@color/blue_login_btn"/>
 
             <com.daimajia.slider.library.SliderLayout
                 android:id="@+id/slider"
@@ -28,7 +53,7 @@
                 custom:auto_cycle="false"
                 custom:indicator_visibility="visible"
                 custom:pager_animation="Accordion"
-                custom:pager_animation_span="0" />
+                custom:pager_animation_span="0"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -47,7 +72,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="Brand Name"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/txt_amount"
@@ -60,7 +85,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="Rs. 450"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -81,7 +106,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="Quantity"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <Button
                     android:id="@+id/btn_incr_quantity"
@@ -95,7 +120,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="+"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/txt_quantity"
@@ -107,7 +132,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="1"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <Button
                     android:id="@+id/btn_decr_quantity"
@@ -121,7 +146,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="-"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </LinearLayout>
 
             <LinearLayout
@@ -144,7 +169,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="BUY NOW"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <Button
                     android:id="@+id/btn_add_to_cart"
@@ -160,7 +185,7 @@
                     android:padding="@dimen/_5dp"
                     android:text="ADD TO CART"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <TextView
@@ -176,7 +201,7 @@
                 android:paddingTop="@dimen/_10dp"
                 android:text="Product Detail"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/txt_description"
@@ -189,7 +214,7 @@
                 android:paddingStart="@dimen/_15dp"
                 android:paddingTop="@dimen/_10dp"
                 android:text="sdfb fjweif iwef oweofefuweofhg iwef o8ewhfl ,oiwefbn ekf89efj kwbfuihwe fweoufg8ioe fmn hjewvf ef hwebfoubwe fhwevfui"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -208,7 +233,7 @@
                     android:gravity="center_vertical"
                     android:text="Manufacturer"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/txt_manufacturer"
@@ -217,7 +242,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="Manufacturer"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -237,7 +262,7 @@
                     android:gravity="center_vertical"
                     android:text="Stock status"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/txt_stock_status"
@@ -246,7 +271,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="Stock status"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -266,7 +291,7 @@
                     android:gravity="center_vertical"
                     android:text="Quantity available"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/txt_quantity_available"
@@ -275,10 +300,10 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="20"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
             </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

@@ -168,7 +168,8 @@
                       android:textColor="@color/black"/>
         </RelativeLayout>
 
-        <Button android:layout_width="match_parent"
+        <Button android:id="@+id/btn_place_order"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/_40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/_10dp"

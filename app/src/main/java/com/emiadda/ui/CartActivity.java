@@ -1,5 +1,6 @@
 package com.emiadda.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -24,6 +27,7 @@ public class CartActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private CartAdapter cartAdapter;
+    private Button btnPlaceOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class CartActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        btnPlaceOrder = (Button) findViewById(R.id.btn_place_order);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         cartAdapter = new CartAdapter(this);
@@ -45,6 +50,14 @@ public class CartActivity extends AppCompatActivity {
 
         List<ProductModel> productModelList = AppPreferences.getInstance().getCartList();
         cartAdapter.addProduct(productModelList);
+
+        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartActivity.this, MakePaymentActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -3,15 +3,23 @@ package com.emiadda.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.emiadda.R;
+import com.emiadda.asynctasks.GetProductImageAsync;
 import com.emiadda.core.EACategory;
+import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +27,7 @@ import java.util.List;
 /**
  * Created by Shraddha on 16/3/16.
  */
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> implements ServerResponseInterface {
 
     private static final String TAG = CartAdapter.class.getSimpleName();
     private Context context;
@@ -48,10 +56,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //set image logic
-        ProductModel model = cartList.get(position);
-        holder.txtBrandName.setText(model.getMeta_title());
-        holder.txtAmount.setText(model.getPrice());
-        //holder.txtQunt
+        ProductModel productModel = cartList.get(position);
+        holder.txtBrandName.setText(productModel.getMeta_title());
+        holder.txtAmount.setText(productModel.getPrice());
+        if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
+            productModel.setLoadingImage(true);
+            new GetProductImageAsync(null, Integer.parseInt(productModel.getProduct_id())).execute(productModel.getProduct_id());
+        }
+        else {
+            Picasso.with(context).load(productModel.getImage()).fit().into(holder.imgCat);
+        }
     }
 
     @Override
@@ -62,9 +76,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return cartList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void responseReceived(String response, int requestCode, int responseCode) {
+        if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+            for (ProductModel product : cartList) {
+                if(product.getProduct_id().equals(String.valueOf(requestCode))) {
+                    try {
+                        ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
+                        }.getType());
+                        if(productImageModel != null) {
+                            product.setImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ","%20"));
+                            notifyDataSetChanged();
+                        }
+                    }catch (Exception e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+            }
+        }
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView txtBrandName, txtSize, txtQunt, txtAmount;
         public ImageView imgCat;
+        public Button btnSave, btnRemove, btnEdit;
 
         public ViewHolder(View v) {
             super(v);
@@ -73,6 +108,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             txtQunt = (TextView) v.findViewById(R.id.txt_qun_value);
             txtAmount = (TextView) v.findViewById(R.id.txt_amount_value);
             imgCat = (ImageView) v.findViewById(R.id.img_cart);
+            btnSave = (Button) v.findViewById(R.id.btn_save);
+            btnRemove = (Button) v.findViewById(R.id.btn_remove);
+            btnEdit = (Button) v.findViewById(R.id.btn_edit);
+
+            btnSave.setOnClickListener(this);
+            btnRemove.setOnClickListener(this);
+            btnEdit.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_save:
+
+                    break;
+
+                case R.id.btn_remove:
+
+                    break;
+
+                case R.id.btn_edit:
+
+                    break;
+            }
         }
     }
 }

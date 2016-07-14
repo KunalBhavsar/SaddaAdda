@@ -82,7 +82,7 @@
                   android:text="Rs 455"
                   android:textColor="@color/black"/>
 
-        <Button android:id="@+id/edt_edit"
+        <Button android:id="@+id/btn_edit"
                 android:layout_width="40dp"
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
@@ -98,7 +98,7 @@
               android:layout_centerHorizontal="true"
               android:background="@android:color/transparent"/>
 
-        <Button android:id="@+id/edt_save"
+        <Button android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="27dp"
                 android:layout_alignParentBottom="true"
@@ -108,7 +108,7 @@
                 android:text="SAVE"
                 android:textColor="@color/gray_dark"/>
 
-        <Button android:id="@+id/edt_remove"
+        <Button android:id="@+id/btn_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="27dp"
                 android:layout_alignParentBottom="true"
@@ -116,6 +116,8 @@
                 android:layout_toRightOf="@+id/view"
                 android:background="@drawable/black_border"
                 android:text="REMOVE"
+                android:paddingLeft="@dimen/_5dp"
+                android:drawableLeft="@drawable/rubbishbin"
                 android:textColor="@color/gray_dark"/>
 
     </RelativeLayout>

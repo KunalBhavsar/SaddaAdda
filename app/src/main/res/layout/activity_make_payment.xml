@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.emiadda.ui.MakePaymentActivity">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_awesome_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary">
+
+            <ImageView
+                android:id="@+id/txt_title"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/logo"/>
+        </android.support.v7.widget.Toolbar>
+
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/gray_product_bg"/>
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:layout_margin="@dimen/_5dp"
+                      android:background="@color/white"
+                      android:orientation="vertical">
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="3dp"
+                  android:background="@color/blue_login_btn"/>
+
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="@dimen/_35dp"
+                      android:gravity="center_vertical"
+                      android:paddingLeft="@dimen/_15dp"
+                      android:text="MAKE PAYMENT"
+                      android:textColor="@color/blue_login_btn"
+                      android:textSize="16sp"
+                      android:textStyle="bold"/>
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_margin="@dimen/_5dp"
+                          android:background="@color/light_gray"
+                          android:orientation="vertical">
+
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="@dimen/_40dp"
+                          android:gravity="center_vertical"
+                          android:paddingLeft="@dimen/_60dp"
+                          android:text="EMI"
+                          android:textColor="@color/black"
+                          android:textSize="16sp"/>
+
+                <RelativeLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/_5dp"
+                                android:paddingRight="@dimen/_5dp">
+
+                    <TextView android:id="@+id/txt_emi"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_marginBottom="2dp"
+                              android:layout_toLeftOf="@+id/txt_emi_count"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="No of EMI's"/>
+
+                    <TextView android:id="@+id/txt_emi_count"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignLeft="@+id/txt_total_value"
+                              android:layout_alignParentRight="true"
+                              android:layout_marginBottom="2dp"
+                              android:background="@color/white"
+                              android:gravity="center"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="10"/>
+
+
+                    <TextView android:id="@+id/txt_down_payment"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_below="@+id/txt_emi"
+                              android:layout_marginBottom="2dp"
+                              android:layout_toLeftOf="@+id/txt_down_payment_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Down Payment"/>
+
+                    <TextView android:id="@+id/txt_down_payment_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignLeft="@+id/txt_total_value"
+                              android:layout_alignParentRight="true"
+                              android:layout_below="@+id/txt_emi"
+                              android:layout_marginBottom="2dp"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 100"/>
+
+                    <TextView android:id="@+id/txt_emi_price"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_below="@+id/txt_down_payment"
+                              android:layout_marginBottom="2dp"
+                              android:layout_toLeftOf="@+id/txt_emi_price_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="EMI"/>
+
+                    <TextView android:id="@+id/txt_emi_price_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignLeft="@+id/txt_total_value"
+                              android:layout_alignParentRight="true"
+                              android:layout_below="@+id/txt_down_payment"
+                              android:layout_marginBottom="2dp"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 810"/>
+
+                    <TextView android:id="@+id/txt_net_emi"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_below="@+id/txt_emi_price"
+                              android:layout_marginBottom="2dp"
+                              android:layout_toLeftOf="@+id/txt_net_emi_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Net EMI Value"/>
+
+                    <TextView android:id="@+id/txt_net_emi_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignLeft="@+id/txt_total_value"
+                              android:layout_alignParentRight="true"
+                              android:layout_below="@+id/txt_emi_price"
+                              android:layout_marginBottom="2dp"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 810"/>
+
+
+                    <TextView android:id="@+id/txt_total"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_below="@+id/txt_net_emi"
+                              android:layout_marginBottom="@dimen/_5dp"
+                              android:layout_toLeftOf="@+id/txt_total_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Total"
+                              android:textColor="@color/black"/>
+
+                    <TextView android:id="@+id/txt_total_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentRight="true"
+                              android:layout_below="@+id/txt_net_emi"
+                              android:layout_marginBottom="@dimen/_5dp"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 8100"
+                              android:textColor="@color/black"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="@dimen/_35dp"
+                      android:gravity="center_vertical"
+                      android:paddingLeft="@dimen/_15dp"
+                      android:text="PAYABLE AMOUNT"
+                      android:textColor="@color/blue_login_btn"
+                      android:textSize="16sp"
+                      android:textStyle="bold"/>
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_margin="@dimen/_5dp"
+                          android:background="@color/light_gray"
+                          android:orientation="vertical">
+
+                <RelativeLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/_5dp">
+
+                    <TextView android:id="@+id/txt_payable_down_payment"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_marginBottom="2dp"
+                              android:layout_toLeftOf="@+id/txt_payable_down_payment_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Down Payment"/>
+
+                    <TextView android:id="@+id/txt_payable_down_payment_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignLeft="@+id/txt_total_payable_value"
+                              android:layout_alignParentRight="true"
+                              android:layout_marginBottom="2dp"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 100"/>
+
+                    <TextView android:id="@+id/txt_taxes"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_below="@+id/txt_payable_down_payment"
+                              android:layout_marginBottom="2dp"
+                              android:layout_toLeftOf="@+id/txt_taxes_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Taxes"/>
+
+                    <TextView android:id="@+id/txt_taxes_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignLeft="@+id/txt_total_payable_value"
+                              android:layout_alignParentRight="true"
+                              android:layout_below="@+id/txt_payable_down_payment"
+                              android:layout_marginBottom="2dp"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 810"/>
+
+                    <TextView android:id="@+id/txt_delivery_charges"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_below="@+id/txt_taxes"
+                              android:layout_marginBottom="2dp"
+                              android:layout_toLeftOf="@+id/txt_delivery_charges_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Delivery Charges"/>
+
+                    <TextView android:id="@+id/txt_delivery_charges_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignLeft="@+id/txt_total_payable_value"
+                              android:layout_alignParentRight="true"
+                              android:layout_below="@+id/txt_taxes"
+                              android:layout_marginBottom="2dp"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 810"/>
+
+
+                    <TextView android:id="@+id/txt_payable_total"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentLeft="true"
+                              android:layout_below="@+id/txt_delivery_charges"
+
+                              android:layout_toLeftOf="@+id/txt_total_payable_value"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Total"
+                              android:textColor="@color/black"/>
+
+                    <TextView android:id="@+id/txt_total_payable_value"
+                              android:layout_width="wrap_content"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_alignParentRight="true"
+                              android:layout_below="@+id/txt_delivery_charges"
+                              android:background="@color/white"
+                              android:gravity="center_vertical"
+                              android:paddingLeft="@dimen/_10dp"
+                              android:paddingRight="@dimen/_10dp"
+                              android:text="Rs. 8100"
+                              android:textColor="@color/black"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <Button android:id="@+id/btn_confirm_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/_15dp"
+                    android:layout_marginLeft="@dimen/_30dp"
+                    android:layout_marginRight="@dimen/_30dp"
+                    android:background="@color/orange_btn_bg"
+                    android:text="CONFIRM ORDER"
+                    android:textColor="@color/white"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
