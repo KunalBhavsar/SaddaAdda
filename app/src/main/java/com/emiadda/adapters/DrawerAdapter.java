@@ -2,10 +2,12 @@ package com.emiadda.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.emiadda.R;
@@ -68,8 +70,39 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         //holder.txtCat.setText(categoryList.get(position).getCategoryName());
         if (holder instanceof ListHolder) {
-            ListHolder listHolder = (ListHolder) holder;
-            listHolder.txtCat.setText(categoryList.get(position).getCategoryName().replaceAll("&amp;","&").toUpperCase());
+            ListHolder viewHolder = (ListHolder) holder;
+            viewHolder.txtCat.setText(categoryList.get(position).getCategoryName().replaceAll("&amp;","&").toUpperCase());
+
+            String catName = categoryList.get(position).getCategoryName().toLowerCase();
+            //Set category image logic
+            if(catName.equalsIgnoreCase("women")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_women", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.equalsIgnoreCase("men")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_men", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.equalsIgnoreCase("fashion")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_fashion", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.contains("jew")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_jew", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.contains("health")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_health", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.contains("home")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_home_living", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.contains("hair")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_hair", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.contains("food")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_food", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }else if(catName.contains("hit")) {
+                Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("nav_elec", "drawable", context.getPackageName()));
+                viewHolder.imgCategory.setImageDrawable(drawable);
+            }
         }
     }
 
@@ -81,10 +114,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     class ListHolder extends RecyclerView.ViewHolder {
 
         private TextView txtCat;
+        private ImageView imgCategory;
 
         public ListHolder(View itemView) {
             super(itemView);
             txtCat = (TextView) itemView.findViewById(R.id.txt_category);
+            imgCategory = (ImageView) itemView.findViewById(R.id.nav_cat);
             txtCat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

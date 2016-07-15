@@ -59,7 +59,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         ProductModel productModel = cartList.get(position);
         holder.txtBrandName.setText(productModel.getMeta_title());
         holder.txtAmount.setText(productModel.getPrice());
-        if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
+       if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
             productModel.setLoadingImage(true);
             new GetProductImageAsync(null, Integer.parseInt(productModel.getProduct_id())).execute(productModel.getProduct_id());
         }

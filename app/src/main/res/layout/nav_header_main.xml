@@ -20,7 +20,7 @@
             android:layout_margin="@dimen/_5dp"
             android:background="@color/blue_login_btn"
             android:scaleType="fitXY"
-            android:src="@drawable/cartoon_face"
+            android:src="@drawable/profilepic"
             app:civ_border="true"
             app:civ_borderColor="@color/white"
             app:civ_borderWidth="2dp"/>

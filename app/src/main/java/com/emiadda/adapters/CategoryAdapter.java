@@ -1,6 +1,7 @@
 package com.emiadda.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,8 +73,36 @@ public class CategoryAdapter extends BaseAdapter {
         EACategory eaCategory = (EACategory)getItem(position);
         viewHolder.txtCategory.setText(eaCategory.getCategoryName().replaceAll("&amp;","&"));
 
+        String catName = eaCategory.getCategoryName().toLowerCase();
         //Set category image logic
-
+        if(catName.equalsIgnoreCase("women")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("women", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.equalsIgnoreCase("men")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("men", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.equalsIgnoreCase("fashion")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("fashion", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.contains("jew")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("jwellery", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.contains("health")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("health", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.contains("home")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("home_living", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.contains("hair")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("hair", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.contains("food")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("food", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }else if(catName.contains("hit")) {
+            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("elec", "drawable", context.getPackageName()));
+            viewHolder.imgCategory.setImageDrawable(drawable);
+        }
 
         return convertView;
     }
