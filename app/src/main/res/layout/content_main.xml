@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/btn_search"
             android:layout_toStartOf="@+id/btn_search"
-            android:background="@color/normal_gray"
+            android:background="@color/light_gray"
             android:gravity="center_vertical"
             android:hint="@string/search_hint"
             android:lines="1"
@@ -29,8 +29,8 @@
             android:paddingLeft="@dimen/_5dp"
             android:paddingRight="@dimen/_5dp"
             android:paddingStart="@dimen/_5dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/light_gray" />
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray_dark" />
 
         <ImageButton
             android:id="@+id/btn_search"

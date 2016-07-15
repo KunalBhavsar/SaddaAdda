@@ -9,10 +9,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -42,6 +46,8 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     private RecyclerView recyclerView;
     private SubCategoryAdapter subCategoryAdapter;
     private Toolbar toolbar;
+    private EditText edtSearch;
+    private List<EACategory> masterList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         setContentView(R.layout.activity_sub_category);
         mActivityContext = this;
 
+        edtSearch = (EditText) findViewById(R.id.edt_search);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,7 +92,42 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
             }
         });
 
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(masterList == null) {
+                    return;
+                }
+                String query = s.toString().trim().toLowerCase();
+                if (!query.isEmpty()) {
+                    List<EACategory> categoryModels = new ArrayList<>();
+                    for (EACategory categoryModel : masterList) {
+                        if(categoryModel.getCategoryName().toLowerCase().contains(query)) {
+                            categoryModels.add(categoryModel);
+                        }
+                    }
+                    subCategoryAdapter.addCategories(categoryModels);
+                } else {
+                    subCategoryAdapter.addCategories(masterList);
+                }
+            }
+        });
+
         long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, 0);
+        String catName = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_NAME);
+        TextView txtCat = (TextView) findViewById(R.id.txt_category);
+        txtCat.setText(catName.toUpperCase());
+
         new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(categoryId));
     }
 
@@ -101,6 +143,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                 if(!response.isEmpty()) {
                     List<CategoryModel> categoryModelList = new Gson().fromJson(response, new TypeToken<ArrayList<CategoryModel>>() {
                     }.getType());
+                    masterList = new ArrayList<>();
                     for (CategoryModel categoryModel : categoryModelList) {
                         if (subCategoryAdapter != null) {
                             EACategory eaCategory = new EACategory();
@@ -108,6 +151,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                             eaCategory.setCategoryName(categoryModel.getCategory_name());
                             eaCategory.setCategoryImage(categoryModel.getCategory_image());
                             subCategoryAdapter.addCategory(eaCategory);
+                            masterList.add(eaCategory);
                         }
                     }
                 }

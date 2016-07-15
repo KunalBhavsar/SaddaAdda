@@ -337,7 +337,7 @@
                     android:layout_marginBottom="@dimen/_15dp"
                     android:layout_marginLeft="@dimen/_30dp"
                     android:layout_marginRight="@dimen/_30dp"
-                    android:background="@color/orange_btn_bg"
+                    android:background="@drawable/orng_btn"
                     android:text="CONFIRM ORDER"
                     android:textColor="@color/white"/>
         </LinearLayout>
