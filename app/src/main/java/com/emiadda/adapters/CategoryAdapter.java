@@ -37,6 +37,7 @@ public class CategoryAdapter extends BaseAdapter {
 
     public void addCategories(List<EACategory> eaCategories) {
         if(eaCategories != null) {
+            categories.clear();
             this.categories.addAll(eaCategories);
             notifyDataSetChanged();
         }

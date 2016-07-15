@@ -14,12 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,9 +67,11 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private DrawerAdapter drawerAdapter;
     private  DrawerLayout drawer;
+    private EditText edtSearch;
 
     private GridView gridCategories;
     private CategoryAdapter categoryAdapter;
+    private List<EACategory> masterList;
 
     private LinearLayout linSpecialProducts;
     private HashMap<String, ProductModel> specialProductHashmap;
@@ -77,6 +82,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mActivityContext = this;
 
+        edtSearch = (EditText) findViewById(R.id.edt_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -148,6 +154,7 @@ public class MainActivity extends AppCompatActivity
                     EACategory eaCategory = (EACategory) categoryAdapter.getItem(position);
                     Intent intent = new Intent(MainActivity.this, SubCategoryActivity.class);
                     intent.putExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, eaCategory.getId());
+                    intent.putExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_NAME, eaCategory.getCategoryName().replaceAll("&amp;","&"));
                     startActivity(intent);
                 }
             }
@@ -158,6 +165,37 @@ public class MainActivity extends AppCompatActivity
         progressDialog.setCancelable(false);
 
         progressDialog.show();
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(masterList == null) {
+                    return;
+                }
+                String query = s.toString().trim().toLowerCase();
+                if (!query.isEmpty()) {
+                    List<EACategory> categoryModels = new ArrayList<>();
+                    for (EACategory categoryModel : masterList) {
+                        if(categoryModel.getCategoryName().toLowerCase().contains(query)) {
+                            categoryModels.add(categoryModel);
+                        }
+                    }
+                    categoryAdapter.addCategories(categoryModels);
+                } else {
+                    categoryAdapter.addCategories(masterList);
+                }
+            }
+        });
 
         new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(0));
         new GetSpecialsAsync(this, GET_SPECIAL_PRODUCTS).execute();
@@ -216,6 +254,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "received response : " + response);
                 List<CategoryModel> categoryModelList = new Gson().fromJson(response, new TypeToken<ArrayList<CategoryModel>>() {
                 }.getType());
+                masterList = new ArrayList<>();
                 for (CategoryModel categoryModel : categoryModelList) {
                     if (categoryAdapter != null) {
                         EACategory eaCategory = new EACategory();
@@ -224,6 +263,7 @@ public class MainActivity extends AppCompatActivity
                         eaCategory.setCategoryImage(categoryModel.getCategory_image());
                         categoryAdapter.addCategory(eaCategory);
                         drawerAdapter.addCategory(eaCategory);
+                        masterList.add(eaCategory);
                     }
                 }
 

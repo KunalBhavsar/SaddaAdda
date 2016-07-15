@@ -40,6 +40,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     public void addCategories(List<EACategory> eaCategories) {
         if(eaCategories != null) {
+            categories.clear();
             this.categories.addAll(eaCategories);
             notifyDataSetChanged();
         }

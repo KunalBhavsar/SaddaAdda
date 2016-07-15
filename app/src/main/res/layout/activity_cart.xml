@@ -76,7 +76,7 @@
                         android:background="@drawable/black_border">
 
             <EditText android:id="@+id/edt_coupon"
-                      android:layout_width="wrap_content"
+                      android:layout_width="match_parent"
                       android:layout_height="@dimen/_35dp"
                       android:layout_toLeftOf="@+id/txt_coupons"
                       android:background="@android:color/transparent"/>
@@ -175,7 +175,7 @@
                 android:layout_marginBottom="@dimen/_10dp"
                 android:layout_marginLeft="@dimen/_30dp"
                 android:layout_marginRight="@dimen/_30dp"
-                android:background="@color/orange_btn_bg"
+                android:background="@drawable/orng_btn"
                 android:text="PLACE ORDER"
                 android:textColor="@color/white"/>
     </LinearLayout>

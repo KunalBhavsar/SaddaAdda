@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     private Context context;
     private List<ProductModel> productList;
     private OnItemClickListener mItemClickListener;
+    private DecimalFormat formater = new DecimalFormat("#.##");
 
     public ProductGridAdapter(Activity context, OnItemClickListener listener) {
         this.context = context;
@@ -60,7 +62,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         ProductModel productModel = productList.get(position);
         holder.bind(productModel, mItemClickListener);
         holder.txtProductName.setText(productModel.getName().replaceAll("&amp;", "&"));
-        holder.txtPrice.setText("Rs." + productModel.getPrice());
+        holder.txtPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
         if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
             productModel.setLoadingImage(true);
             new GetProductImageAsync(this, Integer.parseInt(productModel.getProduct_id())).execute(productModel.getProduct_id());

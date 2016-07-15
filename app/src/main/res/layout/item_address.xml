@@ -63,7 +63,7 @@
                 android:layout_height="40dp"
                 android:layout_below="@+id/txt_address"
                 android:layout_margin="@dimen/_5dp"
-                android:background="@color/orange_btn_bg"
+                android:background="@drawable/orng_btn"
                 android:text="Deliver To This Address"
                 android:textColor="@color/white" />
         </RelativeLayout>
