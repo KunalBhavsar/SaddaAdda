@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -28,6 +29,9 @@ public class CartActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private CartAdapter cartAdapter;
     private Button btnPlaceOrder;
+    private double subTotal;
+    private double deliveryCharges;
+    private double taxes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,18 @@ public class CartActivity extends AppCompatActivity {
 
         List<ProductModel> productModelList = AppPreferences.getInstance().getCartList();
         cartAdapter.addProduct(productModelList);
+
+        for (ProductModel productModel : productModelList) {
+            subTotal = productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice());
+        }
+
+        deliveryCharges = 100.00;
+        taxes = subTotal / 10;
+
+        ((TextView)findViewById(R.id.txt_sub_total)).setText(String.valueOf(subTotal));
+        ((TextView)findViewById(R.id.txt_delivery_charges)).setText(String.valueOf(deliveryCharges));
+        ((TextView)findViewById(R.id.txt_taxes)).setText(String.valueOf(taxes));
+        ((TextView)findViewById(R.id.txt_total)).setText(String.valueOf(subTotal + deliveryCharges + taxes));
 
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -33,7 +33,7 @@ public class WBNCustomerloginBinding
 
     String url="http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/customerLogin.php";
 
-    int timeOut=60000;
+    int timeOut=10000;
     public List< HeaderProperty> httpHeaders;
     public boolean enableLogging;
 

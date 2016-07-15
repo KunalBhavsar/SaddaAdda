@@ -189,6 +189,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
             @Override
             public void onClick(View v) {
                 Toast.makeText(mAppContext, "Added "+ currentQuantity + " items of " +productModel.getName() + " to the cart" , Toast.LENGTH_SHORT).show();
+                productModel.setNumberOfSeletedItems(currentQuantity);
                 AppPreferences.getInstance().addProductToCartList(productModel);
             }
         });

@@ -22,12 +22,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.adapters.CategoryAdapter;
 import com.emiadda.adapters.DrawerAdapter;
+import com.emiadda.asynctasks.GetProductImageAsync;
+import com.emiadda.asynctasks.GetSpecialsAsync;
 import com.emiadda.core.EACategory;
 import com.emiadda.asynctasks.GetCategoriesAsync;
 import com.emiadda.interafaces.ServerResponseInterface;
@@ -36,17 +39,24 @@ import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CategoryModel;
 import com.emiadda.wsdl.CustomerModel;
+import com.emiadda.wsdl.ProductImageModel;
+import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ServerResponseInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GET_CATEGORIES_REQUEST_CODE = 12;
+    private static final int GET_SPECIAL_PRODUCTS = 13;
 
     ProgressDialog progressDialog;
     Activity mActivityContext;
@@ -57,6 +67,9 @@ public class MainActivity extends AppCompatActivity
 
     private GridView gridCategories;
     private CategoryAdapter categoryAdapter;
+
+    private LinearLayout linSpecialProducts;
+    private HashMap<String, ProductModel> specialProductHashmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +126,7 @@ public class MainActivity extends AppCompatActivity
             });
             navigationView.setNavigationItemSelectedListener(this);
         }
+        linSpecialProducts = (LinearLayout)findViewById(R.id.lin_special_product_list);
         gridCategories = (GridView) findViewById(R.id.grd_categories);
         categoryAdapter = new CategoryAdapter(this);
         gridCategories.setAdapter(categoryAdapter);
@@ -146,6 +160,7 @@ public class MainActivity extends AppCompatActivity
         progressDialog.show();
 
         new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(0));
+        new GetSpecialsAsync(this, GET_SPECIAL_PRODUCTS).execute();
     }
 
     @Override
@@ -193,7 +208,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void responseReceived(String response, int requestCode, int responseCode) {
-        Log.i(TAG, "Response of get categories : " + response);
         if (requestCode == GET_CATEGORIES_REQUEST_CODE) {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
@@ -219,6 +233,55 @@ public class MainActivity extends AppCompatActivity
 
             } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
                 Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(requestCode == GET_SPECIAL_PRODUCTS) {
+            Log.i(TAG, "Special products response : "+response);
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+                Log.i(TAG, "received response : " + response);
+                if(!response.isEmpty()) {
+                    try {
+                        specialProductHashmap = new Gson().fromJson(response, new TypeToken<HashMap<String, ProductModel>>() {}.getType());
+
+                        for (Map.Entry<String, ProductModel> specialProductModelEntry : specialProductHashmap.entrySet()) {
+                            View v = LayoutInflater.from(mActivityContext)
+                                    .inflate(R.layout.item_special_product, null, false);
+                            ((ImageView)v.findViewById(R.id.img_product)).setImageBitmap(null);
+                            ((TextView)v.findViewById(R.id.txt_product_name)).setText(specialProductModelEntry.getValue().getName());
+                            v.setTag(specialProductModelEntry.getKey());
+
+                            new GetProductImageAsync(this, Integer.parseInt(specialProductModelEntry.getKey())).execute(specialProductModelEntry.getValue().getProduct_id());
+
+                            linSpecialProducts.addView(v);
+                        }
+                    }catch (Exception e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+            } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
+                Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+                Log.i(TAG, "received response : " + response);
+                for (int i = 0; i < linSpecialProducts.getChildCount(); i++) {
+                    if(((String)linSpecialProducts.getChildAt(i).getTag()).equals(String.valueOf(requestCode))) {
+                        try {
+                            ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
+                            }.getType());
+                            if(productImageModel != null) {
+                                Picasso.with(mActivityContext).load(productImageModel.getImage().replaceAll("&amp;", "&")
+                                        .replaceAll(" ","%20")).fit().into((ImageView)linSpecialProducts.getChildAt(i).findViewById(R.id.img_product));
+                            }
+                        }catch (Exception e) {
+                            Log.e(TAG, e.getMessage(), e);
+                        }
+                    }
+                }
             }
         }
     }

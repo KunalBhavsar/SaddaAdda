@@ -62,6 +62,8 @@ public class ProductModel implements Serializable {
     private List<String> extra_options;
     private List<PaymentOptionModel> payment_options;
 
+    private int numberOfSeletedItems;
+
     private boolean loadingImage;
 
     public String getProduct_id() {
@@ -486,5 +488,13 @@ public class ProductModel implements Serializable {
     @Override
     public int hashCode() {
         return product_id != null ? product_id.hashCode() : 0;
+    }
+
+    public int getNumberOfSeletedItems() {
+        return numberOfSeletedItems;
+    }
+
+    public void setNumberOfSeletedItems(int numberOfSeletedItems) {
+        this.numberOfSeletedItems = numberOfSeletedItems;
     }
 }

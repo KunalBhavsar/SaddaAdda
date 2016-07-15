@@ -49,8 +49,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         EAProduct eaProduct = eaProducts.get(position);
         holder.txtProductName.setText(eaProduct.getProductName());
-        Log.i(TAG, "URL : " + eaProduct.getImageUrls());
-                Log.i(TAG, "URL : " + (!eaProduct.getImageUrls().isEmpty() ? eaProduct.getImageUrls().get(0) : ""));
         Picasso.with(context)
                 .load(!eaProduct.getImageUrls().isEmpty() ? eaProduct.getImageUrls().get(0) : "")
                 .placeholder(R.drawable.placeholder_product)

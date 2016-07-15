@@ -37,7 +37,7 @@ public class VOKserverBinding
 
     String url="http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/getCategories.php";
 
-    int timeOut=60000;
+    int timeOut=10000;
     public List< HeaderProperty> httpHeaders;
     public boolean enableLogging;
 

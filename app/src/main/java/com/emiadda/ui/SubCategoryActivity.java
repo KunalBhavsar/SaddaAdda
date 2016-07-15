@@ -62,6 +62,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
             public void onItemClick(EACategory item) {
                 Intent intent = new Intent(mActivityContext, ProductListActivity.class);
                 intent.putExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, item.getId());
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME, item.getCategoryName());
                 startActivity(intent);
             }
         });

@@ -15,6 +15,7 @@ import com.emiadda.R;
 import com.emiadda.asynctasks.GetProductImageAsync;
 import com.emiadda.core.EACategory;
 import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
@@ -40,6 +41,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
 
     public void addProduct(List<ProductModel> productModelList) {
         if(productModelList != null) {
+            for (ProductModel productModel : productModelList) {
+                productModel.setImage(null);
+                productModel.setLoadingImage(false);
+            }
             cartList = productModelList;
             notifyDataSetChanged();
         }
@@ -59,13 +64,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         ProductModel productModel = cartList.get(position);
         holder.txtBrandName.setText(productModel.getMeta_title());
         holder.txtAmount.setText(productModel.getPrice());
-       if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
+        holder.txtQunt.setText(String.valueOf(productModel.getNumberOfSeletedItems()));
+        holder.txtAmount.setText(String.valueOf(productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice())));
+
+        Log.i(TAG, "Product model image "+productModel.getImage() + " and is laoding image " + productModel.isLoadingImage());
+        if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
             productModel.setLoadingImage(true);
-            new GetProductImageAsync(null, Integer.parseInt(productModel.getProduct_id())).execute(productModel.getProduct_id());
+            new GetProductImageAsync(CartAdapter.this, Integer.parseInt(productModel.getProduct_id())).execute(productModel.getProduct_id());
         }
         else {
-            Picasso.with(context).load(productModel.getImage()).fit().into(holder.imgCat);
+            Picasso.with(context).load(productModel.getImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);
         }
+
+        holder.btnRemove.setTag(productModel.getProduct_id());
     }
 
     @Override
@@ -78,6 +89,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
 
     @Override
     public void responseReceived(String response, int requestCode, int responseCode) {
+        Log.i(TAG, "Received image download response "+response);
         if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
             for (ProductModel product : cartList) {
                 if(product.getProduct_id().equals(String.valueOf(requestCode))) {
@@ -95,7 +107,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
             }
         }
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView txtBrandName, txtSize, txtQunt, txtAmount;
         public ImageView imgCat;
@@ -125,7 +136,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
                     break;
 
                 case R.id.btn_remove:
-
+                    ProductModel productModel = new ProductModel();
+                    productModel.setProduct_id(String.valueOf(v.getTag()));
+                    cartList.remove(productModel);
+                    AppPreferences.getInstance().removeProductFromCartList(productModel);
+                    notifyDataSetChanged();
                     break;
 
                 case R.id.btn_edit:

@@ -1,318 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.emiadda.ui.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/rel_search"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50dp"
-        android:background="@color/white"
-        android:padding="@dimen/_5dp">
-
-        <EditText
-            android:id="@+id/edt_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/btn_search"
-            android:layout_toStartOf="@+id/btn_search"
-            android:background="@color/normal_gray"
-            android:gravity="center_vertical"
-            android:hint="@string/search_hint"
-            android:lines="1"
-            android:paddingEnd="@dimen/_5dp"
-            android:paddingLeft="@dimen/_5dp"
-            android:paddingRight="@dimen/_5dp"
-            android:paddingStart="@dimen/_5dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/light_gray" />
-
-        <ImageButton
-            android:id="@+id/btn_search"
-            android:layout_width="@dimen/_40dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/blue_login_btn"
-            android:src="@drawable/ic_search" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rel_actual_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rel_search"
-        android:background="@color/light_gray"
-        android:padding="@dimen/_5dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/rel_categories"
+            android:id="@+id/rel_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50dp"
+            android:background="@color/white"
+            android:padding="@dimen/_5dp">
+
+            <EditText
+                android:id="@+id/edt_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/btn_search"
+                android:layout_toStartOf="@+id/btn_search"
+                android:background="@color/normal_gray"
+                android:gravity="center_vertical"
+                android:hint="@string/search_hint"
+                android:lines="1"
+                android:paddingEnd="@dimen/_5dp"
+                android:paddingLeft="@dimen/_5dp"
+                android:paddingRight="@dimen/_5dp"
+                android:paddingStart="@dimen/_5dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/light_gray" />
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="@dimen/_40dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/blue_login_btn"
+                android:src="@drawable/ic_search" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rel_actual_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="@dimen/_5dp">
+            android:layout_below="@+id/rel_search"
+            android:background="@color/light_gray"
+            android:padding="@dimen/_5dp">
 
-            <View
-                android:id="@+id/temp_top_view"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_5dp"
-                android:background="@color/colorAccent" />
-
-            <GridView
-                android:id="@+id/grd_categories"
-                android:layout_width="match_parent"
-                android:layout_height="330dp"
-                android:numColumns="3"
-                android:layout_below="@+id/temp_top_view"
-                android:stretchMode="columnWidth"
-                android:gravity="center"/>
-<!--            <TableLayout
+            <RelativeLayout
+                android:id="@+id/rel_categories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/temp_top_view"
-                android:padding="@dimen/_5dp">
+                android:background="@color/white"
+                android:elevation="@dimen/_5dp">
 
-                <TableRow
+                <View
+                    android:id="@+id/temp_top_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="@dimen/_5dp"
+                    android:background="@color/colorAccent" />
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1">
-
-                        <com.emiadda.views.CircularImageView
-                            android:id="@+id/img_men"
-                            android:layout_width="@dimen/_70dp"
-                            android:layout_height="@dimen/_70dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_margin="@dimen/_5dp"
-                            android:background="@color/white"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/cartoon_face"
-                            app:civ_border="true"
-                            app:civ_borderColor="@color/normal_gray"
-                            app:civ_borderWidth="2dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/img_men"
-                            android:gravity="center_horizontal"
-                            android:padding="@dimen/_5dp"
-                            android:text="MEN"
-                            android:textColor="@color/blue_login_btn"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:layout_weight="1">
-
-                        <com.emiadda.views.CircularImageView
-                            android:id="@+id/img_women"
-                            android:layout_width="@dimen/_70dp"
-                            android:layout_height="@dimen/_70dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_margin="@dimen/_5dp"
-                            android:background="@color/white"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/cartoon_face"
-                            app:civ_border="true"
-                            app:civ_borderColor="@color/normal_gray"
-                            app:civ_borderWidth="2dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/img_women"
-                            android:gravity="center_horizontal"
-                            android:padding="@dimen/_5dp"
-                            android:text="WOMEN"
-                            android:textColor="@color/blue_login_btn"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="3"
-                        android:layout_weight="1">
-
-                        <com.emiadda.views.CircularImageView
-                            android:id="@+id/img_kids"
-                            android:layout_width="@dimen/_70dp"
-                            android:layout_height="@dimen/_70dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_margin="@dimen/_5dp"
-                            android:background="@color/white"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/cartoon_face"
-                            app:civ_border="true"
-                            app:civ_borderColor="@color/normal_gray"
-                            app:civ_borderWidth="2dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/img_kids"
-                            android:gravity="center_horizontal"
-                            android:padding="@dimen/_5dp"
-                            android:text="KIDS"
-                            android:textColor="@color/blue_login_btn"
-                            android:textSize="12sp" />
-
-                    </RelativeLayout>
-                </TableRow>
-
-                <TableRow
+                <GridView
+                    android:id="@+id/grd_categories"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="330dp"
+                    android:layout_below="@+id/temp_top_view"
+                    android:gravity="center"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth" />
+            </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1">
-
-                        <com.emiadda.views.CircularImageView
-                            android:id="@+id/img_electronics"
-                            android:layout_width="@dimen/_70dp"
-                            android:layout_height="@dimen/_70dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_margin="@dimen/_5dp"
-                            android:background="@color/white"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/cartoon_face"
-                            app:civ_border="true"
-                            app:civ_borderColor="@color/normal_gray"
-                            app:civ_borderWidth="2dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/img_electronics"
-                            android:gravity="center_horizontal"
-                            android:padding="@dimen/_5dp"
-                            android:text="ELECTRONICS"
-                            android:textColor="@color/blue_login_btn"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:layout_weight="1">
-
-                        <com.emiadda.views.CircularImageView
-                            android:id="@+id/img_home_living"
-                            android:layout_width="@dimen/_70dp"
-                            android:layout_height="@dimen/_70dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_margin="@dimen/_5dp"
-                            android:background="@color/white"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/cartoon_face"
-                            app:civ_border="true"
-                            app:civ_borderColor="@color/normal_gray"
-                            app:civ_borderWidth="2dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/img_home_living"
-                            android:gravity="center_horizontal"
-                            android:padding="@dimen/_5dp"
-                            android:text="HOME &amp; LIVING"
-                            android:textColor="@color/blue_login_btn"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="3"
-                        android:layout_weight="1">
-
-                        <com.emiadda.views.CircularImageView
-                            android:id="@+id/img_offers"
-                            android:layout_width="@dimen/_70dp"
-                            android:layout_height="@dimen/_70dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_margin="@dimen/_5dp"
-                            android:background="@color/white"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/cartoon_face"
-                            app:civ_border="true"
-                            app:civ_borderColor="@color/normal_gray"
-                            app:civ_borderWidth="2dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/img_offers"
-                            android:gravity="center_horizontal"
-                            android:padding="@dimen/_5dp"
-                            android:text="OFFERS"
-                            android:textColor="@color/blue_login_btn"
-                            android:textSize="12sp" />
-
-                    </RelativeLayout>
-                </TableRow>
-            </TableLayout>-->
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rel_new_arrivals"
-            android:layout_below="@+id/rel_categories"
-            android:background="@color/white"
-            android:elevation="@dimen/_5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <HorizontalScrollView
+            <RelativeLayout
+                android:id="@+id/rel_special_products"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rel_categories"
+                android:layout_marginTop="@dimen/_5dp"
+                android:background="@color/white"
+                android:elevation="@dimen/_5dp">
+                <View
+                    android:id="@+id/temp_top_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_5dp"
+                    android:background="@color/colorAccent" />
 
-                <LinearLayout
-                    android:id="@+id/lin_new_arrivals_list"
+                <TextView
+                    android:layout_below="@+id/temp_top_view2"
+                    android:id="@+id/txt_special_products"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"/>
-            </HorizontalScrollView>
-        </RelativeLayout>
+                    android:padding="@dimen/_5dp"
+                    android:textColor="@color/black"
+                    android:text="SPECIAL PRODUCTS"
+                    android:textSize="16sp" />
 
-        <RelativeLayout
-            android:id="@+id/rel_deal_of_day"
-            android:layout_below="@+id/rel_new_arrivals"
-            android:background="@color/white"
-            android:elevation="@dimen/_5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/lin_deal_of_day_list"
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"/>
-            </HorizontalScrollView>
+                    android:layout_below="@+id/txt_special_products"
+                    android:layout_marginTop="@dimen/_5dp">
+
+                    <LinearLayout
+                        android:id="@+id/lin_special_product_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+</ScrollView>

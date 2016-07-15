@@ -93,4 +93,13 @@ public class AppPreferences {
         editor.putString(CART_LIST, new Gson().toJson(productList));
         editor.apply();
     }
+
+    public void removeProductFromCartList(ProductModel item) {
+        List<ProductModel> productList = getCartList();
+        if (productList.contains(item)) {
+            productList.remove(productList.indexOf(item));
+        }
+        editor.putString(CART_LIST, new Gson().toJson(productList));
+        editor.apply();
+    }
 }

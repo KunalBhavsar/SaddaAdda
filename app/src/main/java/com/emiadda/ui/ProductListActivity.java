@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -88,6 +89,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productGridAdapter);
 
+        ((TextView)findViewById(R.id.txt_category_name)).setText(getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME));
         progressDialog.show();
         long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, 0);
         new GetProductsByCategory(this, GET_PRODUCT_REQUEST_CODE).execute(String.valueOf(categoryId));
@@ -95,11 +97,13 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
 
     @Override
     public void responseReceived(String response, int requestCode, int responseCode) {
-        progressDialog.dismiss();
+        if(progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
 
         if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
             Log.i(TAG, "received response : " + response);
-            if(!response.isEmpty()) {
+            if(response != null && !response.isEmpty()) {
                 try {
                     HashMap<String, ProductModel> map = new Gson().fromJson(response, new TypeToken<HashMap<String, ProductModel>>() {}.getType());
                     if(map != null) {
