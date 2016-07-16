@@ -17,7 +17,7 @@
             android:layout_height="45dp"
             android:background="@drawable/rounded_rect_blue"
             android:padding="7dp"
-            android:src="@drawable/tshirt" />
+            android:src="@drawable/sub_cat" />
 
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:padding="8dp"
+            android:padding="10dp"
             android:src="@drawable/dropdown" />
 
 

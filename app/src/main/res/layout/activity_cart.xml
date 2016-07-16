@@ -78,6 +78,7 @@
             <EditText android:id="@+id/edt_coupon"
                       android:layout_width="match_parent"
                       android:layout_height="@dimen/_35dp"
+                      android:paddingLeft="@dimen/_10dp"
                       android:layout_toLeftOf="@+id/txt_coupons"
                       android:background="@android:color/transparent"/>
 

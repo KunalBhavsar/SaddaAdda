@@ -290,6 +290,7 @@
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/_15dp"
                 android:paddingLeft="@dimen/_15dp"
+                android:paddingBottom="@dimen/_10dp"
                 android:paddingRight="@dimen/_15dp"
                 android:paddingStart="@dimen/_15dp"
                 android:paddingTop="@dimen/_10dp">
@@ -312,6 +313,10 @@
                     android:text="20"
                     android:textSize="16sp"/>
             </LinearLayout>
+
+            <View android:layout_width="match_parent"
+                  android:background="@color/blue_login_btn"
+                  android:layout_height="2dp"/>
 
         </LinearLayout>
 
