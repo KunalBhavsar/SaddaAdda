@@ -1,6 +1,5 @@
 package com.emiadda.asynctasks;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.emiadda.EAApplication;
