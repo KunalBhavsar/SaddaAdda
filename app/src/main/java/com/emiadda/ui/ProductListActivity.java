@@ -24,13 +24,9 @@ import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.adapters.ProductGridAdapter;
-import com.emiadda.asynctasks.GetCategoriesAsync;
 import com.emiadda.asynctasks.GetProductsByCategory;
-import com.emiadda.core.EACategory;
-import com.emiadda.interafaces.ServerResponseInterface;
-import com.emiadda.utils.AppPreferences;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.KeyConstants;
-import com.emiadda.wsdl.CategoryModel;
 import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -42,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class ProductListActivity extends AppCompatActivity implements ServerResponseInterface {
+public class ProductListActivity extends AppCompatActivity implements ServerResponseSubscriber {
 
     private static final int GET_PRODUCT_REQUEST_CODE = 17;
     private static final String TAG = ProductListActivity.class.getSimpleName();
@@ -190,12 +186,12 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode) {
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode) {
         if(progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
-        if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+        if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
             Log.i(TAG, "received response : " + response);
             if(response != null && !response.isEmpty()) {
                 try {
@@ -213,7 +209,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                  Log.e(TAG, e.getMessage(), e);
                 }
             }
-        } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
+        } else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
             Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
         }
     }

@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.asynctasks.GetProductImageAsync;
-import com.emiadda.core.EACategory;
-import com.emiadda.core.EAProduct;
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.asynctasks.ServerRequestProcessingThread;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
@@ -23,14 +23,12 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Shraddha on 16/3/16.
  */
-public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.ViewHolder> implements ServerResponseInterface {
+public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.ViewHolder> implements ServerResponseSubscriber {
 
     private static final String TAG = ProductGridAdapter.class.getSimpleName();
     private Context context;
@@ -42,11 +40,18 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         this.context = context;
         productList = new ArrayList<>();
         this.mItemClickListener = listener;
+        ((EAApplication)context.getApplicationContext()).attach(this);
     }
 
     public void setProducts(List<ProductModel> productList) {
         this.productList = productList;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        ((EAApplication)context.getApplicationContext()).dettach(this);
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
     @Override
@@ -65,7 +70,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         holder.txtPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
         if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
             productModel.setLoadingImage(true);
-            new GetProductImageAsync(this, Integer.parseInt(productModel.getProduct_id())).execute(productModel.getProduct_id());
+            ((EAApplication)context.getApplicationContext()).addToServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE, Integer.parseInt(productModel.getProduct_id()), true, productModel.getProduct_id());
         }
         else {
             Picasso.with(context).load(productModel.getImage()).fit().into(holder.imgProduct);
@@ -78,23 +83,31 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode) {
-        if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
-            for (ProductModel product : productList) {
-                if(product.getProduct_id().equals(String.valueOf(requestCode))) {
-                    try {
-                        ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
-                        }.getType());
-                        if(productImageModel != null) {
-                            product.setImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ","%20"));
-                            notifyDataSetChanged();
+    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode) {
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Received image download response "+response);
+                if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
+                    if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
+                        for (ProductModel product : productList) {
+                            if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
+                                try {
+                                    ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
+                                    }.getType());
+                                    if (productImageModel != null) {
+                                        product.setImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
+                                        notifyDataSetChanged();
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.getMessage(), e);
+                                }
+                            }
                         }
-                    }catch (Exception e) {
-                        Log.e(TAG, e.getMessage(), e);
                     }
                 }
             }
-        }
+        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

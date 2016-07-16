@@ -22,7 +22,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.emiadda.R;
 import com.emiadda.asynctasks.GetProductByProductId;
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.ProductModel;
@@ -32,7 +32,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Created by Kunal on 12/07/16.
  */
-public class ProductDetailActivity extends AppCompatActivity implements ServerResponseInterface, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+public class ProductDetailActivity extends AppCompatActivity implements ServerResponseSubscriber, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
     private static final String TAG = ProductDetailActivity.class.getSimpleName();
     private static final int PRODUCT_DETIALS_REQUEST_CODE = 1;
@@ -196,9 +196,9 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode) {
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode) {
         progressDialog.dismiss();
-        if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+        if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
             if(requestCode == PRODUCT_DETIALS_REQUEST_CODE) {
                 Log.i(TAG, "received response : " + response);
                 if(!response.isEmpty()) {

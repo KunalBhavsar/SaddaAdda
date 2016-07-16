@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5dp"
             android:background="@color/light_gray"
-            android:src="@drawable/shirt" />
+            android:src="@drawable/placeholder_product" />
 
     </RelativeLayout>
 

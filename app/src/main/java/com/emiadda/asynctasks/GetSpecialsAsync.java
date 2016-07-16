@@ -3,9 +3,7 @@ package com.emiadda.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.emiadda.interafaces.ServerResponseInterface;
-import com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope;
-import com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.wsdl.specialProducts.KESExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.specialProducts.KESserverBinding;
 
@@ -18,15 +16,15 @@ import org.ksoap2.serialization.SoapObject;
  */
 public class GetSpecialsAsync extends AsyncTask<Void, Void, String> {
 
-    private static final String TAG = GetProductsByCategory.class.getSimpleName();
-    private static final String METHOD_NAME = "getProductsByCategory";
+    private static final String TAG = GetSpecialsAsync.class.getSimpleName();
+    private static final String METHOD_NAME = "getSpecials";
     private static final String NAMESPACE = "http://www.mydevsystems.com";
 
     private int requestCode;
     private int responseCode;
-    private ServerResponseInterface serverResponseInterface;
+    private ServerResponseSubscriber serverResponseInterface;
 
-    public GetSpecialsAsync(ServerResponseInterface serverResponseInterface, int requestCode) {
+    public GetSpecialsAsync(ServerResponseSubscriber serverResponseInterface, int requestCode) {
         this.requestCode =requestCode;
         this.serverResponseInterface = serverResponseInterface;
     }
@@ -50,11 +48,11 @@ public class GetSpecialsAsync extends AsyncTask<Void, Void, String> {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            responseCode = ServerResponseInterface.RESPONSE_CODE_OK;
+            responseCode = ServerResponseSubscriber.RESPONSE_CODE_OK;
             return abmServerBinding.getSpecials();
         }
         catch (Exception e) {
-            requestCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
+            requestCode = ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION;
             Log.e(TAG, e.getMessage(), e);
         }
         return null;
@@ -63,7 +61,7 @@ public class GetSpecialsAsync extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if(serverResponseInterface != null) {
-            this.serverResponseInterface.responseReceived(s, requestCode, responseCode);
+            this.serverResponseInterface.responseReceived(s, requestCode, responseCode, 0);
         }
     }
 }

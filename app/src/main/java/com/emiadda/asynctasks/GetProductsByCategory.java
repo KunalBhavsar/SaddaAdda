@@ -3,7 +3,7 @@ package com.emiadda.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding;
 
@@ -22,9 +22,9 @@ public class GetProductsByCategory extends AsyncTask<String, Void, String> {
 
     private int requestCode;
     private int responseCode;
-    private ServerResponseInterface serverResponseInterface;
+    private ServerResponseSubscriber serverResponseInterface;
 
-    public GetProductsByCategory(ServerResponseInterface serverResponseInterface, int requestCode) {
+    public GetProductsByCategory(ServerResponseSubscriber serverResponseInterface, int requestCode) {
         this.requestCode =requestCode;
         this.serverResponseInterface = serverResponseInterface;
     }
@@ -48,11 +48,11 @@ public class GetProductsByCategory extends AsyncTask<String, Void, String> {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            responseCode = ServerResponseInterface.RESPONSE_CODE_OK;
+            responseCode = ServerResponseSubscriber.RESPONSE_CODE_OK;
             return abmServerBinding.getProductsByCategory(params[0]);
         }
         catch (Exception e) {
-            requestCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
+            requestCode = ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION;
             Log.e(TAG, e.getMessage(), e);
         }
         return null;
@@ -61,7 +61,7 @@ public class GetProductsByCategory extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if(serverResponseInterface != null) {
-            this.serverResponseInterface.responseReceived(s, requestCode, responseCode);
+            this.serverResponseInterface.responseReceived(s, requestCode, responseCode, 0);
         }
     }
 }

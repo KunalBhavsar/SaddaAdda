@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.asynctasks.LoginAsync;
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ import org.json.JSONObject;
 /**
  * Created by Shraddha on 30/6/16.
  */
-public class LoginActivity extends ActionBarActivity implements View.OnClickListener, ServerResponseInterface {
+public class LoginActivity extends ActionBarActivity implements View.OnClickListener, ServerResponseSubscriber {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     private static final int REQUEST_CODE_LOGIN = 11;
@@ -85,12 +85,12 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode) {
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode) {
         if(requestCode == REQUEST_CODE_LOGIN) {
             if(progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+            if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
                 Log.i(TAG, "received response : "+response);
                 try {
                     CustomerModel customerModel = new Gson().fromJson(new JSONObject(response).toString(), CustomerModel.class);
@@ -110,7 +110,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 }
 
             }
-            else if(responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION){
+            else if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION){
                 Toast.makeText(mActivityContext, "Error in logging in", Toast.LENGTH_SHORT).show();
             }
         }

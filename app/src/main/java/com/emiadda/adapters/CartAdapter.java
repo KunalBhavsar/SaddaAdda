@@ -11,10 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.asynctasks.GetProductImageAsync;
-import com.emiadda.core.EACategory;
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.asynctasks.ServerRequestProcessingThread;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Created by Shraddha on 16/3/16.
  */
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> implements ServerResponseInterface {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> implements ServerResponseSubscriber {
 
     private static final String TAG = CartAdapter.class.getSimpleName();
     private Context context;
@@ -37,6 +38,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     public CartAdapter(Activity context) {
         this.context = context;
         cartList = new ArrayList<>();
+        ((EAApplication)context.getApplicationContext()).attach(this);
     }
 
     public void addProduct(List<ProductModel> productModelList) {
@@ -70,7 +72,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         Log.i(TAG, "Product model image "+productModel.getImage() + " and is laoding image " + productModel.isLoadingImage());
         if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
             productModel.setLoadingImage(true);
-            new GetProductImageAsync(CartAdapter.this, Integer.parseInt(productModel.getProduct_id())).execute(productModel.getProduct_id());
+            ((EAApplication)context.getApplicationContext()).addToServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE, Integer.parseInt(productModel.getProduct_id()), true, productModel.getProduct_id());
         }
         else {
             Picasso.with(context).load(productModel.getImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);
@@ -88,24 +90,31 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode) {
-        Log.i(TAG, "Received image download response "+response);
-        if(responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
-            for (ProductModel product : cartList) {
-                if(product.getProduct_id().equals(String.valueOf(requestCode))) {
-                    try {
-                        ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
-                        }.getType());
-                        if(productImageModel != null) {
-                            product.setImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ","%20"));
-                            notifyDataSetChanged();
+    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode) {
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Received image download response "+response);
+                if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
+                    if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
+                        for (ProductModel product : cartList) {
+                            if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
+                                try {
+                                    ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
+                                    }.getType());
+                                    if (productImageModel != null) {
+                                        product.setImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
+                                        notifyDataSetChanged();
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.getMessage(), e);
+                                }
+                            }
                         }
-                    }catch (Exception e) {
-                        Log.e(TAG, e.getMessage(), e);
                     }
                 }
             }
-        }
+        });
     }
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView txtBrandName, txtSize, txtQunt, txtAmount;

@@ -3,7 +3,6 @@ package com.emiadda.ui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,11 +21,8 @@ import android.widget.Toast;
 import com.emiadda.R;
 import com.emiadda.adapters.SubCategoryAdapter;
 import com.emiadda.asynctasks.GetCategoriesAsync;
-import com.emiadda.asynctasks.GetProductByProductId;
-import com.emiadda.asynctasks.GetProductImageAsync;
-import com.emiadda.asynctasks.GetProductsByCategory;
 import com.emiadda.core.EACategory;
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CategoryModel;
 import com.google.gson.Gson;
@@ -35,7 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubCategoryActivity extends AppCompatActivity implements ServerResponseInterface {
+public class SubCategoryActivity extends AppCompatActivity implements ServerResponseSubscriber {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GET_CATEGORIES_REQUEST_CODE = 12;
 
@@ -133,13 +129,13 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode) {
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode) {
         Log.i(TAG, "Response of get categories : " + response);
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
         if (requestCode == GET_CATEGORIES_REQUEST_CODE) {
-            if (responseCode == ServerResponseInterface.RESPONSE_CODE_OK) {
+            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
                 Log.i(TAG, "received response : " + response);
                 if(!response.isEmpty()) {
                     List<CategoryModel> categoryModelList = new Gson().fromJson(response, new TypeToken<ArrayList<CategoryModel>>() {
@@ -156,7 +152,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                         }
                     }
                 }
-            } else if (responseCode == ServerResponseInterface.RESPONSE_CODE_EXCEPTION) {
+            } else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
                 Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
             }
         }

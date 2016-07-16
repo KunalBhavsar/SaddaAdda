@@ -3,7 +3,7 @@ package com.emiadda.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.wsdl.customerLogin.WBNCustomerloginBinding;
 import com.emiadda.wsdl.customerLogin.WBNExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.customerLogin.WBNparams;
@@ -20,11 +20,11 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
     private static final String METHOD_NAME = "CustomerLogin";
     private static final String NAMESPACE = "http://www.mydevsystems.com";
 
-    private ServerResponseInterface serverResponseInterface;
+    private ServerResponseSubscriber serverResponseInterface;
     private int requestCode;
     private int responseCode;
 
-    public LoginAsync(ServerResponseInterface serverResponseInterface, int requestCode) {
+    public LoginAsync(ServerResponseSubscriber serverResponseInterface, int requestCode) {
         this.serverResponseInterface = serverResponseInterface;
         this.requestCode = requestCode;
     }
@@ -58,11 +58,11 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            responseCode = ServerResponseInterface.RESPONSE_CODE_OK;
+            responseCode = ServerResponseSubscriber.RESPONSE_CODE_OK;
             return vfwCustomerloginBinding.CustomerLogin(new WBNparams(request, soapEnvelope));
         }
         catch (Exception ex) {
-            responseCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
+            responseCode = ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION;
             Log.e(TAG, "Error: " + ex.getMessage(), ex);
         }
 
@@ -72,7 +72,7 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if(serverResponseInterface != null) {
-            serverResponseInterface.responseReceived(s, requestCode, responseCode);
+            serverResponseInterface.responseReceived(s, requestCode, responseCode, 0);
         }
     }
 }

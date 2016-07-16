@@ -3,7 +3,7 @@ package com.emiadda.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.emiadda.interafaces.ServerResponseInterface;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding;
 
@@ -21,9 +21,9 @@ public class GetCategoriesAsync extends AsyncTask<String, Void, String> {
 
     private int requestCode;
     private int responseCode;
-    private ServerResponseInterface serverResponseInterface;
+    private ServerResponseSubscriber serverResponseInterface;
 
-    public GetCategoriesAsync(ServerResponseInterface serverResponseInterface, int requestCode) {
+    public GetCategoriesAsync(ServerResponseSubscriber serverResponseInterface, int requestCode) {
         this.serverResponseInterface = serverResponseInterface;
         this.requestCode =requestCode;
     }
@@ -47,11 +47,11 @@ public class GetCategoriesAsync extends AsyncTask<String, Void, String> {
                 soapEnvelope.dotNet = false;
                 soapEnvelope.bodyOut = request;
 
-                responseCode = ServerResponseInterface.RESPONSE_CODE_OK;
+                responseCode = ServerResponseSubscriber.RESPONSE_CODE_OK;
                 return VOKServerBinding.getCategories(params[0]);
         }
         catch (Exception e) {
-            requestCode = ServerResponseInterface.RESPONSE_CODE_EXCEPTION;
+            responseCode = ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION;
             Log.e(TAG, e.getMessage(), e);
         }
         return null;
@@ -60,7 +60,7 @@ public class GetCategoriesAsync extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if (serverResponseInterface != null) {
-            serverResponseInterface.responseReceived(s, requestCode, responseCode);
+            serverResponseInterface.responseReceived(s, requestCode, responseCode, 0);
         }
     }
 }
