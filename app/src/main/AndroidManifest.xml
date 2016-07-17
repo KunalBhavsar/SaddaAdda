@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.emiadda"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-sdk tools:overrideLibrary="com.balysv.materialripple" />
 
     <application
         android:name=".EAApplication"
@@ -51,10 +53,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".ui.MakePaymentActivity"
+        <activity
+            android:name=".ui.MakePaymentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".ui.SplashActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/AppTheme.NoActionBar"
-                  android:windowSoftInputMode="stateHidden"/>
+                  android:windowSoftInputMode="stateHidden">
+        </activity>
     </application>
 
 </manifest>

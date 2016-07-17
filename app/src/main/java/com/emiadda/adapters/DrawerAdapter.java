@@ -126,6 +126,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     EACategory eaCategory = categoryList.get(getAdapterPosition());
                     Intent intent = new Intent(context, SubCategoryActivity.class);
                     intent.putExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, eaCategory.getId());
+                    intent.putExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_NAME, eaCategory.getCategoryName().replaceAll("&amp;","&"));
                     context.startActivity(intent);
                 }
             });

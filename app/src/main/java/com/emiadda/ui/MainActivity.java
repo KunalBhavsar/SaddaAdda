@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.adapters.CategoryAdapter;
@@ -56,15 +58,15 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ServerResponseSubscriber {
+        implements ServerResponseSubscriber {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GET_CATEGORIES_REQUEST_CODE = 12;
     private static final int GET_SPECIAL_PRODUCTS = 13;
 
-    ProgressDialog progressDialog;
-    Activity mActivityContext;
-    Context mAppContext;
+    private ProgressDialog progressDialog;
+    private Activity mActivityContext;
+    private Context mAppContext;
 
     private NavigationView navigationView;
     private RecyclerView recyclerView;
@@ -91,12 +93,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ActionBar actionBar = getSupportActionBar();
 
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        View mCustomView = mInflater.inflate(R.layout.menu_layout, null);
-        //actionBar.setCustomView(mCustomView);
-        //actionBar.setDisplayShowCustomEnabled(true);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -135,7 +132,6 @@ public class MainActivity extends AppCompatActivity
                     finish();
                 }
             });
-            navigationView.setNavigationItemSelectedListener(this);
         }
         linSpecialProducts = (LinearLayout)findViewById(R.id.lin_special_product_list);
         specialProductHashmap = new HashMap<>();
@@ -235,24 +231,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_men) {
-            Intent intent = new Intent(MainActivity.this, ProductListActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_kids) {
-            Intent intent = new Intent(MainActivity.this, SubCategoryActivity.class);
-            startActivity(intent);
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     @Override
     public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode) {

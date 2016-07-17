@@ -6,12 +6,14 @@
 
     <color name="gray_transparent">#80484848</color>
     <color name="red_login">#DC1E28</color>
-    <color name="blue_login_btn">#18AFE6</color>
+    <color name="blue_login_btn">#5baee0</color>
+    <color name="blue_light">#95c9e9</color>
     <color name="light_gray">#E3E3E3</color>
     <color name="normal_gray">#808080</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="orange_btn_bg">#FF8C00</color>
+    <color name="orange_light">#fdb262</color>
     <color name="circular_image_bg">#BAB399</color>
     <color name="gray_product_bg">#d9d0d0</color>
     <color name="gray_dark">#545151</color>

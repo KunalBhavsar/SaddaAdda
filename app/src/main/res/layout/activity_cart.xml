@@ -176,8 +176,9 @@
                 android:layout_marginBottom="@dimen/_10dp"
                 android:layout_marginLeft="@dimen/_30dp"
                 android:layout_marginRight="@dimen/_30dp"
-                android:background="@drawable/orng_btn"
+                android:background="@drawable/ripple_orange"
                 android:text="PLACE ORDER"
+                style="?android:attr/buttonStyleSmall"
                 android:textColor="@color/white"/>
     </LinearLayout>
 

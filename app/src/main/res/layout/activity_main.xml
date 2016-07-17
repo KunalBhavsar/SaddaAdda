@@ -25,6 +25,7 @@
             <ImageView
                 android:id="@+id/txt_title"
                 android:layout_width="120dp"
+                android:transitionName="login"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:src="@drawable/logo"/>

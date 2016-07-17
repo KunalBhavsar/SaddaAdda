@@ -72,7 +72,7 @@ public class CategoryAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         EACategory eaCategory = (EACategory)getItem(position);
-        viewHolder.txtCategory.setText(eaCategory.getCategoryName().replaceAll("&amp;","&"));
+        viewHolder.txtCategory.setText(eaCategory.getCategoryName().replaceAll("&amp;","&").toUpperCase());
 
         String catName = eaCategory.getCategoryName().toLowerCase();
         //Set category image logic
