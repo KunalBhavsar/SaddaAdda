@@ -101,14 +101,20 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                     AppPreferences.getInstance().setAppOwnerData(customerModel);
 
                     Toast.makeText(mActivityContext, "Welcome "+customerModel.getFirstname(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        ImageView imageView = (ImageView) findViewById(R.id.img_logo);
-                        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivityContext,imageView,"login");
-                        startActivity(intent, activityOptionsCompat.toBundle());
-                    } else {
-                        startActivity(intent);
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                ImageView imageView = (ImageView) findViewById(R.id.img_logo);
+                                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivityContext,imageView,"login");
+                                startActivity(intent, activityOptionsCompat.toBundle());
+                            } else {
+                                startActivity(intent);
+                            }
+                        }
+                    });
+
                     finish();
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage(), e);
