@@ -3,17 +3,14 @@ package com.emiadda.ui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -101,21 +98,10 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                     AppPreferences.getInstance().setAppOwnerData(customerModel);
 
                     Toast.makeText(mActivityContext, "Welcome "+customerModel.getFirstname(), Toast.LENGTH_SHORT).show();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                ImageView imageView = (ImageView) findViewById(R.id.img_logo);
-                                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivityContext,imageView,"login");
-                                startActivity(intent, activityOptionsCompat.toBundle());
-                            } else {
-                                startActivity(intent);
-                            }
-                        }
-                    });
-
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
                     finish();
+
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage(), e);
                     boolean falseResponse = Boolean.getBoolean(response);

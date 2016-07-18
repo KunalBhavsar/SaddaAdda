@@ -93,14 +93,15 @@
             <TextView
                 android:id="@+id/txt_category_name"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_40dp"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/_40dp"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/lnr_sort"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/_5dp"
                 android:text="Men"
                 android:textColor="@color/blue_login_btn"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <LinearLayout android:id="@+id/lnr_sort"
                           android:layout_width="wrap_content"
