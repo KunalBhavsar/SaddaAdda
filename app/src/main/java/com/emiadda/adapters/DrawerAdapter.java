@@ -42,6 +42,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    public void resetCategories(List<EACategory> eaCategories) {
+        categoryList.clear();
+        categoryList.addAll(eaCategories);
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;

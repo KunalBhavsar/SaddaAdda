@@ -14,6 +14,7 @@ import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.asynctasks.GetProductImageAsync;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
+import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
@@ -70,7 +71,8 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         holder.txtPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
         if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
             productModel.setLoadingImage(true);
-            ((EAApplication)context.getApplicationContext()).addToServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE, Integer.parseInt(productModel.getProduct_id()), true, productModel.getProduct_id());
+            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
+                    Integer.parseInt(productModel.getProduct_id()), EAServerRequest.PRIORITY_LOW, productModel.getProduct_id());
         }
         else {
             Picasso.with(context).load(productModel.getImage()).fit().into(holder.imgProduct);

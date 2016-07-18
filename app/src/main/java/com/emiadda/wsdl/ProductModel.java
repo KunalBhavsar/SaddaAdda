@@ -63,8 +63,8 @@ public class ProductModel implements Serializable {
     private List<PaymentOptionModel> payment_options;
 
     private int numberOfSeletedItems;
-
     private boolean loadingImage;
+    private String actualImage;
 
     public String getProduct_id() {
         return product_id;
@@ -472,6 +472,14 @@ public class ProductModel implements Serializable {
 
     public void setPayment_options(List<PaymentOptionModel> payment_options) {
         this.payment_options = payment_options;
+    }
+
+    public String getActualImage() {
+        return actualImage;
+    }
+
+    public void setActualImage(String actualImage) {
+        this.actualImage = actualImage;
     }
 
     @Override

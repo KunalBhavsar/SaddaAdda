@@ -1,6 +1,7 @@
 package com.emiadda;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EAServerRequest;
@@ -20,14 +21,20 @@ public class EAApplication extends Application implements ServerRequestResponseO
 
     List<ServerResponseSubscriber> serverResponseInterfaces;
 
+    static Context mAppContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mAppContext = this;
         AppPreferences.init(this);
         ServerRequestProcessingThread.init(this);
         serverResponseInterfaces = new ArrayList<>();
     }
 
+    private static Context getInstance() {
+        return mAppContext;
+    }
 
     @Override
     public void attach(ServerResponseSubscriber serverResponseSubscriber) {
@@ -51,12 +58,19 @@ public class EAApplication extends Application implements ServerRequestResponseO
     }
 
     @Override
-    public void addToServerRequest(int requestCode, int extraRequestCode, boolean highPriority, String... params) {
-        EAServerRequest eaServerRequest = new EAServerRequest(requestCode, extraRequestCode, highPriority);
+    public void addToServerRequest(int requestCode, int extraRequestCode, int priority, String... params) {
+        EAServerRequest eaServerRequest = new EAServerRequest(requestCode, extraRequestCode, priority);
         if(params.length > 0) {
             eaServerRequest.setParams(params);
         }
         ServerRequestProcessingThread.getInstance().addServerRequeset(eaServerRequest);
     }
 
+    public static void makeServerRequest(int requestCode, int extraRequestCode, int priority, String... params) {
+        EAServerRequest eaServerRequest = new EAServerRequest(requestCode, extraRequestCode, priority);
+        if(params.length > 0) {
+            eaServerRequest.setParams(params);
+        }
+        ServerRequestProcessingThread.getInstance().addServerRequeset(eaServerRequest);
+    }
 }

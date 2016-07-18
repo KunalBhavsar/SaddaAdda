@@ -14,8 +14,9 @@ import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Comparator;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Created by Kunal on 16/07/16.
@@ -38,12 +39,17 @@ public class ServerRequestProcessingThread extends Thread {
 
     private static ServerRequestProcessingThread thread;
     private EAApplication context;
-    BlockingQueue<EAServerRequest> serverReuests;
+    BlockingQueue<EAServerRequest> serverRequests;
 
 
     public ServerRequestProcessingThread(EAApplication context) {
         this.context = context;
-        serverReuests = new ArrayBlockingQueue<>(20);
+        serverRequests = new PriorityBlockingQueue<>(50, new Comparator<EAServerRequest>() {
+            @Override
+            public int compare(EAServerRequest lhs, EAServerRequest rhs) {
+                return Integer.valueOf(rhs.getPriority()).compareTo(lhs.getPriority());
+            }
+        });
     }
 
     public static void init(EAApplication context) {
@@ -59,9 +65,7 @@ public class ServerRequestProcessingThread extends Thread {
         if (shuttingDown || loggerTerminated) return;
 
         try {
-            if (serverRequest.isHighPriority()) {
-                serverReuests.put(serverRequest);
-            }
+            serverRequests.put(serverRequest);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             Log.e(TAG, e.getMessage(), e);
@@ -70,7 +74,7 @@ public class ServerRequestProcessingThread extends Thread {
 
     public void shutDown() throws InterruptedException {
         shuttingDown = true;
-        serverReuests.put(new EAServerRequest(SHUTDOWN_REQUEST_CODE, -1, true));
+        serverRequests.put(new EAServerRequest(SHUTDOWN_REQUEST_CODE, -1, EAServerRequest.PRIORITY_HIGH));
     }
 
     private volatile boolean shuttingDown, loggerTerminated;
@@ -79,7 +83,7 @@ public class ServerRequestProcessingThread extends Thread {
     public void run() {
         try {
             EAServerRequest item;
-            while ((item = serverReuests.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
+            while ((item = serverRequests.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
                 switch (item.getRequestCode()) {
                     case REQUEST_CODE_GET_CATEGORY :
                         getCategories(item);

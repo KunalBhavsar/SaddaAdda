@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.emiadda.R;
 import com.emiadda.core.EACategory;
 import com.emiadda.views.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,38 +21,54 @@ import java.util.List;
 /**
  * Created by Kunal on 05/07/16.
  */
-public class CategoryAdapter extends BaseAdapter {
-    private List<EACategory> categories;
+public class CategoryAdapter extends BaseAdapter implements Filterable {
+    private List<EACategory> masterCategories;
+    private List<EACategory> filteredCategories;
     private Context context;
+    private CategoryFilter categoryFilter;
+    private String filterString;
 
     public CategoryAdapter(Context context) {
         this.context = context;
-        categories = new ArrayList<>();
+        masterCategories = new ArrayList<>();
+        filteredCategories = new ArrayList<>();
+        categoryFilter = new CategoryFilter();
     }
 
     public void addCategory(EACategory eaCategory) {
         if(eaCategory != null) {
-            categories.add(eaCategory);
-            notifyDataSetChanged();
+            masterCategories.add(eaCategory);
+            if(filterString != null && !filterString.isEmpty()) {
+                getFilter().filter(filterString);
+            }
+            else {
+                notifyDataSetChanged();
+            }
         }
     }
 
-    public void addCategories(List<EACategory> eaCategories) {
+    public void resetCategories(List<EACategory> eaCategories) {
         if(eaCategories != null) {
-            categories.clear();
-            this.categories.addAll(eaCategories);
-            notifyDataSetChanged();
+            masterCategories.clear();
+            masterCategories.addAll(eaCategories);
+            if(filterString != null && !filterString.isEmpty()) {
+                getFilter().filter(filterString);
+            }
+            else {
+                filteredCategories.addAll(masterCategories);
+                notifyDataSetChanged();
+            }
         }
     }
 
     @Override
     public int getCount() {
-        return categories.size();
+        return filteredCategories.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return categories.get(position);
+        return filteredCategories.get(position);
     }
 
     @Override
@@ -76,40 +94,78 @@ public class CategoryAdapter extends BaseAdapter {
 
         String catName = eaCategory.getCategoryName().toLowerCase();
         //Set category image logic
+        int identifier;
         if(catName.equalsIgnoreCase("women")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("women", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.equalsIgnoreCase("men")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("men", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.equalsIgnoreCase("fashion")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("fashion", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.contains("jew")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("jwellery", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.contains("health")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("health", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.contains("home")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("home_living", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.contains("hair")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("hair", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.contains("food")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("food", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
-        }else if(catName.contains("hit")) {
-            Drawable drawable = context.getResources().getDrawable(context.getResources().getIdentifier("elec", "drawable", context.getPackageName()));
-            viewHolder.imgCategory.setImageDrawable(drawable);
+            identifier = context.getResources().getIdentifier("women", "drawable", context.getPackageName());
         }
+        else if(catName.equalsIgnoreCase("men")) {
+            identifier = context.getResources().getIdentifier("men", "drawable", context.getPackageName());
+        }
+        else if(catName.equalsIgnoreCase("fashion")) {
+            identifier = context.getResources().getIdentifier("fashion", "drawable", context.getPackageName());
+        }
+        else if(catName.contains("jew")) {
+            identifier = context.getResources().getIdentifier("jwellery", "drawable", context.getPackageName());
+        }
+        else if(catName.contains("health")) {
+            identifier = context.getResources().getIdentifier("health", "drawable", context.getPackageName());
+        }
+        else if(catName.contains("home")) {
+            identifier = context.getResources().getIdentifier("home_living", "drawable", context.getPackageName());
+        }
+        else if(catName.contains("hair")) {
+            identifier = context.getResources().getIdentifier("hair", "drawable", context.getPackageName());
+        }
+        else if(catName.contains("food")) {
+            identifier = context.getResources().getIdentifier("food", "drawable", context.getPackageName());
+        }
+        else if(catName.contains("hit")) {
+            identifier = context.getResources().getIdentifier("elec", "drawable", context.getPackageName());
+        }
+        else {
+            identifier = R.drawable.placeholder_product;
+        }
+        Picasso.with(context).load(identifier).into(viewHolder.imgCategory);
 
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return categoryFilter;
     }
 
     class ViewHolder {
         CircularImageView imgCategory;
         TextView txtCategory;
+    }
+
+    class CategoryFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filterString = constraint.toString().toLowerCase();
+
+            final List<EACategory> list = masterCategories;
+            final ArrayList<EACategory> nlist = new ArrayList<>();
+
+            for (EACategory eaCategory : list) {
+                if(eaCategory.getCategoryName().toLowerCase().contains(filterString)) {
+                    nlist.add(eaCategory);
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredCategories = (ArrayList<EACategory>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }

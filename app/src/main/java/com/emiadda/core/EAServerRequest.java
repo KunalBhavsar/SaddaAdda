@@ -7,15 +7,20 @@ import java.util.List;
  * Created by Kunal on 16/07/16.
  */
 public class EAServerRequest {
+
+    public static final int PRIORITY_HIGH = 10;
+    public static final int PRIORITY_MEDIUM = 5;
+    public static final int PRIORITY_LOW = 1;
+
     int requestCode;
     int extraRequestCode;
-    boolean highPriority;
+    int priority;
     List<String> params;
 
-    public EAServerRequest(int requestCode, int extraRequestCode, boolean highPriority) {
+    public EAServerRequest(int requestCode, int extraRequestCode, int priority) {
         this.requestCode = requestCode;
         this.extraRequestCode = extraRequestCode;
-        this.highPriority = highPriority;
+        this.priority = priority;
     }
 
     public int getRequestCode() {
@@ -34,12 +39,12 @@ public class EAServerRequest {
         this.extraRequestCode = extraRequestCode;
     }
 
-    public boolean isHighPriority() {
-        return highPriority;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setHighPriority(boolean highPriority) {
-        this.highPriority = highPriority;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public List<String> getParams() {

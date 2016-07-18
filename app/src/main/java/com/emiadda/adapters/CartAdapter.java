@@ -15,6 +15,7 @@ import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.asynctasks.GetProductImageAsync;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
+import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.ProductImageModel;
@@ -72,7 +73,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         Log.i(TAG, "Product model image "+productModel.getImage() + " and is laoding image " + productModel.isLoadingImage());
         if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
             productModel.setLoadingImage(true);
-            ((EAApplication)context.getApplicationContext()).addToServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE, Integer.parseInt(productModel.getProduct_id()), true, productModel.getProduct_id());
+            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
+                    Integer.parseInt(productModel.getProduct_id()), EAServerRequest.PRIORITY_LOW, productModel.getProduct_id());
         }
         else {
             Picasso.with(context).load(productModel.getImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);

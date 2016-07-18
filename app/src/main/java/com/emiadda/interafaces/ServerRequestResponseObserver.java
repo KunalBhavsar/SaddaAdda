@@ -8,5 +8,5 @@ public interface ServerRequestResponseObserver {
     void dettach(ServerResponseSubscriber serverResponseSubscriber);
 
     void notifyServerResponse(String response, int requestCode, int responseCode, int extraRequestId);
-    void addToServerRequest(int requestCode, int extraRequestCode, boolean highPriority, String... params);
+    void addToServerRequest(int requestCode, int extraRequestCode, int priority, String... params);
 }
