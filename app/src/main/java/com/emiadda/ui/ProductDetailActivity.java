@@ -65,6 +65,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     private boolean inForeground;
     private boolean dismissProgress;
     private RelativeLayout rltProgress;
+    private String selectedProductName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,6 +114,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
         }
 
         productId = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID);
+        selectedProductName = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME);
         showProgress(true);
         ((EAApplication) mAppContext).attach(this);
 
@@ -261,7 +263,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mActivityContext, "Error in fetching product details", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivityContext, selectedProductName + " data not available", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

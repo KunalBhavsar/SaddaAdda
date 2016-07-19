@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout linSpecialProducts;
     private HashMap<String, ProductModel> specialProductHashmap;
     private boolean inForeground = true;
-    private boolean dismissLoading = true;
+    private boolean dismissLoading;
     private RelativeLayout rltProgress;
 
     @Override
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode, String activityTag) {
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
         if(!TAG.equals(activityTag)) {
             return;
         }

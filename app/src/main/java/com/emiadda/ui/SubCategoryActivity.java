@@ -183,7 +183,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(mAppContext, "Error in fetching " + categorySelected + " data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mAppContext, categorySelected + " data not available", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     });

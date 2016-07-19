@@ -61,6 +61,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
     private boolean inForeground = true;
     private boolean dismissLoading;
     private RelativeLayout rltProgress;
+    private String selectedSubcategoryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
             public void onItemClick(ProductModel item) {
                 Intent intent = new Intent(mActivityContext, ProductDetailActivity.class);
                 intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, item.getProduct_id());
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME, item.getName());
                 mActivityContext.startActivity(intent);
             }
         });
@@ -107,7 +109,10 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productGridAdapter);
 
-        ((TextView) findViewById(R.id.txt_category_name)).setText(getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME).replaceAll("&amp;", "&"));
+        selectedSubcategoryName = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME).replaceAll("&amp;", "&");
+        TextView  subcategoryTextView = (TextView) findViewById(R.id.txt_category_name);
+        if(subcategoryTextView != null)
+        subcategoryTextView.setText(selectedSubcategoryName);
 
         edtSearch = (EditText) findViewById(R.id.edt_search);
         edtSearch.addTextChangedListener(new TextWatcher() {
@@ -269,7 +274,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(mAppContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mAppContext, selectedSubcategoryName + " data not available", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
