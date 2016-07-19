@@ -250,16 +250,6 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
-        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
-        fragTransaction.detach(currentFragment);
-        fragTransaction.attach(currentFragment);
-        fragTransaction.commit();
-    }
-
-    @Override
     public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
         if (!TAG.equals(activityTag)) {
             return;
@@ -347,7 +337,11 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
             showProgress(false);
             dismissProgress = false;
         }
-
+        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
         setProductDetails();
     }
 

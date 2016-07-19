@@ -215,6 +215,11 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
             productModel.setLoadingImage(false);
         }
         updateProductListUI();
+        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
     }
 
     @Override
@@ -346,16 +351,6 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                 outRect.right = mVerticalSpaceHeight;
             }
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
-        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
-        fragTransaction.detach(currentFragment);
-        fragTransaction.attach(currentFragment);
-        fragTransaction.commit();
     }
 
     @Override
