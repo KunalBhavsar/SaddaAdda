@@ -15,6 +15,7 @@ public class EAServerRequest {
     int requestCode;
     int extraRequestCode;
     int priority;
+    String activityTag;
     List<String> params;
 
     public EAServerRequest(int requestCode, int extraRequestCode, int priority) {
@@ -49,6 +50,14 @@ public class EAServerRequest {
 
     public List<String> getParams() {
         return params;
+    }
+
+    public String getActivityTag() {
+        return activityTag;
+    }
+
+    public void setActivityTag(String activityTag) {
+        this.activityTag = activityTag;
     }
 
     public void setParams(String... params) {

@@ -13,9 +13,7 @@ import android.widget.TextView;
 
 import com.emiadda.EAApplication;
 import com.emiadda.R;
-import com.emiadda.asynctasks.GetProductImageAsync;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
-import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.ProductImageModel;
@@ -44,11 +42,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
 
     public void addProduct(List<ProductModel> productModelList) {
         if(productModelList != null) {
-            for (ProductModel productModel : productModelList) {
-                productModel.setImage(null);
-                productModel.setLoadingImage(false);
-            }
-            cartList = productModelList;
+            cartList.addAll(productModelList);
             notifyDataSetChanged();
         }
     }
@@ -70,15 +64,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         holder.txtQunt.setText(String.valueOf(productModel.getNumberOfSeletedItems()));
         holder.txtAmount.setText(String.valueOf(productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice())));
 
-        Log.i(TAG, "Product model image "+productModel.getImage() + " and is laoding image " + productModel.isLoadingImage());
-        if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
-            productModel.setLoadingImage(true);
-            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
-                    Integer.parseInt(productModel.getProduct_id()), EAServerRequest.PRIORITY_LOW, productModel.getProduct_id());
-        }
-        else {
-            Picasso.with(context).load(productModel.getImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);
-        }
+        Picasso.with(context).load(productModel.getActualImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);
 
         holder.btnRemove.setTag(productModel.getProduct_id());
     }
@@ -92,7 +78,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     }
 
     @Override
-    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode) {
+    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode, String activityTag) {
+        if(!TAG.equals(activityTag)) {
+            return;
+        }
+
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {

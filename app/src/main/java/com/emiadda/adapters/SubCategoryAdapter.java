@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,31 +20,49 @@ import java.util.List;
 /**
  * Created by Shraddha on 16/3/16.
  */
-public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.ViewHolder> {
+public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.ViewHolder> implements Filterable {
 
     private static final String TAG = SubCategoryAdapter.class.getSimpleName();
     private Context context;
-    public List<EACategory> categories;
+    private List<EACategory> masterCategories;
+    private List<EACategory> filteredCategories;
+    private SubCategoryFilter categoryFilter;
+    private String filterString;
     private OnItemClickListener mItemClickListener;
 
     public SubCategoryAdapter(Activity context, OnItemClickListener listener) {
         this.context = context;
-        categories = new ArrayList<>();
+        masterCategories = new ArrayList<>();
+        filteredCategories = new ArrayList<>();
+        categoryFilter = new SubCategoryFilter();
         mItemClickListener = listener;
     }
 
     public void addCategory(EACategory eaCategory) {
         if(eaCategory != null) {
-            categories.add(eaCategory);
-            notifyDataSetChanged();
+            masterCategories.add(eaCategory);
+            if(filterString != null && !filterString.isEmpty()) {
+                getFilter().filter(filterString);
+            }
+            else {
+                filteredCategories.add(eaCategory);
+                notifyDataSetChanged();
+            }
         }
     }
 
-    public void addCategories(List<EACategory> eaCategories) {
+    public void resetCategories(List<EACategory> eaCategories) {
         if(eaCategories != null) {
-            categories.clear();
-            this.categories.addAll(eaCategories);
-            notifyDataSetChanged();
+            masterCategories.clear();
+            masterCategories.addAll(eaCategories);
+            filteredCategories.clear();
+            if(filterString != null && !filterString.trim().isEmpty()) {
+                getFilter().filter(filterString);
+            }
+            else {
+                filteredCategories.addAll(masterCategories);
+                notifyDataSetChanged();
+            }
         }
     }
 
@@ -55,7 +75,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        EACategory eaCategory = categories.get(position);
+        EACategory eaCategory = filteredCategories.get(position);
         holder.bind(eaCategory, mItemClickListener);
         holder.txtName.setText(eaCategory.getCategoryName().replaceAll("&amp;","&"));
         //set image logic
@@ -63,7 +83,12 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     @Override
     public int getItemCount() {
-        return categories.size();
+        return filteredCategories.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return categoryFilter;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -87,6 +112,35 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     public interface OnItemClickListener {
         void onItemClick(EACategory item);
+    }
+
+    class SubCategoryFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filterString = constraint.toString().toLowerCase();
+
+            final List<EACategory> list = masterCategories;
+            final ArrayList<EACategory> nlist = new ArrayList<>();
+
+            for (EACategory eaCategory : list) {
+                if(eaCategory.getCategoryName().toLowerCase().contains(filterString)) {
+                    nlist.add(eaCategory);
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredCategories = (ArrayList<EACategory>) results.values;
+            notifyDataSetChanged();
+        }
     }
 
 }

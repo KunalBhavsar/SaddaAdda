@@ -5,7 +5,8 @@ package com.emiadda.interafaces;
  */
 public interface ServerResponseSubscriber {
     int RESPONSE_CODE_OK = 1;
+    int RESPONSE_CODE_CANCEL = 3;
     int RESPONSE_CODE_EXCEPTION = 2;
 
-    void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode);
+    void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag);
 }

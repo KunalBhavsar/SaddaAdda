@@ -1,28 +1,36 @@
 package com.emiadda.ui;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.adapters.CartAdapter;
-import com.emiadda.adapters.ProductGridAdapter;
+import com.emiadda.asynctasks.ServerRequestProcessingThread;
+import com.emiadda.core.EAServerRequest;
+import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity implements ServerResponseSubscriber {
 
+    private static final String TAG = CartActivity.class.getSimpleName();
 
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
@@ -32,11 +40,17 @@ public class CartActivity extends AppCompatActivity {
     private double subTotal;
     private double deliveryCharges;
     private double taxes;
+    private List<ProductModel> masterProductModelList;
+    private boolean inForeground;
+    private Context mAppContext;
+    private RelativeLayout rltProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        mAppContext = getApplicationContext();
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -52,10 +66,12 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(cartAdapter);
 
-        List<ProductModel> productModelList = AppPreferences.getInstance().getCartList();
-        cartAdapter.addProduct(productModelList);
+        rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
 
-        for (ProductModel productModel : productModelList) {
+        masterProductModelList = AppPreferences.getInstance().getCartList();
+        cartAdapter.addProduct(masterProductModelList);
+
+        for (ProductModel productModel : masterProductModelList) {
             subTotal = productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice());
         }
 
@@ -67,6 +83,8 @@ public class CartActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.txt_taxes)).setText(String.valueOf(taxes));
         ((TextView)findViewById(R.id.txt_total)).setText(String.valueOf(subTotal + deliveryCharges + taxes));
 
+        ((EAApplication)mAppContext).attach(this);
+
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +92,57 @@ public class CartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void showProgress(final boolean visibile) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(visibile) {
+                    rltProgress.setVisibility(View.VISIBLE);
+                }
+                else {
+                    rltProgress.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ((EAApplication)mAppContext).attach(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ((EAApplication)mAppContext).attach(this);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        inForeground = true;
+        //Reset is downloading status
+        for (ProductModel productModel : masterProductModelList) {
+            if(productModel.getActualImage() == null || productModel.getActualImage().isEmpty()) {
+                productModel.setLoadingImage(false);
+            }
+        }
+        for (ProductModel productModel : masterProductModelList) {
+            if((productModel.getActualImage() == null || productModel.getActualImage().isEmpty()) && !productModel.isLoadingImage()) {
+                productModel.setLoadingImage(true);
+                EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
+                        Integer.parseInt(productModel.getProduct_id()), EAServerRequest.PRIORITY_LOW, TAG, productModel.getProduct_id());
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        inForeground = false;
+        super.onPause();
     }
 
     @Override
@@ -85,5 +154,41 @@ public class CartActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+        if(!TAG.equals(activityTag)) {
+            return;
+        }
+
+        Log.i(TAG, "Received image download response "+response);
+        if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
+            if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
+                for (ProductModel product : masterProductModelList) {
+                    if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
+                        try {
+                            ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
+                            }.getType());
+                            if (productImageModel != null) {
+                                product.setActualImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
+                                AppPreferences.getInstance().removeProductFromCartList(product);
+                                AppPreferences.getInstance().addProductToCartList(product);
+                                if(inForeground) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            cartAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage(), e);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

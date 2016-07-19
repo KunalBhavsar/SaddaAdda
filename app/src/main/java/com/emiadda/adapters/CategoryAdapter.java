@@ -42,6 +42,7 @@ public class CategoryAdapter extends BaseAdapter implements Filterable {
                 getFilter().filter(filterString);
             }
             else {
+                filteredCategories.add(eaCategory);
                 notifyDataSetChanged();
             }
         }
@@ -50,6 +51,7 @@ public class CategoryAdapter extends BaseAdapter implements Filterable {
     public void resetCategories(List<EACategory> eaCategories) {
         if(eaCategories != null) {
             masterCategories.clear();
+            filteredCategories.clear();
             masterCategories.addAll(eaCategories);
             if(filterString != null && !filterString.isEmpty()) {
                 getFilter().filter(filterString);
@@ -125,7 +127,7 @@ public class CategoryAdapter extends BaseAdapter implements Filterable {
         else {
             identifier = R.drawable.placeholder_product;
         }
-        Picasso.with(context).load(identifier).into(viewHolder.imgCategory);
+        Picasso.with(context).load(identifier).fit().into(viewHolder.imgCategory);
 
         return convertView;
     }

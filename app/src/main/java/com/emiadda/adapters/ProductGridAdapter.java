@@ -3,23 +3,16 @@ package com.emiadda.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.emiadda.EAApplication;
 import com.emiadda.R;
-import com.emiadda.asynctasks.GetProductImageAsync;
-import com.emiadda.asynctasks.ServerRequestProcessingThread;
-import com.emiadda.core.EAServerRequest;
-import com.emiadda.interafaces.ServerResponseSubscriber;
-import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -29,30 +22,38 @@ import java.util.List;
 /**
  * Created by Shraddha on 16/3/16.
  */
-public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.ViewHolder> implements ServerResponseSubscriber {
+public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.ViewHolder> implements Filterable {
 
     private static final String TAG = ProductGridAdapter.class.getSimpleName();
     private Context context;
-    private List<ProductModel> productList;
+    private List<ProductModel> masterProductList;
+    private List<ProductModel> filteredProductList;
     private OnItemClickListener mItemClickListener;
     private DecimalFormat formater = new DecimalFormat("#.##");
+    private String filterString;
+    private ProductGridFilter productGridFilter;
 
     public ProductGridAdapter(Activity context, OnItemClickListener listener) {
         this.context = context;
-        productList = new ArrayList<>();
+        masterProductList = new ArrayList<>();
+        filteredProductList = new ArrayList<>();
         this.mItemClickListener = listener;
-        ((EAApplication)context.getApplicationContext()).attach(this);
+        productGridFilter = new ProductGridFilter();
     }
 
-    public void setProducts(List<ProductModel> productList) {
-        this.productList = productList;
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        ((EAApplication)context.getApplicationContext()).dettach(this);
-        super.onDetachedFromRecyclerView(recyclerView);
+    public void resetProducts(List<ProductModel> productList) {
+        if(productList != null) {
+            masterProductList.clear();
+            filteredProductList.clear();
+            masterProductList.addAll(productList);
+            if(filterString != null && !filterString.isEmpty()) {
+                getFilter().filter(filterString);
+            }
+            else {
+                filteredProductList.addAll(masterProductList);
+                notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -64,52 +65,16 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        ProductModel productModel = productList.get(position);
+        ProductModel productModel = filteredProductList.get(position);
         holder.bind(productModel, mItemClickListener);
         holder.txtProductName.setText(productModel.getName().replaceAll("&amp;", "&"));
         holder.txtPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
-        if((productModel.getImage() == null || productModel.getImage().isEmpty()) && !productModel.isLoadingImage()) {
-            productModel.setLoadingImage(true);
-            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
-                    Integer.parseInt(productModel.getProduct_id()), EAServerRequest.PRIORITY_LOW, productModel.getProduct_id());
-        }
-        else {
-            Picasso.with(context).load(productModel.getImage()).fit().into(holder.imgProduct);
-        }
+        Picasso.with(context).load(productModel.getActualImage()).placeholder(R.drawable.placeholder_product).fit().into(holder.imgProduct);
     }
 
     @Override
     public int getItemCount() {
-        return productList.size();
-    }
-
-    @Override
-    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode) {
-        ((Activity)context).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "Received image download response "+response);
-                if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
-                    if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-                        for (ProductModel product : productList) {
-                            if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
-                                try {
-                                    ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
-                                    }.getType());
-                                    if (productImageModel != null) {
-                                        product.setImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
-                                        notifyDataSetChanged();
-                                    }
-                                } catch (Exception e) {
-                                    Log.e(TAG, e.getMessage(), e);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        return filteredProductList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -137,4 +102,39 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     public interface OnItemClickListener {
         void onItemClick(ProductModel item);
     }
+
+    @Override
+    public Filter getFilter() {
+        return productGridFilter;
+    }
+
+    public class ProductGridFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filterString = constraint.toString().toLowerCase();
+
+            final List<ProductModel> list = masterProductList;
+            final ArrayList<ProductModel> nlist = new ArrayList<>();
+
+            for (ProductModel productModel : list) {
+                if(productModel.getName().toLowerCase().contains(filterString)) {
+                    nlist.add(productModel);
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredProductList = (ArrayList<ProductModel>) results.values;
+            notifyDataSetChanged();
+        }
+    }
+
 }

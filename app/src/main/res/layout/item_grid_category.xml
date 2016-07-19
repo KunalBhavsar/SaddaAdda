@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="110dp"
-    android:layout_gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <com.emiadda.views.CircularImageView
-        android:id="@+id/img_category"
-        android:layout_width="@dimen/_70dp"
-        android:layout_height="@dimen/_70dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/_5dp"
-        android:background="@color/white"
-        android:scaleType="fitXY"
-        app:civ_border="true"
-        app:civ_borderColor="@color/normal_gray"
-        app:civ_borderWidth="2dp" />
+    <RelativeLayout
+        android:layout_width="@dimen/_120dp"
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/txt_category"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/img_category"
-        android:gravity="center_horizontal"
-        android:padding="@dimen/_5dp"
-        android:text="MEN"
-        android:textColor="@color/blue_login_btn"
-        android:textSize="14sp" />
+        <com.emiadda.views.CircularImageView
+            android:id="@+id/img_category"
+            android:layout_width="@dimen/_70dp"
+            android:layout_height="@dimen/_70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/_5dp"
+            android:background="@color/white"
+            android:scaleType="fitXY"
+            app:civ_border="true"
+            app:civ_borderColor="@color/normal_gray"
+            app:civ_borderWidth="2dp" />
+
+        <TextView
+            android:id="@+id/txt_category"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/img_category"
+            android:gravity="center_horizontal"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="@dimen/_5dp"
+            android:text="MEN"
+            android:textColor="@color/blue_login_btn"
+            android:textSize="12sp" />
+    </RelativeLayout>
 </RelativeLayout>

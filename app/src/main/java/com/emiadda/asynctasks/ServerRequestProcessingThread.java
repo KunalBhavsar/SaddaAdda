@@ -83,23 +83,28 @@ public class ServerRequestProcessingThread extends Thread {
     public void run() {
         try {
             EAServerRequest item;
-            while ((item = serverRequests.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
-                switch (item.getRequestCode()) {
-                    case REQUEST_CODE_GET_CATEGORY :
-                        getCategories(item);
-                        break;
-                    case REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID :
-                        getProductByProductId(item);
-                        break;
-                    case REQUEST_CODE_GET_PRODUCT_IMAGE :
-                        getProductImage(item);
-                        break;
-                    case REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY :
-                        getProductByCategory(item);
-                        break;
-                    case REQUEST_CODE_GET_SPECIAL_PRODUCTS :
-                        getSpecialProducts(item);
-                        break;
+            while (true) {
+                if ((item = serverRequests.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
+                    switch (item.getRequestCode()) {
+                        case REQUEST_CODE_GET_CATEGORY:
+                            getCategories(item);
+                            break;
+                        case REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID:
+                            getProductByProductId(item);
+                            break;
+                        case REQUEST_CODE_GET_PRODUCT_IMAGE:
+                            getProductImage(item);
+                            break;
+                        case REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY:
+                            getProductByCategory(item);
+                            break;
+                        case REQUEST_CODE_GET_SPECIAL_PRODUCTS:
+                            getSpecialProducts(item);
+                            break;
+                    }
+                }
+                else {
+                    break;
                 }
             }
         }
@@ -131,16 +136,19 @@ public class ServerRequestProcessingThread extends Thread {
 
             String response = VOKServerBinding.getCategories(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
             if(response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getExtraRequestCode());
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            }
+            else {
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getExtraRequestCode());
+            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
         }
     }
 
-    private void getProductByProductId(EAServerRequest serverRequest) {
+    private void getProductByProductId(EAServerRequest eaServerRequest) {
         try {
             //Using easysoap
             com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding vokServerBinding = new com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding();
@@ -158,14 +166,17 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response = vokServerBinding.getProductByProductID(serverRequest.getParams().size() > 0 ? serverRequest.getParams().get(0) : null);
+            String response = vokServerBinding.getProductByProductID(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
             if(response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, serverRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, serverRequest.getExtraRequestCode());
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            }
+            else {
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-            context.notifyServerResponse(null, serverRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, serverRequest.getExtraRequestCode());
+            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
         }
     }
 
@@ -189,11 +200,14 @@ public class ServerRequestProcessingThread extends Thread {
 
             String response = abmServerBinding.getProductImage(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
             if(response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getExtraRequestCode());
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            }
+            else {
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
         }
         catch (Exception e) {
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getExtraRequestCode());
+            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
     }
@@ -218,12 +232,15 @@ public class ServerRequestProcessingThread extends Thread {
 
             String response =  abmServerBinding.getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
             if(response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getExtraRequestCode());
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            }
+            else {
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
 
         }
         catch (Exception e) {
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getExtraRequestCode());
+            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
     }
@@ -248,11 +265,14 @@ public class ServerRequestProcessingThread extends Thread {
 
             String response =  abmServerBinding.getSpecials();
             if(response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getExtraRequestCode());
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            }
+            else {
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
         }
         catch (Exception e) {
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getExtraRequestCode());
+            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
     }

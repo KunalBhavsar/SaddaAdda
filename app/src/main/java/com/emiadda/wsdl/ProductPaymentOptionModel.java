@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Kunal on 13/07/16.
  */
-public class PaymentOptionModel implements Serializable {
+public class ProductPaymentOptionModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -18,12 +18,18 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +43,7 @@ import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
+import com.emiadda.views.WrapHeightGridView;
 import com.emiadda.wsdl.CategoryModel;
 import com.emiadda.wsdl.CustomerModel;
 import com.emiadda.wsdl.ProductImageModel;
@@ -57,7 +64,6 @@ public class MainActivity extends AppCompatActivity
     private static final int GET_CATEGORIES_REQUEST_CODE = 12;
     private static final int GET_SPECIAL_PRODUCTS = 13;
 
-    private ProgressDialog progressDialog;
     private Activity mActivityContext;
     private Context mAppContext;
 
@@ -67,13 +73,15 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private EditText edtSearch;
 
-    private GridView gridCategories;
+    private WrapHeightGridView gridCategories;
     private CategoryAdapter categoryAdapter;
-    private List<EACategory> masterList;
+    private List<EACategory> masterCategoryList;
 
     private LinearLayout linSpecialProducts;
     private HashMap<String, ProductModel> specialProductHashmap;
     private boolean inForeground = true;
+    private boolean dismissLoading = true;
+    private RelativeLayout rltProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +98,9 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         linSpecialProducts = (LinearLayout) findViewById(R.id.lin_special_product_list);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        gridCategories = (GridView) findViewById(R.id.grd_categories);
+        gridCategories = (WrapHeightGridView) findViewById(R.id.grd_categories);
         ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
+        rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -129,8 +138,7 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
-        progressDialog = new ProgressDialog(this);
-        masterList = new ArrayList<>();
+        masterCategoryList = new ArrayList<>();
         specialProductHashmap = new HashMap<>();
         categoryAdapter = new CategoryAdapter(this);
         drawerAdapter = new DrawerAdapter(this);
@@ -182,19 +190,36 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        progressDialog.setMessage("Loading..");
-        progressDialog.setCancelable(false);
-
-        progressDialog.show();
+        showProgress(true);
         ((EAApplication) mAppContext).attach(this);
-        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, String.valueOf(0));
-        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM);
+        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(0));
+        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
+    }
+
+    private void showProgress(final boolean visibile) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(visibile) {
+                    rltProgress.setVisibility(View.VISIBLE);
+                }
+                else {
+                    rltProgress.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     @Override
-    protected void onStop() {
+    protected void onStart() {
+        super.onStart();
+        ((EAApplication) mAppContext).attach(this);
+    }
+
+    @Override
+    protected void onDestroy() {
         ((EAApplication) mAppContext).dettach(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     @Override
@@ -206,7 +231,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -221,9 +245,15 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode) {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
+    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode, String activityTag) {
+        if(!TAG.equals(activityTag)) {
+            return;
+        }
+        if(inForeground) {
+            showProgress(false);
+        }
+        else {
+            dismissLoading = true;
         }
         if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
             if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY
@@ -233,15 +263,18 @@ public class MainActivity extends AppCompatActivity
                         new TypeToken<ArrayList<CategoryModel>>() {}.getType());
                 processGetCategoriesResponse(categoryModelList);
                 refreshCatergoryUI();
-            } else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS
+            }
+            else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS
                     && extraRequestCode == GET_SPECIAL_PRODUCTS) {
                 Log.i(TAG, "Special products response : " + response);
                 if (!response.isEmpty()) {
                     specialProductHashmap = new Gson().fromJson(response,
                             new TypeToken<HashMap<String, ProductModel>>() {}.getType());
                     refreshSpecialProductUI();
+                    updateImagesOfSpecialProductsUI();
                 }
-            } else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
+            }
+            else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
                 Log.i(TAG, "Get image response response : " + response);
                 ProductImageModel productImageModel = new Gson().fromJson(response,
                         new TypeToken<ProductImageModel>() {}.getType());
@@ -251,18 +284,29 @@ public class MainActivity extends AppCompatActivity
             }
         }
         else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
-            Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+            if(inForeground) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY) {
+                            Toast.makeText(mAppContext, "Error in fetching Categories", Toast.LENGTH_SHORT).show();
+                        } else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS) {
+                            Toast.makeText(mAppContext, "Error in fetching Special products", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
         }
     }
 
     private void processGetCategoriesResponse(List<CategoryModel> categoryModelList) {
-        masterList.clear();
+        masterCategoryList.clear();
         for (CategoryModel categoryModel : categoryModelList) {
             EACategory eaCategory = new EACategory();
             eaCategory.setId(Long.parseLong(categoryModel.getCategory_id()));
             eaCategory.setCategoryName(categoryModel.getCategory_name());
             eaCategory.setCategoryImage(categoryModel.getCategory_image());
-            masterList.add(eaCategory);
+            masterCategoryList.add(eaCategory);
         }
         refreshCatergoryUI();
     }
@@ -278,7 +322,7 @@ public class MainActivity extends AppCompatActivity
                             gridCategories.setAdapter(categoryAdapter);
                         }
                     }
-                    categoryAdapter.resetCategories(masterList);
+                    categoryAdapter.resetCategories(masterCategoryList);
                     if (drawerAdapter == null) {
                         drawerAdapter = new DrawerAdapter(mActivityContext);
                         if (drawerRecyclerView != null) {
@@ -287,7 +331,7 @@ public class MainActivity extends AppCompatActivity
                             drawerRecyclerView.setAdapter(drawerAdapter);
                         }
                     }
-                    drawerAdapter.resetCategories(masterList);
+                    drawerAdapter.resetCategories(masterCategoryList);
                 }
             });
         }
@@ -315,12 +359,6 @@ public class MainActivity extends AppCompatActivity
                                 mActivityContext.startActivity(intent);
                             }
                         });
-                        if((productModel.getActualImage() == null || productModel.getActualImage().isEmpty())
-                                && !productModel.isLoadingImage()) {
-                            productModel.setLoadingImage(true);
-                            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
-                                    Integer.parseInt(specialProductModelEntry.getKey()), EAServerRequest.PRIORITY_LOW, productModel.getProduct_id());
-                        }
                         ((TextView)view.findViewById(R.id.txt_product_name)).setText(productModel.getName().replaceAll("&amp;","&"));
                         Picasso.with(mAppContext).load(productModel.getActualImage())
                                 .placeholder(R.drawable.placeholder_product).into((ImageView) view.findViewById(R.id.img_product));
@@ -345,7 +383,7 @@ public class MainActivity extends AppCompatActivity
                                 && !specialProduct.isLoadingImage()) {
                             specialProduct.setLoadingImage(true);
                             EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
-                                    Integer.parseInt(specialProductId), EAServerRequest.PRIORITY_LOW, specialProduct.getProduct_id());
+                                    Integer.parseInt(specialProductId), EAServerRequest.PRIORITY_LOW, TAG, specialProduct.getProduct_id());
                         }
                         Picasso.with(mAppContext).load(specialProductHashmap.get(specialProductId).getActualImage())
                                 .placeholder(R.drawable.placeholder_product).into((ImageView)view.findViewById(R.id.img_product));
@@ -359,6 +397,14 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         inForeground = true;
+        if(dismissLoading) {
+            showProgress(false);
+            dismissLoading = false;
+        }
+        //Reset is downloading status
+        for (Map.Entry<String, ProductModel> productModelEntry : specialProductHashmap.entrySet()) {
+            productModelEntry.getValue().setLoadingImage(false);
+        }
         refreshCatergoryUI();
         refreshSpecialProductUI();
         updateImagesOfSpecialProductsUI();

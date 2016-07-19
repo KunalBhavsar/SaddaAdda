@@ -2,7 +2,6 @@ package com.emiadda.wsdl;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Shraddha on 6/7/16.
@@ -59,8 +58,8 @@ public class ProductModel implements Serializable {
     private String emi_discount_rate;
     private String show_payment_option;
     private List<String> all_images;
-    private List<String> extra_options;
-    private List<PaymentOptionModel> payment_options;
+    private List<ProductExtraOptionModel> extra_options;
+    private List<ProductPaymentOptionModel> payment_options;
 
     private int numberOfSeletedItems;
     private boolean loadingImage;
@@ -458,19 +457,19 @@ public class ProductModel implements Serializable {
         this.all_images = all_images;
     }
 
-    public List<String> getExtra_options() {
+    public List<ProductExtraOptionModel> getExtra_options() {
         return extra_options;
     }
 
-    public void setExtra_options(List<String> extra_options) {
+    public void setExtra_options(List<ProductExtraOptionModel> extra_options) {
         this.extra_options = extra_options;
     }
 
-    public List<PaymentOptionModel> getPayment_options() {
+    public List<ProductPaymentOptionModel> getPayment_options() {
         return payment_options;
     }
 
-    public void setPayment_options(List<PaymentOptionModel> payment_options) {
+    public void setPayment_options(List<ProductPaymentOptionModel> payment_options) {
         this.payment_options = payment_options;
     }
 

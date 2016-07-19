@@ -72,7 +72,7 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if(serverResponseInterface != null) {
-            serverResponseInterface.responseReceived(s, requestCode, responseCode, 0);
+            serverResponseInterface.responseReceived(s, requestCode, responseCode, 0, null);
         }
     }
 }

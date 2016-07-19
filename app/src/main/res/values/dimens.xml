@@ -28,6 +28,7 @@
     <dimen name="_100dp">100dp</dimen>
     <dimen name="_120dp">120dp</dimen>
     <dimen name="_140dp">140dp</dimen>
+    <dimen name="_150dp">150dp</dimen>
     <dimen name="_200dp">200dp</dimen>
     <dimen name="_250dp">250dp</dimen>
     <dimen name="_300dp">300dp</dimen>

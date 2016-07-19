@@ -85,7 +85,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode) {
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
         if(requestCode == REQUEST_CODE_LOGIN) {
             if(progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();

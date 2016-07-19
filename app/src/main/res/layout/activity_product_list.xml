@@ -1,80 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/white"
-              android:orientation="vertical"
-              tools:context="com.emiadda.ui.ProductListActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context="com.emiadda.ui.ProductListActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Light">
+
+        <ImageView
+            android:id="@+id/txt_title"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/logo" />
+
+        <ImageView
+            android:id="@+id/img_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/cart" />
+    </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/my_awesome_toolbar"
         android:fitsSystemWindows="true">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/my_awesome_toolbar"
+        <RelativeLayout
+            android:id="@+id/rel_search"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:theme="@style/ThemeOverlay.AppCompat.Light">
+            android:layout_height="@dimen/_50dp"
+            android:background="@color/white"
+            android:padding="@dimen/_5dp">
 
-            <ImageView
-                android:id="@+id/txt_title"
-                android:layout_width="120dp"
+            <EditText
+                android:id="@+id/edt_search"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:src="@drawable/logo"/>
+                android:layout_toLeftOf="@+id/btn_search"
+                android:layout_toStartOf="@+id/btn_search"
+                android:background="@color/light_gray"
+                android:gravity="center_vertical"
+                android:hint="@string/search_hint"
+                android:lines="1"
+                android:paddingEnd="@dimen/_5dp"
+                android:paddingLeft="@dimen/_5dp"
+                android:paddingRight="@dimen/_5dp"
+                android:paddingStart="@dimen/_5dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray_dark" />
 
-            <ImageView
-                android:id="@+id/img_cart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/cart"/>
-        </android.support.v7.widget.Toolbar>
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="@dimen/_40dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/blue_login_btn"
+                android:src="@drawable/ic_search" />
+        </RelativeLayout>
+
     </android.support.design.widget.AppBarLayout>
-
-    <RelativeLayout
-        android:id="@+id/rel_search"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_50dp"
-        android:background="@color/white"
-        android:padding="@dimen/_5dp">
-
-        <EditText
-            android:id="@+id/edt_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/btn_search"
-            android:layout_toStartOf="@+id/btn_search"
-            android:background="@color/light_gray"
-            android:gravity="center_vertical"
-            android:hint="@string/search_hint"
-            android:lines="1"
-            android:paddingEnd="@dimen/_5dp"
-            android:paddingLeft="@dimen/_5dp"
-            android:paddingRight="@dimen/_5dp"
-            android:paddingStart="@dimen/_5dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray_dark" />
-
-        <ImageButton
-            android:id="@+id/btn_search"
-            android:layout_width="@dimen/_40dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/blue_login_btn"
-            android:src="@drawable/ic_search" />
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
         android:background="@color/gray_product_bg"
         android:orientation="vertical"
         android:padding="@dimen/_5dp">
@@ -82,7 +85,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@color/blue_login_btn"/>
+            android:background="@color/blue_login_btn" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -94,58 +97,62 @@
                 android:id="@+id/txt_category_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/_40dp"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/lnr_sort"
                 android:gravity="center_vertical"
+                android:minHeight="@dimen/_40dp"
                 android:paddingLeft="@dimen/_5dp"
                 android:text="Men"
                 android:textColor="@color/blue_login_btn"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
-            <LinearLayout android:id="@+id/lnr_sort"
-                          android:layout_width="wrap_content"
-                          android:layout_height="@dimen/_30dp"
-                          android:layout_centerVertical="true"
-                          android:layout_marginRight="2dp"
-                          android:layout_toLeftOf="@+id/lnr_filter"
-                          android:background="@color/gray_product_bg"
-                          android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/lnr_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="2dp"
+                android:layout_toLeftOf="@+id/lnr_filter"
+                android:background="@color/gray_product_bg"
+                android:orientation="horizontal">
 
-                <ImageView android:layout_width="@dimen/_30dp"
-                           android:layout_height="@dimen/_30dp"
-                           android:background="@color/blue_login_btn"
-                           android:padding="@dimen/_5dp"
-                           android:src="@drawable/sort"/>
+                <ImageView
+                    android:layout_width="@dimen/_30dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:background="@color/blue_login_btn"
+                    android:padding="@dimen/_5dp"
+                    android:src="@drawable/sort" />
 
                 <Button
                     android:id="@+id/txt_sort"
                     android:layout_width="@dimen/_60dp"
                     android:layout_height="@dimen/_30dp"
                     android:background="@color/light_gray"
-                    android:text="Sort By"
                     android:clickable="false"
+                    android:text="Sort By"
                     android:textColor="@android:color/black"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/lnr_filter"
-                          android:layout_width="wrap_content"
-                          android:layout_height="@dimen/_30dp"
-                          android:layout_alignParentRight="true"
-                          android:layout_centerVertical="true"
-                          android:layout_marginLeft="5dp"
-                          android:layout_marginRight="@dimen/_5dp"
-                          android:background="@color/gray_product_bg"
-                          android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/lnr_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="@dimen/_5dp"
+                android:background="@color/gray_product_bg"
+                android:orientation="horizontal">
 
 
-                <ImageView android:layout_width="@dimen/_30dp"
-                           android:layout_height="@dimen/_30dp"
-                           android:background="@color/blue_login_btn"
-                           android:padding="@dimen/_5dp"
-                           android:src="@drawable/filter"/>
+                <ImageView
+                    android:layout_width="@dimen/_30dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:background="@color/blue_login_btn"
+                    android:padding="@dimen/_5dp"
+                    android:src="@drawable/filter" />
 
                 <Button
                     android:id="@+id/txt_filter"
@@ -155,7 +162,7 @@
                     android:background="@color/light_gray"
                     android:text="Filter"
                     android:textColor="@android:color/black"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -164,7 +171,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:padding="@dimen/_5dp"/>
+            android:padding="@dimen/_5dp" />
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rlt_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar_layout"
+        android:background="@color/blackglass"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -20,7 +20,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class EAApplication extends Application implements ServerRequestResponseObserver {
 
     List<ServerResponseSubscriber> serverResponseInterfaces;
-
     static Context mAppContext;
 
     @Override
@@ -51,23 +50,25 @@ public class EAApplication extends Application implements ServerRequestResponseO
     }
 
     @Override
-    public void notifyServerResponse(String response, int requestCode, int responseCode, int extraRequestId) {
+    public void notifyServerResponse(String response, int requestCode, int responseCode, String activityTag, int extraRequestId) {
         for (ServerResponseSubscriber serverResponseSubscriber : serverResponseInterfaces) {
-            serverResponseSubscriber.responseReceived(response, requestCode, responseCode, extraRequestId);
+            serverResponseSubscriber.responseReceived(response, requestCode, responseCode, extraRequestId, activityTag);
         }
     }
 
     @Override
-    public void addToServerRequest(int requestCode, int extraRequestCode, int priority, String... params) {
+    public void addToServerRequest(int requestCode, int extraRequestCode, int priority, String activityTag, String... params) {
         EAServerRequest eaServerRequest = new EAServerRequest(requestCode, extraRequestCode, priority);
+        eaServerRequest.setActivityTag(activityTag);
         if(params.length > 0) {
             eaServerRequest.setParams(params);
         }
         ServerRequestProcessingThread.getInstance().addServerRequeset(eaServerRequest);
     }
 
-    public static void makeServerRequest(int requestCode, int extraRequestCode, int priority, String... params) {
+    public static void makeServerRequest(int requestCode, int extraRequestCode, int priority, String activityTag, String... params) {
         EAServerRequest eaServerRequest = new EAServerRequest(requestCode, extraRequestCode, priority);
+        eaServerRequest.setActivityTag(activityTag);
         if(params.length > 0) {
             eaServerRequest.setParams(params);
         }

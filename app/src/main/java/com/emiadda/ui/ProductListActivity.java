@@ -3,6 +3,7 @@ package com.emiadda.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -19,14 +20,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.adapters.ProductGridAdapter;
-import com.emiadda.asynctasks.GetProductsByCategory;
+import com.emiadda.asynctasks.ServerRequestProcessingThread;
+import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.KeyConstants;
+import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,6 +41,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ProductListActivity extends AppCompatActivity implements ServerResponseSubscriber {
@@ -47,11 +53,14 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
     private RecyclerView recyclerView;
     private ProductGridAdapter productGridAdapter;
     private Toolbar toolbar;
-    private ProgressDialog progressDialog;
     private Activity mActivityContext;
+    private Context mAppContext;
     private EditText edtSearch;
-    private List<ProductModel> masterList;
+    private List<ProductModel> masterProductList;
     private LinearLayout lnrSort;
+    private boolean inForeground = true;
+    private boolean dismissLoading;
+    private RelativeLayout rltProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +75,11 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mActivityContext = this;
+        mAppContext = getApplicationContext();
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
-        progressDialog.setCancelable(false);
+        rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
+
+        masterProductList = new ArrayList<>();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -97,10 +107,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productGridAdapter);
 
-        ((TextView)findViewById(R.id.txt_category_name)).setText(getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME));
-        progressDialog.show();
-        long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, 0);
-        new GetProductsByCategory(this, GET_PRODUCT_REQUEST_CODE).execute(String.valueOf(categoryId));
+        ((TextView)findViewById(R.id.txt_category_name)).setText(getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME).replaceAll("&amp;","&"));
 
         edtSearch = (EditText) findViewById(R.id.edt_search);
         edtSearch.addTextChangedListener(new TextWatcher() {
@@ -116,21 +123,10 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(masterList == null) {
+                if(productGridAdapter == null) {
                     return;
                 }
-                String query = s.toString().trim().toLowerCase();
-                if (!query.isEmpty()) {
-                    List<ProductModel> categoryModels = new ArrayList<>();
-                    for (ProductModel categoryModel : masterList) {
-                        if(categoryModel.getName().toLowerCase().contains(query)) {
-                            categoryModels.add(categoryModel);
-                        }
-                    }
-                    productGridAdapter.setProducts(categoryModels);
-                } else {
-                    productGridAdapter.setProducts(masterList);
-                }
+                productGridAdapter.getFilter().filter(s.toString());
             }
         });
 
@@ -143,11 +139,11 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                 dialogBuilder.setItems(languages,new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(masterList != null && !masterList.isEmpty()) {
+                        if(masterProductList != null && !masterProductList.isEmpty()) {
                             if(i == 0) {
-                                Collections.sort(masterList, new ProductNameComparator());
+                                Collections.sort(masterProductList, new ProductNameComparator());
                             } else {
-                                Collections.sort(masterList, new ProductPriceComparator());
+                                Collections.sort(masterProductList, new ProductPriceComparator());
                             }
                             productGridAdapter.notifyDataSetChanged();
                         }
@@ -158,6 +154,57 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
             }
         });
 
+        ((EAApplication)mAppContext).attach(this);
+        showProgress(true);
+        long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, 0);
+        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY, GET_PRODUCT_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(categoryId));
+    }
+
+    private void showProgress(final boolean visibile) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(visibile) {
+                    rltProgress.setVisibility(View.VISIBLE);
+                }
+                else {
+                    rltProgress.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ((EAApplication)mAppContext).attach(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ((EAApplication)mAppContext).dettach(this);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        inForeground = true;
+        if(dismissLoading) {
+            showProgress(false);
+            dismissLoading = false;
+        }
+        //Reset is downloading status
+        for (ProductModel productModel : masterProductList) {
+            productModel.setLoadingImage(false);
+        }
+        updateProductListUI();
+    }
+
+    @Override
+    protected void onPause() {
+        inForeground = false;
+        super.onPause();
     }
 
     class ProductNameComparator implements Comparator<ProductModel> {
@@ -186,31 +233,84 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode) {
-        if(progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
+    public void responseReceived(String response, final int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+        if(!TAG.equals(activityTag)) {
+            return;
+        }
+
+        if(inForeground) {
+            showProgress(false);
+        }
+        else {
+            dismissLoading = true;
         }
 
         if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-            Log.i(TAG, "received response : " + response);
-            if(response != null && !response.isEmpty()) {
-                try {
-                    HashMap<String, ProductModel> map = new Gson().fromJson(response, new TypeToken<HashMap<String, ProductModel>>() {}.getType());
-                    if(map != null) {
-                        List<ProductModel> productModelList = new ArrayList<>();
-                        Set<String> set = map.keySet();
-                        for (String key : set) {
-                            productModelList.add(map.get(key));
-                            masterList = productModelList;
+            if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY &&
+                    extraRequestCode == GET_PRODUCT_REQUEST_CODE) {
+                Log.i(TAG, "Get products by category response : " + response);
+                if (response != null && !response.isEmpty()) {
+                    try {
+                        HashMap<String, ProductModel> map = new Gson().fromJson(response,
+                                new TypeToken<HashMap<String, ProductModel>>() {}.getType());
+                        if (map != null) {
+                            List<ProductModel> productModelList = new ArrayList<>();
+                            Set<String> set = map.keySet();
+                            for (String key : set) {
+                                productModelList.add(map.get(key));
+                            }
+                            masterProductList = productModelList;
+                            updateProductListUI();
                         }
-                        productGridAdapter.setProducts(productModelList);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage(), e);
                     }
-                }catch (Exception e) {
-                 Log.e(TAG, e.getMessage(), e);
                 }
             }
-        } else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
-            Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+            else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
+                Log.i(TAG, "Get product image response : " + response);
+                ProductImageModel productImageModel = new Gson().fromJson(response,
+                        new TypeToken<ProductImageModel>() {}.getType());
+                final String imagePath = productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20");
+                for (ProductModel productModel : masterProductList) {
+                    if(extraRequestCode == Integer.parseInt(productModel.getProduct_id())) {
+                        productModel.setActualImage(imagePath);
+                        break;
+                    }
+                }
+                updateProductListUI();
+            }
+        }
+        else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
+            if(inForeground) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY) {
+                            Toast.makeText(mAppContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private void updateProductListUI() {
+        if(inForeground) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    productGridAdapter.resetProducts(masterProductList);
+                    for (ProductModel productModel : masterProductList) {
+                        if((productModel.getActualImage() == null || productModel.getActualImage().isEmpty())
+                                && !productModel.isLoadingImage()) {
+                            productModel.setLoadingImage(true);
+                            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
+                                    Integer.parseInt(productModel.getProduct_id()), EAServerRequest.PRIORITY_LOW, TAG, productModel.getProduct_id());
+                        }
+                    }
+                }
+            });
         }
     }
 

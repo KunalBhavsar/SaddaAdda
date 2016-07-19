@@ -2,6 +2,7 @@ package com.emiadda.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,13 +16,16 @@ import android.view.View;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.adapters.SubCategoryAdapter;
-import com.emiadda.asynctasks.GetCategoriesAsync;
+import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EACategory;
+import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CategoryModel;
@@ -32,24 +36,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubCategoryActivity extends AppCompatActivity implements ServerResponseSubscriber {
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int GET_CATEGORIES_REQUEST_CODE = 12;
+    private static final String TAG = SubCategoryActivity.class.getSimpleName();
+    private static final int GET_CATEGORIES_REQUEST_CODE = 21;
 
-    ProgressDialog progressDialog;
     Activity mActivityContext;
+    Context mAppContext;
 
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView recyclerView;
+    private RecyclerView subcategoryRecyclerView;
     private SubCategoryAdapter subCategoryAdapter;
     private Toolbar toolbar;
     private EditText edtSearch;
-    private List<EACategory> masterList;
+    private List<EACategory> masterCategoryList;
+    private boolean inForeground;
+    private boolean dismissProgress;
+    private RelativeLayout rltProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_category);
         mActivityContext = this;
+        mAppContext = getApplicationContext();
 
         edtSearch = (EditText) findViewById(R.id.edt_search);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
@@ -58,8 +66,12 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
+        subcategoryRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        subcategoryRecyclerView.setHasFixedSize(true);
+
+        rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
+
+        masterCategoryList = new ArrayList<>();
         subCategoryAdapter = new SubCategoryAdapter(this, new SubCategoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(EACategory item) {
@@ -71,13 +83,8 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         });
 
         layoutManager = new LinearLayoutManager(SubCategoryActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(subCategoryAdapter);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        subcategoryRecyclerView.setLayoutManager(layoutManager);
+        subcategoryRecyclerView.setAdapter(subCategoryAdapter);
 
         ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
         assert imgCart != null;
@@ -102,21 +109,10 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(masterList == null) {
+                if(masterCategoryList == null) {
                     return;
                 }
-                String query = s.toString().trim().toLowerCase();
-                if (!query.isEmpty()) {
-                    List<EACategory> categoryModels = new ArrayList<>();
-                    for (EACategory categoryModel : masterList) {
-                        if(categoryModel.getCategoryName().toLowerCase().contains(query)) {
-                            categoryModels.add(categoryModel);
-                        }
-                    }
-                    subCategoryAdapter.addCategories(categoryModels);
-                } else {
-                    subCategoryAdapter.addCategories(masterList);
-                }
+                subCategoryAdapter.getFilter().filter(s.toString());
             }
         });
 
@@ -125,37 +121,128 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         TextView txtCat = (TextView) findViewById(R.id.txt_category);
         txtCat.setText(catName.toUpperCase());
 
-        new GetCategoriesAsync(this, GET_CATEGORIES_REQUEST_CODE).execute(String.valueOf(categoryId));
+        ((EAApplication)mAppContext).attach(this);
+        showProgress(true);
+        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY,
+                GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(categoryId));
+    }
+
+    private void showProgress(final boolean visibile) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(visibile) {
+                    rltProgress.setVisibility(View.VISIBLE);
+                }
+                else {
+                    rltProgress.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode) {
-        Log.i(TAG, "Response of get categories : " + response);
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
+    protected void onStart() {
+        super.onStart();
+        ((EAApplication)mAppContext).attach(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ((EAApplication)mAppContext).dettach(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+        if(!TAG.equals(activityTag)) {
+            return;
         }
-        if (requestCode == GET_CATEGORIES_REQUEST_CODE) {
+
+        if(inForeground) {
+            showProgress(false);
+        }
+        else {
+            dismissProgress = true;
+        }
+        if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY
+                && extraRequestCode == GET_CATEGORIES_REQUEST_CODE) {
+            Log.i(TAG, "Response of get categories : " + response);
             if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-                Log.i(TAG, "received response : " + response);
                 if(!response.isEmpty()) {
-                    List<CategoryModel> categoryModelList = new Gson().fromJson(response, new TypeToken<ArrayList<CategoryModel>>() {
-                    }.getType());
-                    masterList = new ArrayList<>();
-                    for (CategoryModel categoryModel : categoryModelList) {
-                        if (subCategoryAdapter != null) {
-                            EACategory eaCategory = new EACategory();
-                            eaCategory.setId(Long.parseLong(categoryModel.getCategory_id()));
-                            eaCategory.setCategoryName(categoryModel.getCategory_name());
-                            eaCategory.setCategoryImage(categoryModel.getCategory_image());
-                            subCategoryAdapter.addCategory(eaCategory);
-                            masterList.add(eaCategory);
-                        }
-                    }
+                    List<CategoryModel> categoryModelList = new Gson().fromJson(response,
+                            new TypeToken<ArrayList<CategoryModel>>() {}.getType());
+                    processGetCategoriesResponse(categoryModelList);
+                    refreshCatergoryUI();
                 }
-            } else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
-                Toast.makeText(mActivityContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+            }
+            else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
+                if(inForeground) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mAppContext, "Error in fetching Subcategories", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
+    }
+
+    private void processGetCategoriesResponse(List<CategoryModel> categoryModelList) {
+        masterCategoryList.clear();
+        for (CategoryModel categoryModel : categoryModelList) {
+            EACategory eaCategory = new EACategory();
+            eaCategory.setId(Long.parseLong(categoryModel.getCategory_id()));
+            eaCategory.setCategoryName(categoryModel.getCategory_name());
+            eaCategory.setCategoryImage(categoryModel.getCategory_image());
+            masterCategoryList.add(eaCategory);
+        }
+        refreshCatergoryUI();
+    }
+
+    private void refreshCatergoryUI() {
+        if (inForeground) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (subCategoryAdapter == null) {
+                        subCategoryAdapter = new SubCategoryAdapter(mActivityContext, new SubCategoryAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(EACategory item) {
+                                Intent intent = new Intent(mActivityContext, ProductListActivity.class);
+                                intent.putExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, item.getId());
+                                intent.putExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME, item.getCategoryName());
+                                startActivity(intent);
+                            }
+                        });
+
+                        if (subcategoryRecyclerView != null) {
+                            subcategoryRecyclerView.setAdapter(subCategoryAdapter);
+                        }
+                    }
+                    subCategoryAdapter.resetCategories(masterCategoryList);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((EAApplication)mAppContext).attach(this);
+        inForeground = true;
+        if(dismissProgress) {
+            showProgress(false);
+            dismissProgress = false;
+        }
+        refreshCatergoryUI();
+    }
+
+    @Override
+    protected void onPause() {
+        inForeground = false;
+        super.onPause();
     }
 
     @Override
