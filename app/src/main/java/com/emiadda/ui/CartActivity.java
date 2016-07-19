@@ -164,12 +164,11 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
 
         Log.i(TAG, "Received image download response "+response);
         if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
-            if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
+            if(response != null && !response.isEmpty()) {
+                ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {}.getType());
                 for (ProductModel product : masterProductModelList) {
                     if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
                         try {
-                            ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
-                            }.getType());
                             if (productImageModel != null) {
                                 product.setActualImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
                                 AppPreferences.getInstance().removeProductFromCartList(product);

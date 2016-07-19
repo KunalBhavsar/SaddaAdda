@@ -51,6 +51,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     private boolean inForeground;
     private boolean dismissProgress;
     private RelativeLayout rltProgress;
+    private String categorySelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,10 +118,11 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         });
 
         long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, 0);
-        String catName = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_NAME);
+        categorySelected = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_NAME);
         TextView txtCat = (TextView) findViewById(R.id.txt_category);
-        txtCat.setText(catName.toUpperCase());
-
+        if(txtCat != null) {
+            txtCat.setText(categorySelected.toUpperCase());
+        }
         ((EAApplication)mAppContext).attach(this);
         showProgress(true);
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY,
@@ -176,12 +178,13 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                     refreshCatergoryUI();
                 }
             }
-            else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
+            else {
                 if(inForeground) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(mAppContext, "Error in fetching Subcategories", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mAppContext, "Error in fetching " + categorySelected + " data", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     });
                 }

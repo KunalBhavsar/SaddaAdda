@@ -255,18 +255,24 @@ public class MainActivity extends AppCompatActivity
         else {
             dismissLoading = true;
         }
-        if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-            if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY
-                    && extraRequestCode == GET_CATEGORIES_REQUEST_CODE) {
-                Log.i(TAG, "Categories response : " + response);
+        if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY
+                && extraRequestCode == GET_CATEGORIES_REQUEST_CODE) {
+            Log.i(TAG, "Categories response : " + response);
+            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
                 List<CategoryModel> categoryModelList = new Gson().fromJson(response,
-                        new TypeToken<ArrayList<CategoryModel>>() {}.getType());
+                        new TypeToken<ArrayList<CategoryModel>>() {
+                        }.getType());
                 processGetCategoriesResponse(categoryModelList);
                 refreshCatergoryUI();
             }
-            else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS
-                    && extraRequestCode == GET_SPECIAL_PRODUCTS) {
-                Log.i(TAG, "Special products response : " + response);
+            else {
+                Toast.makeText(mAppContext, "Error in fetching Categories", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS
+                && extraRequestCode == GET_SPECIAL_PRODUCTS) {
+            Log.i(TAG, "Special products response : " + response);
+            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
                 if (!response.isEmpty()) {
                     specialProductHashmap = new Gson().fromJson(response,
                             new TypeToken<HashMap<String, ProductModel>>() {}.getType());
@@ -274,27 +280,19 @@ public class MainActivity extends AppCompatActivity
                     updateImagesOfSpecialProductsUI();
                 }
             }
-            else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
-                Log.i(TAG, "Get image response response : " + response);
+            else {
+                Toast.makeText(mAppContext, "Error in fetching Special products", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
+            Log.i(TAG, "Get image response response : " + response);
+            if(response != null && !response.isEmpty()) {
                 ProductImageModel productImageModel = new Gson().fromJson(response,
-                        new TypeToken<ProductImageModel>() {}.getType());
+                        new TypeToken<ProductImageModel>() {
+                        }.getType());
                 final String imagePath = productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20");
                 specialProductHashmap.get(String.valueOf(extraRequestCode)).setActualImage(imagePath);
                 updateImagesOfSpecialProductsUI();
-            }
-        }
-        else if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION) {
-            if(inForeground) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY) {
-                            Toast.makeText(mAppContext, "Error in fetching Categories", Toast.LENGTH_SHORT).show();
-                        } else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS) {
-                            Toast.makeText(mAppContext, "Error in fetching Special products", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
             }
         }
     }
@@ -376,16 +374,16 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     for (int i = 0; i < linSpecialProducts.getChildCount(); i++) {
                         View view = linSpecialProducts.getChildAt(i);
-                        String specialProductId = (String) view.getTag();
-                        ProductModel specialProduct = specialProductHashmap.get(specialProductId);
+                        String specialProductKey = (String) view.getTag();
+                        ProductModel specialProduct = specialProductHashmap.get(specialProductKey);
                         if((specialProduct.getActualImage() == null
                                 || specialProduct.getActualImage().isEmpty())
                                 && !specialProduct.isLoadingImage()) {
                             specialProduct.setLoadingImage(true);
                             EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
-                                    Integer.parseInt(specialProductId), EAServerRequest.PRIORITY_LOW, TAG, specialProduct.getProduct_id());
+                                    Integer.parseInt(specialProductKey), EAServerRequest.PRIORITY_LOW, TAG, specialProduct.getProduct_id());
                         }
-                        Picasso.with(mAppContext).load(specialProductHashmap.get(specialProductId).getActualImage())
+                        Picasso.with(mAppContext).load(specialProductHashmap.get(specialProductKey).getActualImage())
                                 .placeholder(R.drawable.placeholder_product).into((ImageView)view.findViewById(R.id.img_product));
                     }
                 }
