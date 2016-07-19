@@ -83,8 +83,7 @@ public class ServerRequestProcessingThread extends Thread {
     public void run() {
         try {
             EAServerRequest item;
-            while (true) {
-                if ((item = serverRequests.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
+            while ((item = serverRequests.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
                     switch (item.getRequestCode()) {
                         case REQUEST_CODE_GET_CATEGORY:
                             getCategories(item);
@@ -103,11 +102,7 @@ public class ServerRequestProcessingThread extends Thread {
                             break;
                     }
                 }
-                else {
-                    break;
-                }
             }
-        }
         catch (InterruptedException iex) {
             Log.e(TAG, iex.getMessage(), iex);
         }
