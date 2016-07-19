@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,13 +56,15 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     private RelativeLayout rltProgress;
     private String categorySelected;
 
+    private Fragment cartFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_category);
         mActivityContext = this;
         mAppContext = getApplicationContext();
-
+        setUpCartFragment();
         edtSearch = (EditText) findViewById(R.id.edt_search);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -127,6 +132,14 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         showProgress(true);
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY,
                 GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(categoryId));
+    }
+
+    private void setUpCartFragment() {
+        cartFragment = new CartFrgament();
+        FragmentManager fragmentManager =getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.cart_fragment, cartFragment, KeyConstants.CART_FRAGMENT);
+        fragmentTransaction.commit();
     }
 
     private void showProgress(final boolean visibile) {
@@ -239,6 +252,11 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
             showProgress(false);
             dismissProgress = false;
         }
+        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
         refreshCatergoryUI();
     }
 

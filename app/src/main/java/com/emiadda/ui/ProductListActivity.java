@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -61,13 +64,15 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
     private boolean inForeground = true;
     private boolean dismissLoading;
     private RelativeLayout rltProgress;
+
+    private Fragment cartFragment;
     private String selectedSubcategoryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
-
+        setUpCartFragment();
         lnrSort = (LinearLayout) findViewById(R.id.lnr_sort);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -90,7 +95,6 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
             public void onItemClick(ProductModel item) {
                 Intent intent = new Intent(mActivityContext, ProductDetailActivity.class);
                 intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, item.getProduct_id());
-                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME, item.getName());
                 mActivityContext.startActivity(intent);
             }
         });
@@ -163,6 +167,14 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         showProgress(true);
         long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, 0);
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY, GET_PRODUCT_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(categoryId));
+    }
+
+    private void setUpCartFragment() {
+        cartFragment = new CartFrgament();
+        FragmentManager fragmentManager =getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.cart_fragment, cartFragment, KeyConstants.CART_FRAGMENT);
+        fragmentTransaction.commit();
     }
 
     private void showProgress(final boolean visibile) {
@@ -274,7 +286,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(mAppContext, selectedSubcategoryName + " data not available", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mAppContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -334,6 +346,16 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                 outRect.right = mVerticalSpaceHeight;
             }
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
     }
 
     @Override

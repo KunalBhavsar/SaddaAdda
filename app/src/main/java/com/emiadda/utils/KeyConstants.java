@@ -10,4 +10,6 @@ public class KeyConstants {
     public static final String INTENT_CONSTANT_PRODUCT_ID = "product_id";
     public static final String INTENT_CONSTANT_PRODUCT_NAME = "product_name";
     public static final String INTENT_CONSTANT_CATEGORY_NAME = "category_name";
+
+    public static final String CART_FRAGMENT = "cart";
 }

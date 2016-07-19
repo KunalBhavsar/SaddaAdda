@@ -23,6 +23,7 @@
         <ImageView
             android:id="@+id/img_cart"
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:layout_marginRight="10dp"
@@ -107,6 +108,7 @@
             android:layout_marginBottom="@dimen/_5dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:layout_marginRight="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:background="@color/light_gray"
             android:paddingLeft="@dimen/_5dp"
             android:paddingRight="@dimen/_5dp"

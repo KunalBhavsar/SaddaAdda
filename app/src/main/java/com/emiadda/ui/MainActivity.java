@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -57,8 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity
-        implements ServerResponseSubscriber {
+public class MainActivity extends AppCompatActivity implements ServerResponseSubscriber {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GET_CATEGORIES_REQUEST_CODE = 12;
@@ -83,12 +85,16 @@ public class MainActivity extends AppCompatActivity
     private boolean dismissLoading;
     private RelativeLayout rltProgress;
 
+    private Fragment cartFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActivityContext = this;
         mAppContext = getApplicationContext();
+
+        setUpCartFragment();
 
         edtSearch = (EditText) findViewById(R.id.edt_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
@@ -196,6 +202,14 @@ public class MainActivity extends AppCompatActivity
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
     }
 
+    private void setUpCartFragment() {
+        cartFragment = new CartFrgament();
+        FragmentManager fragmentManager =getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.cart_fragment, cartFragment, KeyConstants.CART_FRAGMENT);
+        fragmentTransaction.commit();
+    }
+
     private void showProgress(final boolean visibile) {
         runOnUiThread(new Runnable() {
             @Override
@@ -230,6 +244,11 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
     }
 
     @Override
@@ -406,6 +425,11 @@ public class MainActivity extends AppCompatActivity
         refreshCatergoryUI();
         refreshSpecialProductUI();
         updateImagesOfSpecialProductsUI();
+        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
     }
 
     @Override

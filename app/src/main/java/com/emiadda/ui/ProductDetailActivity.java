@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -67,11 +70,13 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     private RelativeLayout rltProgress;
     private String selectedProductName;
 
+    private Fragment cartFragment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_detail);
-
+        setUpCartFragment();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -120,6 +125,14 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
 
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID, PRODUCT_DETIALS_REQUEST_CODE,
                 EAServerRequest.PRIORITY_HIGH, TAG, productId);
+    }
+
+    private void setUpCartFragment() {
+        cartFragment = new CartFrgament();
+        FragmentManager fragmentManager =getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.cart_fragment, cartFragment, KeyConstants.CART_FRAGMENT);
+        fragmentTransaction.commit();
     }
 
     private void showProgress(final boolean visibile) {
@@ -223,11 +236,27 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                             Toast.makeText(mAppContext, "Added " + currentQuantity + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
                             productModel.setNumberOfSeletedItems(currentQuantity);
                             AppPreferences.getInstance().addProductToCartList(productModel);
+
+                            Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+                            FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+                            fragTransaction.detach(currentFragment);
+                            fragTransaction.attach(currentFragment);
+                            fragTransaction.commit();
                         }
                     });
                 }
             });
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        fragTransaction.detach(currentFragment);
+        fragTransaction.attach(currentFragment);
+        fragTransaction.commit();
     }
 
     @Override
@@ -321,6 +350,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
 
         setProductDetails();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
