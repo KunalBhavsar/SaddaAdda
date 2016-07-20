@@ -25,9 +25,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -86,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private RelativeLayout rltProgress;
 
     private Fragment cartFragment;
+    private ImageView btnNext;
+    private ImageView btnPrev;
+    private HorizontalScrollView horizontalScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,10 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
 
         setUpCartFragment();
 
+        horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
         edtSearch = (EditText) findViewById(R.id.edt_search);
+        btnNext = (ImageView) findViewById(R.id.btnNext);
+        btnPrev = (ImageView) findViewById(R.id.btnPrevoius);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -193,6 +201,20 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                     return;
                 }
                 categoryAdapter.getFilter().filter(s.toString());
+            }
+        });
+
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() - 170, (int)horizontalScrollView.getScrollY());
+            }
+        });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() + 170, (int)horizontalScrollView.getScrollY());
             }
         });
 
