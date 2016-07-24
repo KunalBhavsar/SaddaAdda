@@ -71,6 +71,7 @@
                     android:textStyle="bold"/>
 
                 <Button
+                    android:id="@+id/btn_view_all"
                     android:layout_width="@dimen/_100dp"
                     android:layout_height="@dimen/_30dp"
                     android:layout_alignParentRight="true"
@@ -90,19 +91,19 @@
                     <ImageView
                         android:id="@+id/btnPrevoius"
                         android:layout_width="30dip"
-                        android:padding="@dimen/_5dp"
                         android:layout_height="30dip"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
+                        android:padding="@dimen/_5dp"
                         android:src="@drawable/arrow_l"/>
 
                     <HorizontalScrollView
+                        android:id="@+id/horizontalScrollView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/horizontalScrollView"
+                        android:layout_marginTop="@dimen/_5dp"
                         android:layout_toLeftOf="@+id/btnNext"
-                        android:layout_toRightOf="@+id/btnPrevoius"
-                        android:layout_marginTop="@dimen/_5dp">
+                        android:layout_toRightOf="@+id/btnPrevoius">
 
                         <LinearLayout
                             android:id="@+id/lin_special_product_list"
@@ -113,10 +114,10 @@
                     <ImageView
                         android:id="@+id/btnNext"
                         android:layout_width="30dip"
-                        android:padding="@dimen/_5dp"
                         android:layout_height="30dip"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:padding="@dimen/_5dp"
                         android:src="@drawable/arrow_r"/>
                 </RelativeLayout>
             </RelativeLayout>

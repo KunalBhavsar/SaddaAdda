@@ -120,10 +120,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40dp"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/_5dp"
+                    android:layout_marginBottom="@dimen/_5dp"
+                    android:background="@drawable/underline"
+                    android:gravity="center"
+                    android:textColor="@color/black_86p"
                     android:paddingLeft="@dimen/_10dp"
-                    android:text="Products not available"
+                    android:text="No results found"
                     android:textSize="18sp" />
 
                 <android.support.v7.widget.RecyclerView

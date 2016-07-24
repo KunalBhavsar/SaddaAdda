@@ -94,6 +94,12 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 Log.i(TAG, "received response : "+response);
                 try {
                     CustomerModel customerModel = new Gson().fromJson(new JSONObject(response).toString(), CustomerModel.class);
+
+                    if(customerModel.getCustomer_id() == null) {
+                        Snackbar.make(btnSubmit, "Wrong username and password combination.", Snackbar.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     AppPreferences.getInstance().setUserLoggegIn(true);
                     AppPreferences.getInstance().setAppOwnerData(customerModel);
 

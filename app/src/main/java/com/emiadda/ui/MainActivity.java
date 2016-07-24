@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private Fragment cartFragment;
     private ImageView btnNext;
     private ImageView btnPrev;
+    private Button btnViewAll;
     private HorizontalScrollView horizontalScrollView;
 
     @Override
@@ -105,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         edtSearch = (EditText) findViewById(R.id.edt_search);
         btnNext = (ImageView) findViewById(R.id.btnNext);
         btnPrev = (ImageView) findViewById(R.id.btnPrevoius);
+        btnViewAll = (Button) findViewById(R.id.btn_view_all);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -215,6 +218,16 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             @Override
             public void onClick(View v) {
                 horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() + 170, (int)horizontalScrollView.getScrollY());
+            }
+        });
+
+        btnViewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivityContext, ProductListActivity.class);
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_ID, 0L);
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME, "New Arrivals");
+                startActivity(intent);
             }
         });
 
