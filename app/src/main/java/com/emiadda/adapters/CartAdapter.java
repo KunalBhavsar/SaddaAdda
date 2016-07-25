@@ -2,6 +2,7 @@ package com.emiadda.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,9 @@ import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.ui.ProductDetailActivity;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
@@ -40,7 +43,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         ((EAApplication)context.getApplicationContext()).attach(this);
     }
 
-    public void addProduct(List<ProductModel> productModelList) {
+    public void resetProductList(List<ProductModel> productModelList) {
+        cartList.clear();
         if(productModelList != null) {
             cartList.addAll(productModelList);
             notifyDataSetChanged();
@@ -67,6 +71,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         Picasso.with(context).load(productModel.getActualImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);
 
         holder.btnRemove.setTag(productModel.getProduct_id());
+        holder.btnEdit.setTag(productModel.getProduct_id());
     }
 
     @Override
@@ -145,7 +150,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
                     break;
 
                 case R.id.btn_edit:
-
+                    Intent intent = new Intent(context, ProductDetailActivity.class);
+                    productModel = new ProductModel();
+                    productModel.setProduct_id(String.valueOf(v.getTag()));
+                    int itemIndex = cartList.indexOf(productModel);
+                    if(itemIndex >= 0) {
+                        ProductModel cartItemSelected = cartList.get(itemIndex);
+                        intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, cartItemSelected.getProduct_id());
+                        intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME, cartItemSelected.getName());
+                        intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, cartItemSelected.getNumberOfSeletedItems());
+                        context.startActivity(intent);
+                    }
+                    else {
+                        Log.i(TAG, "Wrong item index selected : "+itemIndex + " for product id : "+productModel.getProduct_id());
+                    }
                     break;
             }
         }

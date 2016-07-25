@@ -14,9 +14,9 @@ import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
-import java.util.Comparator;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Kunal on 16/07/16.
@@ -39,17 +39,13 @@ public class ServerRequestProcessingThread extends Thread {
 
     private static ServerRequestProcessingThread thread;
     private EAApplication context;
-    BlockingQueue<EAServerRequest> serverRequests;
-
+    LinkedBlockingDeque<EAServerRequest> serverRequestLinkedBlockingDeque;
+    List<EAServerRequest> tempServerRequestList;
 
     public ServerRequestProcessingThread(EAApplication context) {
         this.context = context;
-        serverRequests = new PriorityBlockingQueue<>(50, new Comparator<EAServerRequest>() {
-            @Override
-            public int compare(EAServerRequest lhs, EAServerRequest rhs) {
-                return Integer.valueOf(rhs.getPriority()).compareTo(lhs.getPriority());
-            }
-        });
+
+        serverRequestLinkedBlockingDeque = new LinkedBlockingDeque<>(50);
     }
 
     public static void init(EAApplication context) {
@@ -65,7 +61,35 @@ public class ServerRequestProcessingThread extends Thread {
         if (shuttingDown || loggerTerminated) return;
 
         try {
-            serverRequests.put(serverRequest);
+            int existingServerRequestSize = serverRequestLinkedBlockingDeque.size();
+
+            if (existingServerRequestSize > 0) {
+                if(serverRequestLinkedBlockingDeque.getFirst().getPriority() == serverRequest.getPriority() &&
+                        serverRequestLinkedBlockingDeque.getLast().getPriority() == serverRequest.getPriority()) {
+                    serverRequestLinkedBlockingDeque.putLast(serverRequest);
+                }
+                if (serverRequestLinkedBlockingDeque.getFirst().getPriority() < serverRequest.getPriority()) {
+                    serverRequestLinkedBlockingDeque.putFirst(serverRequest);
+                }
+                else if(serverRequestLinkedBlockingDeque.getLast().getPriority() > serverRequest.getPriority()) {
+                    serverRequestLinkedBlockingDeque.putLast(serverRequest);
+                }
+                else {
+                    tempServerRequestList = new ArrayList<>();
+                    tempServerRequestList.addAll(serverRequestLinkedBlockingDeque);
+                    serverRequestLinkedBlockingDeque.clear();
+                    for (int i = 0; i < tempServerRequestList.size(); i++) {
+                        if(tempServerRequestList.get(i).getPriority() < serverRequest.getPriority()) {
+                            tempServerRequestList.add(i, serverRequest);
+                            break;
+                        }
+                    }
+                    serverRequestLinkedBlockingDeque.addAll(tempServerRequestList);
+                    tempServerRequestList = null;
+                }
+            } else {
+                serverRequestLinkedBlockingDeque.put(serverRequest);
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             Log.e(TAG, e.getMessage(), e);
@@ -74,39 +98,38 @@ public class ServerRequestProcessingThread extends Thread {
 
     public void shutDown() throws InterruptedException {
         shuttingDown = true;
-        serverRequests.put(new EAServerRequest(SHUTDOWN_REQUEST_CODE, -1, EAServerRequest.PRIORITY_HIGH));
+        serverRequestLinkedBlockingDeque.putFirst(new EAServerRequest(SHUTDOWN_REQUEST_CODE, -1, EAServerRequest.PRIORITY_HIGH));
     }
 
     private volatile boolean shuttingDown, loggerTerminated;
+
     // Sit in a loop, pulling strings off the queue and logging
     @Override
     public void run() {
         try {
             EAServerRequest item;
-            while ((item = serverRequests.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
-                    switch (item.getRequestCode()) {
-                        case REQUEST_CODE_GET_CATEGORY:
-                            getCategories(item);
-                            break;
-                        case REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID:
-                            getProductByProductId(item);
-                            break;
-                        case REQUEST_CODE_GET_PRODUCT_IMAGE:
-                            getProductImage(item);
-                            break;
-                        case REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY:
-                            getProductByCategory(item);
-                            break;
-                        case REQUEST_CODE_GET_SPECIAL_PRODUCTS:
-                            getSpecialProducts(item);
-                            break;
-                    }
+            while ((item = serverRequestLinkedBlockingDeque.take()).getRequestCode() != SHUTDOWN_REQUEST_CODE) {
+                switch (item.getRequestCode()) {
+                    case REQUEST_CODE_GET_CATEGORY:
+                        getCategories(item);
+                        break;
+                    case REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID:
+                        getProductByProductId(item);
+                        break;
+                    case REQUEST_CODE_GET_PRODUCT_IMAGE:
+                        getProductImage(item);
+                        break;
+                    case REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY:
+                        getProductByCategory(item);
+                        break;
+                    case REQUEST_CODE_GET_SPECIAL_PRODUCTS:
+                        getSpecialProducts(item);
+                        break;
                 }
             }
-        catch (InterruptedException iex) {
+        } catch (InterruptedException iex) {
             Log.e(TAG, iex.getMessage(), iex);
-        }
-        finally {
+        } finally {
             loggerTerminated = true;
         }
     }
@@ -130,14 +153,12 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.bodyOut = request;
 
             String response = VOKServerBinding.getCategories(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-            if(response != null && !response.isEmpty()) {
+            if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-            else {
+            } else {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
         }
@@ -162,14 +183,12 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.bodyOut = request;
 
             String response = vokServerBinding.getProductByProductID(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-            if(response != null && !response.isEmpty()) {
+            if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-            else {
+            } else {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
         }
@@ -194,14 +213,12 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.bodyOut = request;
 
             String response = abmServerBinding.getProductImage(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-            if(response != null && !response.isEmpty()) {
+            if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-            else {
+            } else {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
@@ -225,16 +242,14 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response =  abmServerBinding.getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-            if(response != null && !response.isEmpty()) {
+            String response = abmServerBinding.getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+            if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-            else {
+            } else {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
@@ -258,15 +273,13 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response =  abmServerBinding.getSpecials();
-            if(response != null && !response.isEmpty()) {
+            String response = abmServerBinding.getSpecials();
+            if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-            else {
+            } else {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -88,10 +89,13 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private RelativeLayout rltProgress;
 
     private Fragment cartFragment;
-    private ImageView btnNext;
-    private ImageView btnPrev;
+    private RelativeLayout btnNext;
+    private RelativeLayout btnPrev;
     private Button btnViewAll;
     private HorizontalScrollView horizontalScrollView;
+
+    private TextView txtNoCategories;
+    private TextView txtNoSpecialProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +108,11 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
 
         horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
         edtSearch = (EditText) findViewById(R.id.edt_search);
-        btnNext = (ImageView) findViewById(R.id.btnNext);
-        btnPrev = (ImageView) findViewById(R.id.btnPrevoius);
+        btnNext = (RelativeLayout) findViewById(R.id.btnNext);
+        btnPrev = (RelativeLayout) findViewById(R.id.btnPrevoius);
         btnViewAll = (Button) findViewById(R.id.btn_view_all);
+        txtNoCategories = (TextView)findViewById(R.id.txt_no_categories);
+        txtNoSpecialProducts = (TextView)findViewById(R.id.txt_no_special_products);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -146,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                 @Override
                 public void onClick(View v) {
                     AppPreferences.getInstance().setUserLoggegIn(false);
-                    AppPreferences.getInstance().remove(AppPreferences.APP_OWNER_DATA);
+                    AppPreferences.getInstance().clearUserData();
                     Intent intent = new Intent(mActivityContext, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivityContext.startActivity(intent);
@@ -207,17 +213,34 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             }
         });
 
+        categoryAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if(categoryAdapter.isEmpty()) {
+                    txtNoCategories.setVisibility(View.VISIBLE);
+                    gridCategories.setVisibility(View.GONE);
+                }
+                else {
+                    txtNoCategories.setVisibility(View.GONE);
+                    gridCategories.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() - 170, (int)horizontalScrollView.getScrollY());
+                int widthOfOneElement = linSpecialProducts.getChildAt(0).getMeasuredWidth();
+                horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() - widthOfOneElement, (int)horizontalScrollView.getScrollY());
             }
         });
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() + 170, (int)horizontalScrollView.getScrollY());
+                int widthOfOneElement = linSpecialProducts.getChildAt(0).getMeasuredWidth();
+                horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() + widthOfOneElement, (int)horizontalScrollView.getScrollY());
             }
         });
 
@@ -360,7 +383,6 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             eaCategory.setCategoryImage(categoryModel.getCategory_image());
             masterCategoryList.add(eaCategory);
         }
-        refreshCatergoryUI();
     }
 
     private void refreshCatergoryUI() {
@@ -384,6 +406,14 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                         }
                     }
                     drawerAdapter.resetCategories(masterCategoryList);
+                    if(masterCategoryList.isEmpty()) {
+                        txtNoCategories.setVisibility(View.VISIBLE);
+                        gridCategories.setVisibility(View.GONE);
+                    }
+                    else {
+                        txtNoCategories.setVisibility(View.GONE);
+                        gridCategories.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
@@ -416,6 +446,21 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                                 .placeholder(R.drawable.placeholder_product).into((ImageView) view.findViewById(R.id.img_product));
                         linSpecialProducts.addView(view);
                     }
+
+                    if(specialProductHashmap.isEmpty()) {
+                        txtNoSpecialProducts.setVisibility(View.VISIBLE);
+                        btnNext.setVisibility(View.GONE);
+                        btnPrev.setVisibility(View.GONE);
+                        linSpecialProducts.setVisibility(View.GONE);
+                        btnViewAll.setVisibility(View.GONE);
+                    }
+                    else {
+                        txtNoSpecialProducts.setVisibility(View.GONE);
+                        btnNext.setVisibility(View.VISIBLE);
+                        btnPrev.setVisibility(View.VISIBLE);
+                        linSpecialProducts.setVisibility(View.VISIBLE);
+                        btnViewAll.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
@@ -426,6 +471,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+//                    List<EAServerRequest> serverRequests = new ArrayList<>();
+
                     for (int i = 0; i < linSpecialProducts.getChildCount(); i++) {
                         View view = linSpecialProducts.getChildAt(i);
                         String specialProductKey = (String) view.getTag();
@@ -434,12 +481,22 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                                 || specialProduct.getActualImage().isEmpty())
                                 && !specialProduct.isLoadingImage()) {
                             specialProduct.setLoadingImage(true);
+/*                            EAServerRequest eaServerRequest = new EAServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
+                                    Integer.parseInt(specialProductKey), EAServerRequest.PRIORITY_LOW);
+                            eaServerRequest.setActivityTag(TAG);
+                            eaServerRequest.setParams(specialProduct.getProduct_id());
+                            serverRequests.add(eaServerRequest);*/
+                            Log.i(TAG, "Special product id : "+specialProduct.getProduct_id());
                             EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE,
                                     Integer.parseInt(specialProductKey), EAServerRequest.PRIORITY_LOW, TAG, specialProduct.getProduct_id());
                         }
                         Picasso.with(mAppContext).load(specialProductHashmap.get(specialProductKey).getActualImage())
                                 .placeholder(R.drawable.placeholder_product).into((ImageView)view.findViewById(R.id.img_product));
                     }
+/*                    for (EAServerRequest serverRequest : serverRequests) {
+                        Log.i(TAG, "Special product id : "+serverRequest.getParams());
+                    }
+                    EAApplication.addServerRequests(serverRequests);*/
                 }
             });
         }

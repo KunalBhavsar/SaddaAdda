@@ -2,7 +2,6 @@ package com.emiadda.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,7 +43,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class ProductListActivity extends AppCompatActivity implements ServerResponseSubscriber {
@@ -53,7 +51,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
     private static final String TAG = ProductListActivity.class.getSimpleName();
 
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewProductList;
     private ProductGridAdapter productGridAdapter;
     private Toolbar toolbar;
     private Activity mActivityContext;
@@ -64,6 +62,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
     private boolean inForeground = true;
     private boolean dismissLoading;
     private RelativeLayout rltProgress;
+    private TextView txtNoProducts;
 
     private Fragment cartFragment;
     private String selectedSubcategoryName;
@@ -84,17 +83,19 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         mAppContext = getApplicationContext();
 
         rltProgress = (RelativeLayout) findViewById(R.id.rlt_progress);
+        txtNoProducts = (TextView)findViewById(R.id.txt_no_products);
 
         masterProductList = new ArrayList<>();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new GridSpaceItemDecoration(10));
+        recyclerViewProductList = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerViewProductList.setHasFixedSize(true);
+        recyclerViewProductList.addItemDecoration(new GridSpaceItemDecoration(10));
         productGridAdapter = new ProductGridAdapter(mActivityContext, new ProductGridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ProductModel item) {
                 Intent intent = new Intent(mActivityContext, ProductDetailActivity.class);
                 intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, item.getProduct_id());
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME, item.getName());
                 mActivityContext.startActivity(intent);
             }
         });
@@ -110,8 +111,23 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         });
 
         layoutManager = new GridLayoutManager(ProductListActivity.this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(productGridAdapter);
+        recyclerViewProductList.setLayoutManager(layoutManager);
+        recyclerViewProductList.setAdapter(productGridAdapter);
+
+        productGridAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if(productGridAdapter.getItemCount() == 0) {
+                    txtNoProducts.setVisibility(View.VISIBLE);
+                    recyclerViewProductList.setVisibility(View.GONE);
+                }
+                else {
+                    txtNoProducts.setVisibility(View.GONE);
+                    recyclerViewProductList.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         selectedSubcategoryName = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_SUB_CATEGORY_NAME).replaceAll("&amp;", "&");
         TextView  subcategoryTextView = (TextView) findViewById(R.id.txt_category_name);
@@ -291,7 +307,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(mAppContext, "Error in fetching categories", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mAppContext, selectedSubcategoryName + " data not available", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

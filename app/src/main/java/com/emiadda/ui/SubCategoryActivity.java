@@ -55,6 +55,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     private boolean dismissProgress;
     private RelativeLayout rltProgress;
     private String categorySelected;
+    private TextView txtNoSubCategories;
 
     private Fragment cartFragment;
 
@@ -76,7 +77,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         subcategoryRecyclerView.setHasFixedSize(true);
 
         rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
-
+        txtNoSubCategories = (TextView)findViewById(R.id.txt_no_sub_categories);
         masterCategoryList = new ArrayList<>();
         subCategoryAdapter = new SubCategoryAdapter(this, new SubCategoryAdapter.OnItemClickListener() {
             @Override
@@ -119,6 +120,22 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                     return;
                 }
                 subCategoryAdapter.getFilter().filter(s.toString());
+            }
+        });
+
+        subCategoryAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if(subCategoryAdapter.getItemCount() == 0) {
+                    txtNoSubCategories.setVisibility(View.VISIBLE);
+                    subcategoryRecyclerView.setVisibility(View.GONE);
+                }
+                else {
+                    subcategoryRecyclerView.setVisibility(View.VISIBLE);
+                    txtNoSubCategories.setVisibility(View.GONE);
+                }
             }
         });
 

@@ -102,4 +102,9 @@ public class AppPreferences {
         editor.putString(CART_LIST, new Gson().toJson(productList));
         editor.apply();
     }
+
+    public void clearUserData() {
+        AppPreferences.getInstance().remove(AppPreferences.APP_OWNER_DATA);
+        AppPreferences.getInstance().remove(AppPreferences.CART_LIST);
+    }
 }

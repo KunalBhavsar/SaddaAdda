@@ -43,6 +43,8 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     private static final String TAG = ProductDetailActivity.class.getSimpleName();
     private static final int PRODUCT_DETIALS_REQUEST_CODE = 1;
     private static final String SAVED_INSTANCE_CURRENT_QUANTITY = "current_quantity";
+    private static final String SAVED_INSTANCE_FROM_CART = "from_cart";
+
     private Context mAppContext;
     private Activity mActivityContext;
 
@@ -71,6 +73,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     private String selectedProductName;
 
     private Fragment cartFragment;
+    private boolean fromCart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +91,10 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(fromCart) {
+                    mActivityContext.finish();
+                    return;
+                }
                 Intent intent = new Intent(mActivityContext, CartActivity.class);
                 startActivity(intent);
             }
@@ -115,11 +122,16 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
         mDemoSlider.addOnPageChangeListener(this);
 
         if (savedInstanceState != null) {
+            fromCart = savedInstanceState.getBoolean(SAVED_INSTANCE_FROM_CART);
             currentQuantity = savedInstanceState.getInt(SAVED_INSTANCE_CURRENT_QUANTITY);
         }
-
+        else {
+            fromCart = getIntent().hasExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT);
+            currentQuantity = getIntent().getIntExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, 1);
+        }
         productId = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID);
         selectedProductName = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME);
+
         showProgress(true);
         ((EAApplication) mAppContext).attach(this);
 
@@ -142,7 +154,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                 if (visibile) {
                     rltProgress.setVisibility(View.VISIBLE);
                 } else {
-                    rltProgress.setVisibility(View.INVISIBLE);
+                    rltProgress.setVisibility(View.GONE);
                 }
             }
         });
@@ -225,7 +237,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                     btnBuyNow.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(mAppContext, "Buy " + currentQuantity + " items of " + productModel.getName(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mAppContext, "Coming soon..", Toast.LENGTH_SHORT).show();
                             //TODO: buy product option
                         }
                     });
@@ -236,6 +248,11 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                             Toast.makeText(mAppContext, "Added " + currentQuantity + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
                             productModel.setNumberOfSeletedItems(currentQuantity);
                             AppPreferences.getInstance().addProductToCartList(productModel);
+
+                            if(fromCart) {
+                                mActivityContext.finish();
+                                return;
+                            }
 
                             Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
                             FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
@@ -293,6 +310,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_INSTANCE_CURRENT_QUANTITY, currentQuantity);
+        outState.putBoolean(SAVED_INSTANCE_FROM_CART, fromCart);
         super.onSaveInstanceState(outState);
     }
 

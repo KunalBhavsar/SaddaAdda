@@ -68,16 +68,6 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
 
         rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
 
-        masterProductModelList = AppPreferences.getInstance().getCartList();
-        cartAdapter.addProduct(masterProductModelList);
-
-        for (ProductModel productModel : masterProductModelList) {
-            subTotal = productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice());
-        }
-
-        deliveryCharges = 100.00;
-        taxes = subTotal / 10;
-
         ((TextView)findViewById(R.id.txt_sub_total)).setText(String.valueOf(subTotal));
         ((TextView)findViewById(R.id.txt_delivery_charges)).setText(String.valueOf(deliveryCharges));
         ((TextView)findViewById(R.id.txt_taxes)).setText(String.valueOf(taxes));
@@ -123,13 +113,19 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     @Override
     protected void onResume() {
         super.onResume();
+        masterProductModelList = AppPreferences.getInstance().getCartList();
+        cartAdapter.resetProductList(masterProductModelList);
+        subTotal = 0;
+        taxes = 0;
+        for (ProductModel productModel : masterProductModelList) {
+            subTotal = productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice());
+        }
+
+        deliveryCharges = 100.00;
+        taxes = subTotal / 10;
+
         inForeground = true;
         //Reset is downloading status
-        for (ProductModel productModel : masterProductModelList) {
-            if(productModel.getActualImage() == null || productModel.getActualImage().isEmpty()) {
-                productModel.setLoadingImage(false);
-            }
-        }
         for (ProductModel productModel : masterProductModelList) {
             if((productModel.getActualImage() == null || productModel.getActualImage().isEmpty()) && !productModel.isLoadingImage()) {
                 productModel.setLoadingImage(true);
