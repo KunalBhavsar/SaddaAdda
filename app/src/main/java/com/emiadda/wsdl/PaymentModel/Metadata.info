@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<EasyWSDL>
+  <Info>
+    <Version>4.5.8.1</Version>
+    <AccountType>Basic</AccountType>
+    <LibrariesFolder>libs/easywsdl</LibrariesFolder>
+    <MainClass>ELLserverBinding</MainClass>
+  </Info>
+  <Settings>
+    <Url>http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/getCategories.php?wsdl</Url>
+    <ClassPrefix/>
+    <PackageName>com.emiadda.wsdl.PaymentModel</PackageName>
+    <AddDocumentation>false</AddDocumentation>
+    <EnableAdvancedFeatures>false</EnableAdvancedFeatures>
+    <EnableMTOM>false</EnableMTOM>
+    <EncodeIllegalCharacters>true</EncodeIllegalCharacters>
+    <GenerateAsyncOperations>true</GenerateAsyncOperations>
+    <ImplementSerializable>false</ImplementSerializable>
+    <AddAnyCollection>false</AddAnyCollection>
+    <UseJodaTime>false</UseJodaTime>
+    <Repackage/>
+    <GenerateHtmlDocumentation>true</GenerateHtmlDocumentation>
+  </Settings>
+  <Files>
+    <File>ELLFunctions.java</File>
+    <File>ELLserverBinding.java</File>
+    <File>ELLIServiceEvents.java</File>
+    <File>docs/Html/ELLserverBinding_methods.html</File>
+    <File>docs/Html/MTOMTransfer.html</File>
+    <File>docs/Html/Tips.html</File>
+    <File>docs/Html/ELLserverBinding.html</File>
+    <File>docs/Styles/Blueprint_Styles/Style.css</File>
+    <File>docs/Index.html</File>
+    <File>ELLMarshalGuid.java</File>
+    <File>ELLExtendedSoapSerializationEnvelope.java</File>
+    <File>ELLOperationResult.java</File>
+    <File>ELLHelper.java</File>
+  </Files>
+  <Libraries>
+    <File>ksoap2-android-assembly-3.6.1-jar-with-dependencies.jar</File>
+  </Libraries>
+</EasyWSDL>
