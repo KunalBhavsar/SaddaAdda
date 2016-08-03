@@ -1,4 +1,4 @@
-package com.emiadda.wsdl.PaymentModel;
+package com.emiadda.wsdl.getCategories;
 
 
 
@@ -16,13 +16,12 @@ package com.emiadda.wsdl.PaymentModel;
 
 
 import org.ksoap2.HeaderProperty;
-import org.ksoap2.serialization.*;
-import org.ksoap2.transport.*;
-import org.kxml2.kdom.Element;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.transport.HttpTransportSE;
+import org.ksoap2.transport.HttpsTransportSE;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -272,8 +271,39 @@ public class ELLserverBinding
     
     public String getProductImage(final String _params ) throws java.lang.Exception
     {
-/*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return (String)execute(new ELLIWcfMethod()
+        {
+            @Override
+            public ELLExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+                ELLExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("urn:server", "getProductImage");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info=null;
+                __info = new PropertyInfo();
+                __info.namespace="";
+                __info.name="params";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(_params!=null?_params:SoapPrimitive.NullNilElement);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public java.lang.Object ProcessResult(ELLExtendedSoapSerializationEnvelope __envelope,java.lang.Object __result)throws java.lang.Exception {
+                SoapObject __soap=(SoapObject)__result;
+                java.lang.Object obj = __soap.getProperty("result");
+                if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                {
+                    SoapPrimitive j =(SoapPrimitive) obj;
+                    return j.toString();
+                }
+                else if (obj!= null && obj instanceof String){
+                    return (String)obj;
+                }
+                return null;
+            }
+        },"urn:server#getProductImage");
     }
     
     public android.os.AsyncTask< Void, Void, ELLOperationResult< String>> getProductImageAsync(final String _params)
@@ -285,25 +315,102 @@ public class ELLserverBinding
         });
     }
     
-    public String getSpecials(final String _params ) throws java.lang.Exception
+    public String getSpecials() throws java.lang.Exception
     {
-/*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return (String)execute(new ELLIWcfMethod()
+        {
+            @Override
+            public ELLExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+                ELLExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("urn:server", "getSpecials");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info=null;
+                __info = new PropertyInfo();
+                __info.namespace="";
+                __info.name="params";
+                __info.type = PropertyInfo.BOOLEAN_CLASS;
+                __info.setValue(true);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public java.lang.Object ProcessResult(ELLExtendedSoapSerializationEnvelope __envelope,java.lang.Object __result)throws java.lang.Exception {
+                SoapObject __soap=(SoapObject)__result;
+                java.lang.Object obj = __soap.getProperty("result");
+                if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                {
+                    SoapPrimitive j =(SoapPrimitive) obj;
+                    return j.toString();
+                }
+                else if (obj!= null && obj instanceof String){
+                    return (String)obj;
+                }
+                return null;
+            }
+        },"urn:server#getSpecials");
     }
     
     public android.os.AsyncTask< Void, Void, ELLOperationResult< String>> getSpecialsAsync(final String _params)
     {
         return executeAsync(new ELLFunctions.IFunc< String>() {
             public String Func() throws java.lang.Exception {
-                return getSpecials( _params);
+                return getSpecials();
             }
         });
     }
     
     public String placeOrder(final String _params,final String products_array,final String total_array ) throws java.lang.Exception
     {
-/*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return (String)execute(new ELLIWcfMethod()
+        {
+            @Override
+            public ELLExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+                ELLExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("urn:server", "placeOrder");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info=null;
+                __info = new PropertyInfo();
+                __info.namespace="";
+                __info.name="params";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(_params);
+                __soapReq.addProperty(__info);
+
+                __info = new PropertyInfo();
+                __info.namespace="";
+                __info.name="products_array";
+                __info.type = PropertyInfo.VECTOR_CLASS;
+                __info.setValue(products_array);
+                __soapReq.addProperty(__info);
+
+                __info = new PropertyInfo();
+                __info.namespace="";
+                __info.name="total_array";
+                __info.type = PropertyInfo.VECTOR_CLASS;
+                __info.setValue(total_array);
+                __soapReq.addProperty(__info);
+
+                return __envelope;
+            }
+
+            @Override
+            public java.lang.Object ProcessResult(ELLExtendedSoapSerializationEnvelope __envelope,java.lang.Object __result)throws java.lang.Exception {
+                SoapObject __soap=(SoapObject)__result;
+                java.lang.Object obj = __soap.getProperty("result");
+                if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                {
+                    SoapPrimitive j =(SoapPrimitive) obj;
+                    return j.toString();
+                }
+                else if (obj!= null && obj instanceof String){
+                    return (String)obj;
+                }
+                return null;
+            }
+        },"urn:server#placeOrder");
     }
     
     public android.os.AsyncTask< Void, Void, ELLOperationResult< String>> placeOrderAsync(final String _params,final String products_array,final String total_array)

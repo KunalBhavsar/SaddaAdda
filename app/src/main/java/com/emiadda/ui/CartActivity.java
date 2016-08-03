@@ -31,6 +31,7 @@ import java.util.List;
 public class CartActivity extends AppCompatActivity implements ServerResponseSubscriber {
 
     private static final String TAG = CartActivity.class.getSimpleName();
+    private static final int PLACE_ORDER_REQUEST_CODE = 23;
 
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
@@ -80,6 +81,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, MakePaymentActivity.class);
                 startActivity(intent);
+                //EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, "param", "product_array", "total_array");
             }
         });
     }

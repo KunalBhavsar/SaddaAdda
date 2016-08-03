@@ -1,7 +1,5 @@
 package com.emiadda.wsdl;
 
-import com.emiadda.wsdl.specialProducts.ProductExtraOptionValueModel;
-
 import java.io.Serializable;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.emiadda.wsdl.PaymentModel;
+package com.emiadda.wsdl.getCategories;
 
 //----------------------------------------------------
 //

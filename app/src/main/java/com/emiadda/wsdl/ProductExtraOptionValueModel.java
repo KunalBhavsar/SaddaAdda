@@ -1,11 +1,10 @@
-package com.emiadda.wsdl.specialProducts;
-
-import java.io.Serializable;
+package com.emiadda.wsdl;
 
 /**
- * Created by Kunal on 19/07/16.
+ * Created by Kunal on 03/08/16.
  */
-public class ProductExtraOptionValueModel implements Serializable {
+
+public class ProductExtraOptionValueModel {
     private static final long serialVersionUID = 1L;
 
     private String product_option_value_id;

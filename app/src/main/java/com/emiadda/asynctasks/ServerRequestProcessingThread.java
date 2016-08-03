@@ -5,10 +5,8 @@ import android.util.Log;
 import com.emiadda.EAApplication;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
-import com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope;
-import com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding;
-import com.emiadda.wsdl.specialProducts.KESExtendedSoapSerializationEnvelope;
-import com.emiadda.wsdl.specialProducts.KESserverBinding;
+import com.emiadda.wsdl.getCategories.ELLExtendedSoapSerializationEnvelope;
+import com.emiadda.wsdl.getCategories.ELLserverBinding;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -36,6 +34,7 @@ public class ServerRequestProcessingThread extends Thread {
     public static final int REQUEST_CODE_GET_PRODUCT_IMAGE = 3;
     public static final int REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY = 4;
     public static final int REQUEST_CODE_GET_SPECIAL_PRODUCTS = 5;
+    public static final int REQUEST_CODE_PLACE_ORDER = 6;
 
     private static ServerRequestProcessingThread thread;
     private EAApplication context;
@@ -125,6 +124,9 @@ public class ServerRequestProcessingThread extends Thread {
                     case REQUEST_CODE_GET_SPECIAL_PRODUCTS:
                         getSpecialProducts(item);
                         break;
+                    case REQUEST_CODE_PLACE_ORDER:
+                        placeOrder(item);
+                        break;
                 }
             }
         } catch (InterruptedException iex) {
@@ -137,7 +139,7 @@ public class ServerRequestProcessingThread extends Thread {
     private void getCategories(EAServerRequest eaServerRequest) {
         try {
             //Using easysoap
-            VOKserverBinding VOKServerBinding = new VOKserverBinding();
+            ELLserverBinding VOKServerBinding = new ELLserverBinding();
 
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_CATEGORY);
@@ -147,7 +149,7 @@ public class ServerRequestProcessingThread extends Thread {
             propertyId.setType(Integer.class);
             request.addProperty(propertyId);
 
-            VOKExtendedSoapSerializationEnvelope soapEnvelope = new VOKExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.encodingStyle = SoapEnvelope.ENC;
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
@@ -167,7 +169,7 @@ public class ServerRequestProcessingThread extends Thread {
     private void getProductByProductId(EAServerRequest eaServerRequest) {
         try {
             //Using easysoap
-            com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding vokServerBinding = new com.emiadda.wsdl.categoriesAndProducts.VOKserverBinding();
+            com.emiadda.wsdl.getCategories.ELLserverBinding vokServerBinding = new com.emiadda.wsdl.getCategories.ELLserverBinding();
 
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCT_BY_PRODUCT_ID);
@@ -177,7 +179,7 @@ public class ServerRequestProcessingThread extends Thread {
             propertyId.setType(Integer.class);
             request.addProperty(propertyId);
 
-            com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope soapEnvelope = new com.emiadda.wsdl.categoriesAndProducts.VOKExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            com.emiadda.wsdl.getCategories.ELLExtendedSoapSerializationEnvelope soapEnvelope = new com.emiadda.wsdl.getCategories.ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.encodingStyle = SoapEnvelope.ENC;
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
@@ -197,7 +199,7 @@ public class ServerRequestProcessingThread extends Thread {
     private void getProductImage(EAServerRequest eaServerRequest) {
         try {
             //Using easysoap
-            VOKserverBinding abmServerBinding = new VOKserverBinding();
+            ELLserverBinding abmServerBinding = new ELLserverBinding();
 
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCT_IMAGE);
@@ -207,7 +209,7 @@ public class ServerRequestProcessingThread extends Thread {
             propertyId.setType(Integer.class);
             request.addProperty(propertyId);
 
-            VOKExtendedSoapSerializationEnvelope soapEnvelope = new VOKExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.encodingStyle = SoapEnvelope.ENC;
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
@@ -227,7 +229,7 @@ public class ServerRequestProcessingThread extends Thread {
     private void getProductByCategory(EAServerRequest eaServerRequest) {
         try {
             //Using easysoap
-            VOKserverBinding abmServerBinding = new VOKserverBinding();
+            ELLserverBinding abmServerBinding = new ELLserverBinding();
 
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCTS_BY_CATEGORY);
@@ -237,7 +239,7 @@ public class ServerRequestProcessingThread extends Thread {
             propertyId.setType(Integer.class);
             request.addProperty(propertyId);
 
-            VOKExtendedSoapSerializationEnvelope soapEnvelope = new VOKExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.encodingStyle = SoapEnvelope.ENC;
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
@@ -258,7 +260,7 @@ public class ServerRequestProcessingThread extends Thread {
     private void getSpecialProducts(EAServerRequest eaServerRequest) {
         try {
             //Using easysoap
-            KESserverBinding abmServerBinding = new KESserverBinding();
+            ELLserverBinding abmServerBinding = new ELLserverBinding();
 
             //Using soap standard way
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_SPECIAL_PRODUCTS);
@@ -268,7 +270,7 @@ public class ServerRequestProcessingThread extends Thread {
             propertyId.setType(Integer.class);
             request.addProperty(propertyId);
 
-            KESExtendedSoapSerializationEnvelope soapEnvelope = new KESExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.encodingStyle = SoapEnvelope.ENC;
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
@@ -280,6 +282,37 @@ public class ServerRequestProcessingThread extends Thread {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
         } catch (Exception e) {
+            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    private void placeOrder(EAServerRequest eaServerRequest) {
+        try {
+            //Using easysoap
+            ELLserverBinding abmServerBinding = new ELLserverBinding();
+
+            //Using soap standard way
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCT_IMAGE);
+
+            PropertyInfo propertyId = new PropertyInfo();
+            propertyId.setValue(0);
+            propertyId.setType(Integer.class);
+            request.addProperty(propertyId);
+
+            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
+            soapEnvelope.encodingStyle = SoapEnvelope.ENC;
+            soapEnvelope.dotNet = false;
+            soapEnvelope.bodyOut = request;
+
+            String response = abmServerBinding.placeOrder(eaServerRequest.getParams().get(0), eaServerRequest.getParams().get(1), eaServerRequest.getParams().get(2));
+            if (response != null && !response.isEmpty()) {
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            } else {
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+            }
+        }
+        catch (Exception e) {
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
