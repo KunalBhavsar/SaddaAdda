@@ -81,7 +81,8 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, MakePaymentActivity.class);
                 startActivity(intent);
-                //EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, "param", "product_array", "total_array");
+                //EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG,
+                // "orderParams", "productsParam[]", "totalParams[]");
             }
         });
     }

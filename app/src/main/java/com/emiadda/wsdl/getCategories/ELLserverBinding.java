@@ -36,7 +36,7 @@ public class ELLserverBinding
 
     String url="http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/getCategories.php";
 
-    int timeOut=60000;
+    int timeOut=20000;
     public List< HeaderProperty> httpHeaders;
     public boolean enableLogging;
 
@@ -361,7 +361,7 @@ public class ELLserverBinding
         });
     }
     
-    public String placeOrder(final String _params,final String products_array,final String total_array ) throws java.lang.Exception
+    public String placeOrder(final String orderParams,final String productsParam,final String totalParams) throws java.lang.Exception
     {
         return (String)execute(new ELLIWcfMethod()
         {
@@ -376,21 +376,21 @@ public class ELLserverBinding
                 __info.namespace="";
                 __info.name="params";
                 __info.type = PropertyInfo.STRING_CLASS;
-                __info.setValue(_params);
+                __info.setValue(orderParams);
                 __soapReq.addProperty(__info);
 
                 __info = new PropertyInfo();
                 __info.namespace="";
                 __info.name="products_array";
                 __info.type = PropertyInfo.VECTOR_CLASS;
-                __info.setValue(products_array);
+                __info.setValue(productsParam);
                 __soapReq.addProperty(__info);
 
                 __info = new PropertyInfo();
                 __info.namespace="";
                 __info.name="total_array";
                 __info.type = PropertyInfo.VECTOR_CLASS;
-                __info.setValue(total_array);
+                __info.setValue(totalParams);
                 __soapReq.addProperty(__info);
 
                 return __envelope;
