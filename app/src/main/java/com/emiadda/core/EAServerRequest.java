@@ -19,6 +19,7 @@ public class EAServerRequest {
     List<String> params;
 
     public EAServerRequest(int requestCode, int extraRequestCode, int priority) {
+        params = new ArrayList<>();
         this.requestCode = requestCode;
         this.extraRequestCode = extraRequestCode;
         this.priority = priority;

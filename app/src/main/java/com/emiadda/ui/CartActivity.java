@@ -1,5 +1,6 @@
 package com.emiadda.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emiadda.EAApplication;
 import com.emiadda.R;
@@ -32,6 +34,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
 
     private static final String TAG = CartActivity.class.getSimpleName();
     private static final int PLACE_ORDER_REQUEST_CODE = 23;
+    private static final int REQUEST_CODE_LOGIN = 1;
 
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
@@ -44,6 +47,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     private List<ProductModel> masterProductModelList;
     private boolean inForeground;
     private Context mAppContext;
+    private Activity mActivityContext;
     private RelativeLayout rltProgress;
 
     @Override
@@ -51,6 +55,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        mActivityContext = this;
         mAppContext = getApplicationContext();
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
@@ -79,10 +84,13 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CartActivity.this, MakePaymentActivity.class);
-                startActivity(intent);
-                //EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG,
-                // "orderParams", "productsParam[]", "totalParams[]");
+                if(!AppPreferences.getInstance().isUserLoggedIn()) {
+                    Toast.makeText(mAppContext, "Please login first to place an order", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mActivityContext, LoginActivity.class);
+                    mActivityContext.startActivityForResult(intent, REQUEST_CODE_LOGIN);
+                    return;
+                }
+                proceedForPayment();
             }
         });
     }
@@ -188,5 +196,21 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
                 }
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_CODE_LOGIN) {
+            if(resultCode == RESULT_OK) {
+                proceedForPayment();
+            }
+        }
+    }
+
+    private void proceedForPayment() {
+        Intent intent = new Intent(CartActivity.this, MakePaymentActivity.class);
+        startActivity(intent);
+        //EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG,
+        // "orderParams", "productsParam[]", "totalParams[]");
     }
 }

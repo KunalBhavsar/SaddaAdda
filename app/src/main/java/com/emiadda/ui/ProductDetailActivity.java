@@ -287,6 +287,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                         productModel = new Gson().fromJson(response, new TypeToken<ProductModel>() {
                         }.getType());
                         if (productModel != null) {
+                            Log.i(TAG, "Product payment options : " + new Gson().toJson(productModel.getPayment_options()));
                             setProductDetails();
                         }
                     } catch (Exception e) {
@@ -299,7 +300,9 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mActivityContext, selectedProductName + " data not available", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivityContext, selectedProductName + " data not available",
+                                Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
             }

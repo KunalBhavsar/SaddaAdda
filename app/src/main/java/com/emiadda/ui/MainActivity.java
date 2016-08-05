@@ -1,7 +1,6 @@
 package com.emiadda.ui;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -22,19 +21,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private TextView txtNoCategories;
     private TextView txtNoSpecialProducts;
 
+    private View navDrawerHeaderView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,42 +119,13 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         gridCategories = (WrapHeightGridView) findViewById(R.id.grd_categories);
         ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
         rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
+        navDrawerHeaderView = navigationView.getHeaderView(0);
+        drawerRecyclerView = (RecyclerView) navDrawerHeaderView.findViewById(R.id.recycler_view);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        if (navigationView != null) {
-            View headerView = navigationView.getHeaderView(0);
-            CustomerModel appOwner = AppPreferences.getInstance().getAppOwnerData();
-            TextView txtName = (TextView) headerView.findViewById(R.id.txt_name);
-            txtName.setText(appOwner.getFirstname() + " " + appOwner.getLastname());
-
-            TextView txtEmail = (TextView) headerView.findViewById(R.id.txt_email);
-            txtEmail.setText(appOwner.getEmail());
-
-            TextView txtHome = (TextView) headerView.findViewById(R.id.txt_home);
-            txtHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    drawer.closeDrawers();
-                }
-            });
-
-            drawerRecyclerView = (RecyclerView) headerView.findViewById(R.id.recycler_view);
-            headerView.findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppPreferences.getInstance().setUserLoggegIn(false);
-                    AppPreferences.getInstance().clearUserData();
-                    Intent intent = new Intent(mActivityContext, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mActivityContext.startActivity(intent);
-                    finish();
-                }
-            });
-        }
 
         masterCategoryList = new ArrayList<>();
         specialProductHashmap = new HashMap<>();
@@ -254,6 +220,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             }
         });
 
+        refreshUserLoginStatusOnNavDrawer();
+
         showProgress(true);
         ((EAApplication) mAppContext).attach(this);
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(0));
@@ -343,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                 refreshCatergoryUI();
             }
             else {
-                Toast.makeText(mAppContext, "Error in fetching Categories", Toast.LENGTH_SHORT).show();
+                showToast("Error in fetching Categories", Toast.LENGTH_SHORT);
             }
         }
         else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS
@@ -358,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                 }
             }
             else {
-                Toast.makeText(mAppContext, "Error in fetching Special products", Toast.LENGTH_SHORT).show();
+                showToast("Error in fetching Special products", Toast.LENGTH_SHORT);
             }
         }
         else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
@@ -382,6 +350,56 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             eaCategory.setCategoryName(categoryModel.getCategory_name());
             eaCategory.setCategoryImage(categoryModel.getCategory_image());
             masterCategoryList.add(eaCategory);
+        }
+    }
+
+    private void refreshUserLoginStatusOnNavDrawer() {
+        if (navigationView != null) {
+            RelativeLayout relUserProfile = (RelativeLayout) navDrawerHeaderView.findViewById(R.id.rlt_user_profile);
+            Button buttonLogin = (Button) navDrawerHeaderView.findViewById(R.id.btn_login);
+            if(AppPreferences.getInstance().isUserLoggedIn()) {
+                relUserProfile.setVisibility(View.VISIBLE);
+                buttonLogin.setVisibility(View.GONE);
+
+                CustomerModel appOwner = AppPreferences.getInstance().getAppOwnerData();
+                TextView txtName = (TextView) navDrawerHeaderView.findViewById(R.id.txt_name);
+                txtName.setText(appOwner.getFirstname() + " " + appOwner.getLastname());
+
+                TextView txtEmail = (TextView) navDrawerHeaderView.findViewById(R.id.txt_email);
+                txtEmail.setText(appOwner.getEmail());
+
+                TextView txtHome = (TextView) navDrawerHeaderView.findViewById(R.id.txt_home);
+                txtHome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        drawer.closeDrawers();
+                    }
+                });
+
+                navDrawerHeaderView.findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AppPreferences.getInstance().setUserLoggegIn(false);
+                        AppPreferences.getInstance().clearAppOwnerData();
+                        Intent intent = new Intent(mActivityContext, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mActivityContext.startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+            else {
+                buttonLogin.setVisibility(View.VISIBLE);
+                relUserProfile.setVisibility(View.GONE);
+
+                buttonLogin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mActivityContext, LoginActivity.class);
+                        mActivityContext.startActivity(intent);
+                    }
+                });
+            }
         }
     }
 
@@ -502,6 +520,15 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         }
     }
 
+    private void showToast(final String textToBeShown, final int toastDuration) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mAppContext, textToBeShown, toastDuration).show();
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -517,6 +544,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         refreshCatergoryUI();
         refreshSpecialProductUI();
         updateImagesOfSpecialProductsUI();
+        refreshUserLoginStatusOnNavDrawer();
+
         Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
         FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
         fragTransaction.detach(currentFragment);

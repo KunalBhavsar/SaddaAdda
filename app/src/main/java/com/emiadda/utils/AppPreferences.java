@@ -103,8 +103,7 @@ public class AppPreferences {
         editor.apply();
     }
 
-    public void clearUserData() {
+    public void clearAppOwnerData() {
         AppPreferences.getInstance().remove(AppPreferences.APP_OWNER_DATA);
-        AppPreferences.getInstance().remove(AppPreferences.CART_LIST);
     }
 }

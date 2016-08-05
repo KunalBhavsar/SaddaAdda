@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
-    <RelativeLayout android:id="@+id/rlt_nav"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_140dp"
-                    android:background="@color/blue_login_btn">
+    <RelativeLayout
+        android:id="@+id/rlt_user_profile"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_140dp"
+        android:visibility="gone"
+        android:background="@color/blue_login_btn">
 
         <com.emiadda.views.CircularImageView
             android:id="@+id/img_app_owner"
@@ -23,7 +25,7 @@
             android:src="@drawable/profilepic"
             app:civ_border="true"
             app:civ_borderColor="@color/white"
-            app:civ_borderWidth="2dp"/>
+            app:civ_borderWidth="2dp" />
 
         <View
             android:id="@+id/view"
@@ -31,7 +33,7 @@
             android:layout_height="1dp"
             android:layout_centerVertical="true"
             android:layout_marginTop="2dp"
-            android:background="@color/blue_login_btn"/>
+            android:background="@color/blue_login_btn" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -51,7 +53,7 @@
                 android:text="Android Studio"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/white"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/txt_email"
@@ -63,7 +65,7 @@
                 android:padding="@dimen/_5dp"
                 android:text="android.studio@android.com"
                 android:textColor="@color/white"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </RelativeLayout>
 
         <Button
@@ -74,27 +76,40 @@
             android:layout_alignParentTop="true"
             android:background="@android:color/transparent"
             android:text="SIGN OUT"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 
-    <View android:layout_width="match_parent"
-          android:background="@color/gray_product_bg"
-          android:layout_height="2dp"/>
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:background="@color/blue_login_btn"
+        android:padding="@dimen/_5dp"
+        android:text="SIGN IN"
+        android:textColor="@color/white" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/gray_product_bg" />
 
-    <TextView android:id="@+id/txt_home"
-              style="@style/DrawerText"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/_50dp"
-              android:drawableLeft="@drawable/home1"
-              android:text="@string/home"/>
+    <TextView
+        android:id="@+id/txt_home"
+        style="@style/DrawerText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:drawableLeft="@drawable/home1"
+        android:text="@string/home" />
 
-    <View android:layout_width="match_parent"
-          android:background="@color/gray_product_bg"
-          android:layout_height="1dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_product_bg" />
 
-    <android.support.v7.widget.RecyclerView android:id="@+id/recycler_view"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

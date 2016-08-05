@@ -5,6 +5,11 @@ import android.util.Log;
 import com.emiadda.EAApplication;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.GetCategoriesWSDL;
+import com.emiadda.server.IWsdl2CodeEvents;
+import com.emiadda.server.Vectorproductsparams;
+import com.emiadda.server.Vectortotalparams;
+import com.emiadda.server.orderparams;
 import com.emiadda.wsdl.getCategories.ELLExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.getCategories.ELLserverBinding;
 
@@ -154,7 +159,8 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response = VOKServerBinding.getCategories(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+            String response = new GetCategoriesWSDL().getCategories(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {
@@ -184,7 +190,8 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response = vokServerBinding.getProductByProductID(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+            String response = new GetCategoriesWSDL().getProductByProductID(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {
@@ -214,7 +221,8 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response = abmServerBinding.getProductImage(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+            String response = new GetCategoriesWSDL().getProductImage(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {
@@ -244,7 +252,8 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response = abmServerBinding.getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+            String response = new GetCategoriesWSDL().getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {
@@ -275,7 +284,8 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response = abmServerBinding.getSpecials();
+            String response = new GetCategoriesWSDL().getSpecials(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {
@@ -305,7 +315,11 @@ public class ServerRequestProcessingThread extends Thread {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            String response = abmServerBinding.placeOrder(eaServerRequest.getParams().get(0), eaServerRequest.getParams().get(1), eaServerRequest.getParams().get(2));
+            orderparams orderparams = new orderparams();
+            Vectorproductsparams vectorproductsparams = new Vectorproductsparams();
+            Vectortotalparams vectortotalparams = new Vectortotalparams();
+
+            String response = new GetCategoriesWSDL().placeOrder(orderparams, vectorproductsparams, vectortotalparams);
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {

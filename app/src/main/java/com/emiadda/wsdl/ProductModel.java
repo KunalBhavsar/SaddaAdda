@@ -57,6 +57,7 @@ public class ProductModel implements Serializable {
     private String otp_discount_rate;
     private String emi_discount_rate;
     private String show_payment_option;
+    private List<TaxDataModel> tax_data;
     private List<String> all_images;
     private List<ProductExtraOptionModel> extra_options;
     private List<ProductPaymentOptionModel> payment_options;
@@ -479,6 +480,14 @@ public class ProductModel implements Serializable {
 
     public void setActualImage(String actualImage) {
         this.actualImage = actualImage;
+    }
+
+    public List<TaxDataModel> getTax_data() {
+        return tax_data;
+    }
+
+    public void setTax_data(List<TaxDataModel> tax_data) {
+        this.tax_data = tax_data;
     }
 
     @Override
