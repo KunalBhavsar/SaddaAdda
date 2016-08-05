@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.emiadda.ui.MakePaymentActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.emiadda.ui.MakePaymentActivity">
 
 
     <android.support.v7.widget.Toolbar
@@ -18,13 +18,13 @@
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo"/>
     </android.support.v7.widget.Toolbar>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray_product_bg" />
+        android:background="@color/gray_product_bg"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="@color/blue_login_btn" />
+                android:background="@color/blue_login_btn"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:text="MAKE PAYMENT"
                 android:textColor="@color/blue_login_btn"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,28 +60,33 @@
                 android:background="@color/light_gray"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="@dimen/_60dp"
-                        android:text="EMI"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                <LinearLayout android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginBottom="@dimen/_5dp"
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="@dimen/_60dp"
-                        android:text="Direct Payment"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                              android:background="@color/light_gray"
+                              android:orientation="horizontal">
+
+                    <TextView android:id="@+id/txt_emi_lable"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_weight="1"
+                              android:gravity="center"
+                              android:text="EMI"
+                              android:textColor="@color/black"
+                              android:textSize="16sp"/>
+
+                    <TextView android:id="@+id/txt_direct_lable"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/_35dp"
+                              android:layout_weight="1"
+                              android:background="#fff"
+
+                              android:gravity="center"
+                              android:text="Direct Payment"
+                              android:textColor="@color/gray_dark"
+                              android:textSize="16sp"/>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -103,7 +108,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="No of EMI's" />
+                        android:text="No of EMI's"/>
 
                     <Spinner
                         android:id="@+id/spnr_emi_count"
@@ -116,7 +121,7 @@
                         android:gravity="center"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="10" />
+                        android:text="10"/>
 
 
                     <TextView
@@ -131,7 +136,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Down Payment" />
+                        android:text="Down Payment"/>
 
                     <TextView
                         android:id="@+id/txt_down_payment_value"
@@ -145,7 +150,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 100" />
+                        android:text="Rs. 100"/>
 
                     <TextView
                         android:id="@+id/txt_emi_price"
@@ -159,7 +164,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="EMI" />
+                        android:text="EMI"/>
 
                     <TextView
                         android:id="@+id/txt_emi_price_value"
@@ -173,7 +178,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 810" />
+                        android:text="Rs. 810"/>
 
                     <TextView
                         android:id="@+id/txt_net_emi"
@@ -187,7 +192,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Net EMI Value" />
+                        android:text="Net EMI Value"/>
 
                     <TextView
                         android:id="@+id/txt_net_emi_value"
@@ -201,7 +206,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 810" />
+                        android:text="Rs. 810"/>
 
 
                     <TextView
@@ -217,7 +222,7 @@
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
                         android:text="Total"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/txt_total_value"
@@ -231,7 +236,7 @@
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
                         android:text="Rs. 8100"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"/>
 
                 </RelativeLayout>
 
@@ -246,7 +251,7 @@
                 android:text="PAYABLE AMOUNT"
                 android:textColor="@color/blue_login_btn"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -271,7 +276,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Down Payment" />
+                        android:text="Down Payment"/>
 
                     <TextView
                         android:id="@+id/txt_payable_down_payment_value"
@@ -284,7 +289,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 100" />
+                        android:text="Rs. 100"/>
 
                     <TextView
                         android:id="@+id/txt_taxes"
@@ -298,7 +303,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Taxes" />
+                        android:text="Taxes"/>
 
                     <TextView
                         android:id="@+id/txt_taxes_value"
@@ -312,7 +317,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 810" />
+                        android:text="Rs. 810"/>
 
                     <TextView
                         android:id="@+id/txt_delivery_charges"
@@ -326,7 +331,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Delivery Charges" />
+                        android:text="Delivery Charges"/>
 
                     <TextView
                         android:id="@+id/txt_delivery_charges_value"
@@ -340,7 +345,7 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 810" />
+                        android:text="Rs. 810"/>
 
 
                     <TextView
@@ -356,7 +361,7 @@
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
                         android:text="Total"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/txt_total_payable_value"
@@ -369,7 +374,7 @@
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
                         android:text="Rs. 8100"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"/>
 
                 </RelativeLayout>
 
@@ -385,7 +390,7 @@
                 android:layout_marginRight="@dimen/_30dp"
                 android:background="@drawable/ripple_orange"
                 android:text="CONFIRM ORDER"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"/>
         </LinearLayout>
     </ScrollView>
 
