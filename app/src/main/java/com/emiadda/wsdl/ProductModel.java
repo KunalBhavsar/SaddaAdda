@@ -57,12 +57,12 @@ public class ProductModel implements Serializable {
     private String otp_discount_rate;
     private String emi_discount_rate;
     private String show_payment_option;
-    private List<TaxDataModel> tax_data;
+    private String shipping_charge;
+    private TaxDataModel tax_data;
     private List<String> all_images;
     private List<ProductExtraOptionModel> extra_options;
     private List<ProductPaymentOptionModel> payment_options;
 
-    private int numberOfSeletedItems;
     private boolean loadingImage;
     private String actualImage;
 
@@ -216,6 +216,14 @@ public class ProductModel implements Serializable {
 
     public void setManufacturer_id(String manufacturer_id) {
         this.manufacturer_id = manufacturer_id;
+    }
+
+    public String getShipping_charge() {
+        return shipping_charge;
+    }
+
+    public void setShipping_charge(String shipping_charge) {
+        this.shipping_charge = shipping_charge;
     }
 
     public String getManufacturer() {
@@ -482,11 +490,11 @@ public class ProductModel implements Serializable {
         this.actualImage = actualImage;
     }
 
-    public List<TaxDataModel> getTax_data() {
+    public TaxDataModel getTax_data() {
         return tax_data;
     }
 
-    public void setTax_data(List<TaxDataModel> tax_data) {
+    public void setTax_data(TaxDataModel tax_data) {
         this.tax_data = tax_data;
     }
 
@@ -504,13 +512,5 @@ public class ProductModel implements Serializable {
     @Override
     public int hashCode() {
         return product_id != null ? product_id.hashCode() : 0;
-    }
-
-    public int getNumberOfSeletedItems() {
-        return numberOfSeletedItems;
-    }
-
-    public void setNumberOfSeletedItems(int numberOfSeletedItems) {
-        this.numberOfSeletedItems = numberOfSeletedItems;
     }
 }

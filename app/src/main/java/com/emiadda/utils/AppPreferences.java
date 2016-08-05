@@ -27,6 +27,10 @@ public class AppPreferences {
     public static final String USER_LOGGED_IN = "user_logged_in";
     public static final String APP_OWNER_DATA = "app_owner_data";
     public static final String CART_LIST = "cart_list";
+    public static final String CART_TYPE = "cart_type";
+
+    public static final String CART_TYPE_VALUE_EMI = "emi";
+    public static final String CART_TYPE_VALUE_DIRECT_PAYMENT = "direct_payment";
 
     private AppPreferences(Context context) {
         this.context = context;
@@ -72,6 +76,15 @@ public class AppPreferences {
         editor.apply();
     }
 
+    public void setCartType(String cartType) {
+        editor.putString(CART_TYPE, cartType);
+        editor.apply();
+    }
+
+    public String getCartType() {
+        return sharedPreferences.getString(CART_TYPE, "");
+    }
+
     public List<ProductModel> getCartList() {
         String cartString = sharedPreferences.getString(CART_LIST, "");
         if(!cartString.isEmpty()) {
@@ -81,7 +94,7 @@ public class AppPreferences {
         return new ArrayList<>();
     }
 
-    public void addProductToCartList(ProductModel item) {
+    public void addProductToCartList(ProductModel item, String cartType) {
         List<ProductModel> productList = getCartList();
         if (productList.contains(item)) {
             productList.remove(productList.indexOf(item));
@@ -90,6 +103,8 @@ public class AppPreferences {
         else {
             productList.add(item);
         }
+
+        setCartType(cartType);
         editor.putString(CART_LIST, new Gson().toJson(productList));
         editor.apply();
     }
@@ -98,6 +113,9 @@ public class AppPreferences {
         List<ProductModel> productList = getCartList();
         if (productList.contains(item)) {
             productList.remove(productList.indexOf(item));
+        }
+        if(productList.isEmpty()) {
+            remove(CART_TYPE);
         }
         editor.putString(CART_LIST, new Gson().toJson(productList));
         editor.apply();

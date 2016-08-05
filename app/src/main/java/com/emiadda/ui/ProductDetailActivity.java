@@ -245,10 +245,12 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                     btnAddToCart.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(mAppContext, "Added " + currentQuantity + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
-                            productModel.setNumberOfSeletedItems(currentQuantity);
-                            AppPreferences.getInstance().addProductToCartList(productModel);
+                            productModel.setQuantity(String.valueOf(currentQuantity));
+                            EAApplication.setTransientSelectedProductModel(productModel);
 
+                            Intent intent = new Intent(mActivityContext, MakePaymentActivity.class);
+                            intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, fromCart);
+                            startActivity(intent);
                             if(fromCart) {
                                 mActivityContext.finish();
                                 return;
@@ -287,7 +289,6 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                         productModel = new Gson().fromJson(response, new TypeToken<ProductModel>() {
                         }.getType());
                         if (productModel != null) {
-                            Log.i(TAG, "Product payment options : " + new Gson().toJson(productModel.getPayment_options()));
                             setProductDetails();
                         }
                     } catch (Exception e) {

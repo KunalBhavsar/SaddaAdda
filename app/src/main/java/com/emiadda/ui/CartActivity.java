@@ -3,6 +3,7 @@ package com.emiadda.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +31,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public class CartActivity extends AppCompatActivity implements ServerResponseSubscriber {
+public class CartActivity extends AppCompatActivity implements ServerResponseSubscriber, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = CartActivity.class.getSimpleName();
     private static final int PLACE_ORDER_REQUEST_CODE = 23;
@@ -73,11 +74,6 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         recyclerView.setAdapter(cartAdapter);
 
         rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
-
-        ((TextView)findViewById(R.id.txt_sub_total)).setText(String.valueOf(subTotal));
-        ((TextView)findViewById(R.id.txt_delivery_charges)).setText(String.valueOf(deliveryCharges));
-        ((TextView)findViewById(R.id.txt_taxes)).setText(String.valueOf(taxes));
-        ((TextView)findViewById(R.id.txt_total)).setText(String.valueOf(subTotal + deliveryCharges + taxes));
 
         ((EAApplication)mAppContext).attach(this);
 
@@ -124,17 +120,8 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     @Override
     protected void onResume() {
         super.onResume();
-        masterProductModelList = AppPreferences.getInstance().getCartList();
-        cartAdapter.resetProductList(masterProductModelList);
-        subTotal = 0;
-        taxes = 0;
-        for (ProductModel productModel : masterProductModelList) {
-            subTotal = productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice());
-        }
 
-        deliveryCharges = 100.00;
-        taxes = subTotal / 10;
-
+        refreshTotalAmount();
         inForeground = true;
         //Reset is downloading status
         for (ProductModel productModel : masterProductModelList) {
@@ -144,6 +131,29 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
                         Integer.parseInt(productModel.getProduct_id()), EAServerRequest.PRIORITY_LOW, TAG, productModel.getProduct_id());
             }
         }
+    }
+
+    private void refreshTotalAmount() {
+        masterProductModelList = AppPreferences.getInstance().getCartList();
+        cartAdapter.resetProductList(masterProductModelList);
+        subTotal = 0;
+        taxes = 0;
+        for (ProductModel productModel : masterProductModelList) {
+            double quantity = Double.parseDouble(productModel.getQuantity());
+            double totalPrice = quantity * Double.parseDouble(productModel.getPrice());
+            subTotal += totalPrice;
+            if(productModel.getTax_data() != null) {
+                taxes += productModel.getTax_data().getTax_amt() * quantity;
+            }
+            if(productModel.getShipping_charge() != null) {
+                deliveryCharges += Double.parseDouble(productModel.getShipping_charge()) * quantity;
+            }
+        }
+
+        ((TextView)findViewById(R.id.txt_sub_total)).setText(String.valueOf(subTotal));
+        ((TextView)findViewById(R.id.txt_delivery_charges)).setText(String.valueOf(deliveryCharges));
+        ((TextView)findViewById(R.id.txt_taxes)).setText(String.valueOf(taxes));
+        ((TextView)findViewById(R.id.txt_total)).setText(String.valueOf(subTotal + deliveryCharges + taxes));
     }
 
     @Override
@@ -179,7 +189,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
                             if (productImageModel != null) {
                                 product.setActualImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
                                 AppPreferences.getInstance().removeProductFromCartList(product);
-                                AppPreferences.getInstance().addProductToCartList(product);
+                                AppPreferences.getInstance().addProductToCartList(product, AppPreferences.getInstance().getCartType());
                                 if(inForeground) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -212,5 +222,12 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         startActivity(intent);
         //EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG,
         // "orderParams", "productsParam[]", "totalParams[]");
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(AppPreferences.CART_LIST)) {
+            refreshTotalAmount();
+        }
     }
 }

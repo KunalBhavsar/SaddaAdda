@@ -8,6 +8,7 @@ import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerRequestResponseObserver;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.wsdl.ProductModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class EAApplication extends Application implements ServerRequestResponseO
     List<ServerResponseSubscriber> serverResponseInterfaces;
     static Context mAppContext;
 
+    private static ProductModel transientSelectedProductModel;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -33,6 +36,14 @@ public class EAApplication extends Application implements ServerRequestResponseO
 
     private static Context getInstance() {
         return mAppContext;
+    }
+
+    public static ProductModel getTransientSelectedProductModel() {
+        return transientSelectedProductModel;
+    }
+
+    public static void setTransientSelectedProductModel(ProductModel selectedProductModel) {
+        transientSelectedProductModel = selectedProductModel;
     }
 
     @Override

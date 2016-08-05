@@ -82,18 +82,18 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
-            <Button
+            <TextView
                 android:id="@+id/btn_register"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                android:gravity="center"
+                android:padding="@dimen/_10dp"
                 android:layout_below="@id/btn_submit"
-                android:layout_marginLeft="@dimen/_40dp"
-                android:layout_marginRight="@dimen/_40dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/ripple_blue"
                 android:text="REGISTER"
                 android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
             <Button
                 android:layout_width="match_parent"

@@ -65,8 +65,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         ProductModel productModel = cartList.get(position);
         holder.txtBrandName.setText(productModel.getMeta_title());
         holder.txtAmount.setText(productModel.getPrice());
-        holder.txtQunt.setText(String.valueOf(productModel.getNumberOfSeletedItems()));
-        holder.txtAmount.setText(String.valueOf(productModel.getNumberOfSeletedItems() * Double.parseDouble(productModel.getPrice())));
+        holder.txtQunt.setText(productModel.getQuantity());
+        holder.txtAmount.setText(String.valueOf(Integer.valueOf(productModel.getQuantity()) * Double.parseDouble(productModel.getPrice())));
 
         Picasso.with(context).load(productModel.getActualImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);
 
@@ -158,7 +158,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
                         ProductModel cartItemSelected = cartList.get(itemIndex);
                         intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, cartItemSelected.getProduct_id());
                         intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME, cartItemSelected.getName());
-                        intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, cartItemSelected.getNumberOfSeletedItems());
+                        intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, cartItemSelected.getQuantity());
                         context.startActivity(intent);
                     }
                     else {

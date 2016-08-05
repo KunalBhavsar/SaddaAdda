@@ -143,22 +143,6 @@ public class ServerRequestProcessingThread extends Thread {
 
     private void getCategories(EAServerRequest eaServerRequest) {
         try {
-            //Using easysoap
-            ELLserverBinding VOKServerBinding = new ELLserverBinding();
-
-            //Using soap standard way
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_CATEGORY);
-
-            PropertyInfo propertyId = new PropertyInfo();
-            propertyId.setValue(0);
-            propertyId.setType(Integer.class);
-            request.addProperty(propertyId);
-
-            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
-            soapEnvelope.encodingStyle = SoapEnvelope.ENC;
-            soapEnvelope.dotNet = false;
-            soapEnvelope.bodyOut = request;
-
             String response = new GetCategoriesWSDL().getCategories(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
 
             if (response != null && !response.isEmpty()) {
@@ -174,22 +158,6 @@ public class ServerRequestProcessingThread extends Thread {
 
     private void getProductByProductId(EAServerRequest eaServerRequest) {
         try {
-            //Using easysoap
-            com.emiadda.wsdl.getCategories.ELLserverBinding vokServerBinding = new com.emiadda.wsdl.getCategories.ELLserverBinding();
-
-            //Using soap standard way
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCT_BY_PRODUCT_ID);
-
-            PropertyInfo propertyId = new PropertyInfo();
-            propertyId.setValue(0);
-            propertyId.setType(Integer.class);
-            request.addProperty(propertyId);
-
-            com.emiadda.wsdl.getCategories.ELLExtendedSoapSerializationEnvelope soapEnvelope = new com.emiadda.wsdl.getCategories.ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
-            soapEnvelope.encodingStyle = SoapEnvelope.ENC;
-            soapEnvelope.dotNet = false;
-            soapEnvelope.bodyOut = request;
-
             String response = new GetCategoriesWSDL().getProductByProductID(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
 
             if (response != null && !response.isEmpty()) {
@@ -205,22 +173,6 @@ public class ServerRequestProcessingThread extends Thread {
 
     private void getProductImage(EAServerRequest eaServerRequest) {
         try {
-            //Using easysoap
-            ELLserverBinding abmServerBinding = new ELLserverBinding();
-
-            //Using soap standard way
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCT_IMAGE);
-
-            PropertyInfo propertyId = new PropertyInfo();
-            propertyId.setValue(0);
-            propertyId.setType(Integer.class);
-            request.addProperty(propertyId);
-
-            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
-            soapEnvelope.encodingStyle = SoapEnvelope.ENC;
-            soapEnvelope.dotNet = false;
-            soapEnvelope.bodyOut = request;
-
             String response = new GetCategoriesWSDL().getProductImage(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
 
             if (response != null && !response.isEmpty()) {
@@ -236,22 +188,6 @@ public class ServerRequestProcessingThread extends Thread {
 
     private void getProductByCategory(EAServerRequest eaServerRequest) {
         try {
-            //Using easysoap
-            ELLserverBinding abmServerBinding = new ELLserverBinding();
-
-            //Using soap standard way
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCTS_BY_CATEGORY);
-
-            PropertyInfo propertyId = new PropertyInfo();
-            propertyId.setValue(0);
-            propertyId.setType(Integer.class);
-            request.addProperty(propertyId);
-
-            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
-            soapEnvelope.encodingStyle = SoapEnvelope.ENC;
-            soapEnvelope.dotNet = false;
-            soapEnvelope.bodyOut = request;
-
             String response = new GetCategoriesWSDL().getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
 
             if (response != null && !response.isEmpty()) {
@@ -268,22 +204,6 @@ public class ServerRequestProcessingThread extends Thread {
 
     private void getSpecialProducts(EAServerRequest eaServerRequest) {
         try {
-            //Using easysoap
-            ELLserverBinding abmServerBinding = new ELLserverBinding();
-
-            //Using soap standard way
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_SPECIAL_PRODUCTS);
-
-            PropertyInfo propertyId = new PropertyInfo();
-            propertyId.setValue(0);
-            propertyId.setType(Integer.class);
-            request.addProperty(propertyId);
-
-            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
-            soapEnvelope.encodingStyle = SoapEnvelope.ENC;
-            soapEnvelope.dotNet = false;
-            soapEnvelope.bodyOut = request;
-
             String response = new GetCategoriesWSDL().getSpecials(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
 
             if (response != null && !response.isEmpty()) {
@@ -299,22 +219,6 @@ public class ServerRequestProcessingThread extends Thread {
 
     private void placeOrder(EAServerRequest eaServerRequest) {
         try {
-            //Using easysoap
-            ELLserverBinding abmServerBinding = new ELLserverBinding();
-
-            //Using soap standard way
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_GET_PRODUCT_IMAGE);
-
-            PropertyInfo propertyId = new PropertyInfo();
-            propertyId.setValue(0);
-            propertyId.setType(Integer.class);
-            request.addProperty(propertyId);
-
-            ELLExtendedSoapSerializationEnvelope soapEnvelope = new ELLExtendedSoapSerializationEnvelope(SoapEnvelope.VER11);
-            soapEnvelope.encodingStyle = SoapEnvelope.ENC;
-            soapEnvelope.dotNet = false;
-            soapEnvelope.bodyOut = request;
-
             orderparams orderparams = new orderparams();
             Vectorproductsparams vectorproductsparams = new Vectorproductsparams();
             Vectortotalparams vectortotalparams = new Vectortotalparams();

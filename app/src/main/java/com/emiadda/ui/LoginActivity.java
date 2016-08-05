@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emiadda.R;
@@ -35,6 +36,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     private EditText edtEmail, edtPassword;
     private ProgressDialog progressDialog;
     private Activity mActivityContext;
+    private TextView btnRegister;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +54,9 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         edtEmail = (EditText) findViewById(R.id.edt_email);
         edtPassword = (EditText) findViewById(R.id.edt_password);
         btnSubmit = (Button) findViewById(R.id.btn_submit);
+        btnRegister = (TextView) findViewById(R.id.btn_register);
         btnSubmit.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading..");
@@ -69,6 +73,9 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                     }
                     new LoginAsync(this, REQUEST_CODE_LOGIN).execute(edtEmail.getText().toString(), edtPassword.getText().toString());
                 }
+                break;
+            case R.id.btn_register:
+
                 break;
         }
     }
