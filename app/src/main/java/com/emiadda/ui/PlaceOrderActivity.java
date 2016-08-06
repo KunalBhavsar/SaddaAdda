@@ -2,6 +2,7 @@ package com.emiadda.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -643,6 +644,9 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                     AppPreferences.getInstance().removeAllProductFromCartList();
                 }
                 Toast.makeText(mAppContext, "Successfully placed your Order", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PlaceOrderActivity.this, ThankYouActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
             }
             else {

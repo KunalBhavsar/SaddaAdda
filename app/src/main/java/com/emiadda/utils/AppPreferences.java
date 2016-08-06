@@ -129,5 +129,6 @@ public class AppPreferences {
 
     public void clearAppOwnerData() {
         AppPreferences.getInstance().remove(AppPreferences.APP_OWNER_DATA);
+        removeAllProductFromCartList();
     }
 }

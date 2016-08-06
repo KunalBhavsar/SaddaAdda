@@ -125,7 +125,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                         }
                     });
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                     boolean falseResponse = Boolean.getBoolean(response);
                     if(!falseResponse) {
