@@ -207,22 +207,19 @@ public class ServerRequestProcessingThread extends Thread {
     }
 
     private void placeOrder(EAPlaceOrderRequeset eaServerRequest) {
-        Log.i(TAG,"Started processing place order request");
         try {
             String response = new GetCategoriesWSDL().placeOrder(eaServerRequest.getOrderparams(),
                     eaServerRequest.getVectorproductsparams(), eaServerRequest.getVectortotalparams());
-            Log.i(TAG, "place order response "+response);
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
+                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             }
         }
         catch (Exception e) {
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
-        Log.i(TAG,"Processed place order request");
     }
 }
 

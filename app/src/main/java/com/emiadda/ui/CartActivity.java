@@ -137,6 +137,10 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         refreshTotalAmount();
         inForeground = true;
         //Reset is downloading status
+        if(masterProductModelList.isEmpty()) {
+            Toast.makeText(mAppContext, "Your cart is Empty", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         for (ProductModel productModel : masterProductModelList) {
             if((productModel.getActualImage() == null || productModel.getActualImage().isEmpty()) && !productModel.isLoadingImage()) {
                 productModel.setLoadingImage(true);
@@ -151,6 +155,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         cartAdapter.resetProductList(masterProductModelList);
         subTotal = 0;
         taxes = 0;
+        deliveryCharges = 0;
         for (ProductModel productModel : masterProductModelList) {
             double quantity = Double.parseDouble(productModel.getQuantity());
             double totalPrice = quantity * Double.parseDouble(productModel.getPrice());

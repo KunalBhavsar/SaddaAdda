@@ -112,15 +112,14 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
         if (savedInstanceState != null) {
             fromCart = savedInstanceState.getBoolean(SAVED_INSTANCE_FROM_CART);
             selectedItemPaymentType = savedInstanceState.getString(SAVED_INSTANCE_SELECTED_PAYMENT_TYPE);
-        }
-        else {
+        } else {
             fromCart = getIntent().getBooleanExtra(KeyConstants.INTENT_IS_FROM_CART, false);
         }
 
-        if(fromCart) {
+        if (fromCart) {
             productCart = AppPreferences.getInstance().getCartList();
             currentCartType = AppPreferences.getInstance().getCartType();
-            if(currentCartType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
+            if (currentCartType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
                 txtEmi.setVisibility(View.VISIBLE);
                 txtDirectPayment.setVisibility(View.GONE);
                 handleUIForPaymentType(true);
@@ -147,21 +146,19 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spnrEmiCount.setAdapter(dataAdapter);
 
-            }
-            else {
+            } else {
                 txtEmi.setVisibility(View.GONE);
                 txtDirectPayment.setVisibility(View.VISIBLE);
                 handleUIForPaymentType(false);
             }
-        }
-        else {
+        } else {
             productModel = EAApplication.getTransientSelectedProductModel();
             showEmi = Integer.parseInt(productModel.getShow_payment_option()) > 0;
-            if(showEmi) {
+            if (showEmi) {
                 txtEmi.setVisibility(View.VISIBLE);
                 double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price());
                 double downPayment = Double.parseDouble(productModel.getDown_payment());
-                if((totalEMIAmount - downPayment) > 200d) {
+                if ((totalEMIAmount - downPayment) > 200d) {
                     txtPaybleDPValue.setText(String.valueOf(totalEMIAmount * Integer.parseInt(productModel.getQuantity())));
                     int i = 1;
                     List<String> spnrValues = new ArrayList<>();
@@ -176,46 +173,26 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spnrEmiCount.setAdapter(dataAdapter);
 
-                    if(selectedItemPaymentType != null) {
-                        if(selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
+                    if (selectedItemPaymentType != null) {
+                        if (selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
                             handleUIForPaymentType(true);
-                        }
-                        else if(selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
+                        } else if (selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
                             handleUIForPaymentType(false);
                         }
-                    }
-                    else if(currentCartType != null) {
-                        if (currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
-                            handleUIForPaymentType(true);
-                        } else if (currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
-                            handleUIForPaymentType(false);
-                        }
-                    }
-                    else {
+                    } else {
                         handleUIForPaymentType(true);
                     }
-                }
-                else {
-                    if((selectedItemPaymentType != null && (selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)))
-                            || currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
+                } else {
+                    if ((selectedItemPaymentType != null && (selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)))) {
                         handleUIForPaymentType(false);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(mAppContext, "EMI option not available for selected product, clear your cart for direct payment", Toast.LENGTH_LONG).show();
                         finish();
                     }
                 }
-            }
-            else {
+            } else {
                 txtEmi.setVisibility(View.GONE);
-                if((selectedItemPaymentType != null && (selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)))
-                        || currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
-                    handleUIForPaymentType(false);
-                }
-                else {
-                    Toast.makeText(mAppContext, "EMI option not available for selected product, clear your cart for direct payment", Toast.LENGTH_LONG).show();
-                    finish();
-                }
+                handleUIForPaymentType(false);
             }
         }
 
@@ -231,8 +208,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
 
             rltEmi.setVisibility(View.GONE);
             txtPaybleDPTitle.setText("Amount");
-        }
-        else {
+        } else {
             selectedItemPaymentType = AppPreferences.CART_TYPE_VALUE_EMI;
             txtEmi.setBackgroundColor(ContextCompat.getColor(this, R.color.light_gray));
             txtEmi.setTextColor(ContextCompat.getColor(this, R.color.black));
@@ -243,7 +219,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             txtPaybleDPTitle.setText("Down Payment");
         }
 
-        if(!fromCart) {
+        if (!fromCart) {
             int quantity = Integer.parseInt(String.valueOf(productModel.getQuantity()));
             if (!emiUi) {
                 double totalOTPAmount = Double.parseDouble(productModel.getOtp_last_price()) * quantity;
@@ -286,8 +262,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                     handleUIForPaymentType(false);
                 }
             }
-        }
-        else {
+        } else {
             double totalOTPAmount = 0;
             double totolTaxAmount = 0;
             double totalDeliveryCharges = 0;
@@ -308,7 +283,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 }
             }
 
-            if(emiUi) {
+            if (emiUi) {
                 if ((totalEmiAmount - totalDownPayemnt) > 200d) {
                     totalEmiValue = (totalEmiAmount - totalDownPayemnt) / numberOfEmiSelected;
                 } else {
@@ -324,8 +299,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 txtEmiPriceValue.setText(String.format("%.2f", totalEmiValue));
                 txtNetEmiValue.setText(String.format("%.2f", (totalEmiValue * numberOfEmiSelected)));
                 txtTotalValue.setText(String.valueOf(totalEmiAmount));
-            }
-            else {
+            } else {
                 txtPaybleDPValue.setText(String.valueOf(totalOTPAmount));
                 txtTaxesValue.setText(String.valueOf(totolTaxAmount));
                 txtDeliveryChargesValue.setText(String.valueOf(totalDeliveryCharges));
@@ -380,7 +354,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
 
         VectorProductsParams vectorProductParams = new VectorProductsParams();
 
-        if(fromCart) {
+        if (fromCart) {
             for (ProductModel productModel : productCart) {
                 soapObject = new SoapObject();
 
@@ -407,28 +381,27 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 soapObject.addProperty("thumb", productModel.getActualImage());
                 soapObject.addProperty("name", productModel.getName());
                 soapObject.addProperty("model", productModel.getModel());
-                soapObject.addProperty("quantity", productQuantity);
-                soapObject.addProperty("subtract", 1);
-                soapObject.addProperty("commission", 0);
-                soapObject.addProperty("vendor_id", 0);
-                soapObject.addProperty("store_tax", 0);
-                soapObject.addProperty("vendor_total", 0);
-                soapObject.addProperty("vendor_tax", 0);
-                soapObject.addProperty("shipping_value_type", shippingValueType);
-                soapObject.addProperty("shipping_charge", shippingCharge);
-                soapObject.addProperty("mrp", productMRP);
+                soapObject.addProperty("quantity", String.valueOf(productQuantity));
+                soapObject.addProperty("subtract", String.valueOf(1));
+                soapObject.addProperty("commission", String.valueOf(0));
+                soapObject.addProperty("vendor_id", String.valueOf(0));
+                soapObject.addProperty("store_tax", String.valueOf(0));
+                soapObject.addProperty("vendor_total", String.valueOf(0));
+                soapObject.addProperty("vendor_tax", String.valueOf(0));
+                soapObject.addProperty("shipping_value_type", String.valueOf(shippingValueType));
+                soapObject.addProperty("shipping_charge", String.valueOf(shippingCharge));
+                soapObject.addProperty("mrp", String.valueOf(productMRP));
                 soapObject.addProperty("title", "");
-                soapObject.addProperty("price", productPrice);
-                soapObject.addProperty("down_payment", productDownPayment);
-                soapObject.addProperty("product_shipping", productShippingCharge);
-                soapObject.addProperty("tax", productTax);
-                soapObject.addProperty("total", productPrice + productTax + productShippingCharge);
-                soapObject.addProperty("reward", productModel.getReward());
+                soapObject.addProperty("price", String.valueOf(productPrice));
+                soapObject.addProperty("down_payment", String.valueOf(productDownPayment));
+                soapObject.addProperty("product_shipping", String.valueOf(productShippingCharge));
+                soapObject.addProperty("tax", String.valueOf(productTax));
+                soapObject.addProperty("total", String.valueOf(productPrice + productTax + productShippingCharge));
+                soapObject.addProperty("reward", String.valueOf(productModel.getReward()));
 
                 vectorProductParams.add(new ProductsParams(soapObject));
             }
-        }
-        else {
+        } else {
             soapObject = new SoapObject();
 
             int productQuantity = Integer.parseInt(productModel.getQuantity());
@@ -454,22 +427,22 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             soapObject.addProperty("thumb", productModel.getActualImage());
             soapObject.addProperty("name", productModel.getName());
             soapObject.addProperty("model", productModel.getModel());
-            soapObject.addProperty("quantity", productQuantity);
-            soapObject.addProperty("subtract", 1);
-            soapObject.addProperty("commission", 0);
-            soapObject.addProperty("vendor_id", 0);
-            soapObject.addProperty("store_tax", 0);
-            soapObject.addProperty("vendor_total", 0);
-            soapObject.addProperty("vendor_tax", 0);
-            soapObject.addProperty("shipping_value_type", shippingValueType);
-            soapObject.addProperty("shipping_charge", shippingCharge);
-            soapObject.addProperty("mrp", productMRP);
+            soapObject.addProperty("quantity", String.valueOf(productQuantity));
+            soapObject.addProperty("subtract", String.valueOf(1));
+            soapObject.addProperty("commission", String.valueOf(0));
+            soapObject.addProperty("vendor_id", String.valueOf(0));
+            soapObject.addProperty("store_tax", String.valueOf(0));
+            soapObject.addProperty("vendor_total", String.valueOf(0));
+            soapObject.addProperty("vendor_tax", String.valueOf(0));
+            soapObject.addProperty("shipping_value_type", String.valueOf(shippingValueType));
+            soapObject.addProperty("shipping_charge", String.valueOf(shippingCharge));
+            soapObject.addProperty("mrp", String.valueOf(productMRP));
             soapObject.addProperty("title", "");
-            soapObject.addProperty("price", productPrice);
-            soapObject.addProperty("down_payment", productDownPayment);
-            soapObject.addProperty("product_shipping", productShippingCharge);
-            soapObject.addProperty("tax", productTax);
-            soapObject.addProperty("total", productPrice + productTax + productShippingCharge);
+            soapObject.addProperty("price", String.valueOf(productPrice));
+            soapObject.addProperty("down_payment", String.valueOf(productDownPayment));
+            soapObject.addProperty("product_shipping", String.valueOf(productShippingCharge));
+            soapObject.addProperty("tax", String.valueOf(productTax));
+            soapObject.addProperty("total", String.valueOf(productPrice + productTax + productShippingCharge));
             soapObject.addProperty("reward", productModel.getReward());
 
             vectorProductParams.add(new ProductsParams(soapObject));
@@ -480,35 +453,35 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
         soapObject = new SoapObject();
         soapObject.addProperty("code", "sub_total");
         soapObject.addProperty("title", "Sub-Total");
-        soapObject.addProperty("value", totalAmount);
+        soapObject.addProperty("value", String.valueOf(totalAmount));
         soapObject.addProperty("sort_order", "1");
         vectorTotalParams.add(new TotalParams(soapObject));
 
         soapObject = new SoapObject();
         soapObject.addProperty("code", "shipping");
         soapObject.addProperty("title", "Shipping Charge");
-        soapObject.addProperty("value", totalShippingCharge);
+        soapObject.addProperty("value", String.valueOf(totalShippingCharge));
         soapObject.addProperty("sort_order", "3");
         vectorTotalParams.add(new TotalParams(soapObject));
 
         soapObject = new SoapObject();
         soapObject.addProperty("code", "tax");
         soapObject.addProperty("title", "VAT (15%)");
-        soapObject.addProperty("value", totalVat);
+        soapObject.addProperty("value", String.valueOf(totalVat));
         soapObject.addProperty("sort_order", "5");
         vectorTotalParams.add(new TotalParams(soapObject));
 
         soapObject = new SoapObject();
         soapObject.addProperty("code", "total");
         soapObject.addProperty("title", "Total");
-        soapObject.addProperty("value", totalAmount + totalShippingCharge + totalVat);
+        soapObject.addProperty("value", String.valueOf(totalAmount + totalShippingCharge + totalVat));
         soapObject.addProperty("sort_order", "9");
         vectorTotalParams.add(new TotalParams(soapObject));
 
         soapObject = new SoapObject();
 
         CustomerModel appOwnerData = AppPreferences.getInstance().getAppOwnerData();
-        soapObject.addProperty("store_id", 0);
+        soapObject.addProperty("store_id", String.valueOf(0));
         soapObject.addProperty("store_name", "EMIADDA");
         soapObject.addProperty("invoice_prefix", "INV-2013-00");
         soapObject.addProperty("store_url", "http://www.mydevsystems.com/dev/emiaddanew/");
@@ -555,32 +528,35 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
         soapObject.addProperty("shipping_method", "Shipping Charge");
         soapObject.addProperty("shipping_code", "flat.flat");
 
-        soapObject.addProperty("comment","");
-        soapObject.addProperty("total", totalMrp);
-        soapObject.addProperty("affiliate_id", 0);
-        soapObject.addProperty("commission", 0);
-        soapObject.addProperty("marketing_id", 0);
+        soapObject.addProperty("comment", "");
+        soapObject.addProperty("total", String.valueOf(totalMrp));
+        soapObject.addProperty("affiliate_id", String.valueOf(0));
+        soapObject.addProperty("commission", String.valueOf(0));
+        soapObject.addProperty("marketing_id", String.valueOf(0));
         soapObject.addProperty("tracking", "");
         soapObject.addProperty("language_id", "1");
         soapObject.addProperty("currency_id", "4");
-        soapObject.addProperty("currency_code","INR");
-        soapObject.addProperty("currency_value","1");
+        soapObject.addProperty("currency_code", "INR");
+        soapObject.addProperty("currency_value", "1");
         soapObject.addProperty("ip", getIPAddress(true));
-        soapObject.addProperty("forwarded_ip","");
-        soapObject.addProperty("user_agent","Android");
+        soapObject.addProperty("forwarded_ip", "");
+        soapObject.addProperty("user_agent", "Android");
         soapObject.addProperty("accept_language", "en-US,en;q=0.8");
-        soapObject.addProperty("method","cod");
+        soapObject.addProperty("method", "cod");
         soapObject.addProperty("emi", AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ? "emi" : "otd");
-        soapObject.addProperty("totalamt", totalAmount);
-        soapObject.addProperty("shipping_charge", totalShippingCharge);
-        soapObject.addProperty("down_payment", totalDownPayment);
-        soapObject.addProperty("each_emi", totalEmiValue);
-        soapObject.addProperty("customer_type", appOwnerData.getCustomer_type());
+        soapObject.addProperty("totalamt", String.valueOf(totalAmount));
+        soapObject.addProperty("shipping_charge", String.valueOf(totalShippingCharge));
+        soapObject.addProperty("down_payment", String.valueOf(totalDownPayment));
+        soapObject.addProperty("each_emi", String.valueOf(totalEmiValue));
+        soapObject.addProperty("customer_type", String.valueOf(appOwnerData.getCustomer_type()));
         soapObject.addProperty("no_of_emi", AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ? numberOfEmiSelected : 0);
-        soapObject.addProperty("payable_mrp", totalMrp);
-        soapObject.addProperty("vat", totalVat);
+        soapObject.addProperty("payable_mrp", String.valueOf(totalMrp));
+        soapObject.addProperty("vat", String.valueOf(totalVat));
         soapObject.addProperty("cod_type", AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ? "emi" : "otd");
-
+        if (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
+            soapObject.addProperty("selected_num_emi", String.valueOf(numberOfEmiSelected));
+            soapObject.addProperty("per_emi", String.valueOf(totalEmiValue / numberOfEmiSelected));
+        }
         OrderParams orderParams = new OrderParams(soapObject);
 
         EAApplication.makePlaceOrderServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG,
@@ -600,8 +576,9 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * Get IP address from first non-localhost interface
-     * @param useIPv4  true=return ipv4, false=return ipv6
-     * @return  address or empty string
+     *
+     * @param useIPv4 true=return ipv4, false=return ipv6
+     * @return address or empty string
      */
     public static String getIPAddress(boolean useIPv4) {
         try {
@@ -612,7 +589,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                     if (!addr.isLoopbackAddress()) {
                         String sAddr = addr.getHostAddress();
                         //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                        boolean isIPv4 = sAddr.indexOf(':')<0;
+                        boolean isIPv4 = sAddr.indexOf(':') < 0;
 
                         if (useIPv4) {
                             if (isIPv4)
@@ -620,40 +597,66 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                         } else {
                             if (!isIPv4) {
                                 int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
                             }
                         }
                     }
                 }
             }
-        } catch (Exception ex) { } // for now eat exceptions
+        } catch (Exception ex) {
+        } // for now eat exceptions
         return "";
     }
 
     @Override
     public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
-        if(!TAG.equals(activityTag)) {
+        if (!TAG.equals(activityTag)) {
             return;
         }
-        Log.i(TAG, "Received place order response "+response);
+        Log.i(TAG, "Received place order response " + response);
 
-        if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER) {
-            if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
+        if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER) {
+            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
                 //Order placed successfully
-                if(fromCart) {
+                if (fromCart) {
                     AppPreferences.getInstance().removeAllProductFromCartList();
                 }
-                Toast.makeText(mAppContext, "Successfully placed your Order", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(PlaceOrderActivity.this, ThankYouActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(mAppContext, "Successfully placed your Order", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(PlaceOrderActivity.this, ThankYouActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
             }
             else {
                 Toast.makeText(mAppContext, "Error in placing your Order", Toast.LENGTH_SHORT).show();
                 finish();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(mAppContext, "Successfully placed your Order", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
             }
         }
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ((EAApplication) mAppContext).attach(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ((EAApplication) mAppContext).dettach(this);
+        super.onDestroy();
+    }
+
 }
