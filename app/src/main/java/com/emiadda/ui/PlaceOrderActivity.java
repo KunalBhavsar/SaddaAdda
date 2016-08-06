@@ -60,6 +60,8 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
     private Spinner spnrEmiCount;
     private TextView txtDownPaymentValue, txtEmiPriceValue, txtNetEmiValue, txtTotalValue;
     private TextView txtPaybleDPValue, txtPaybleDPTitle, txtTaxesValue, txtDeliveryChargesValue, txtTotalPayableValue;
+    private RelativeLayout rltProgress;
+
     String currentCartType, selectedItemPaymentType;
 
     Context mAppContext;
@@ -98,6 +100,8 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
         txtTaxesValue = (TextView) findViewById(R.id.txt_taxes_value);
         txtDeliveryChargesValue = (TextView) findViewById(R.id.txt_delivery_charges_value);
         txtTotalPayableValue = (TextView) findViewById(R.id.txt_total_payable_value);
+
+        rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
 
         txtDirectPayment.setOnClickListener(this);
         txtEmi.setOnClickListener(this);
@@ -195,8 +199,22 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 handleUIForPaymentType(false);
             }
         }
-
     }
+
+    private void showProgress(final boolean visibile) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(visibile) {
+                    rltProgress.setVisibility(View.VISIBLE);
+                }
+                else {
+                    rltProgress.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
 
     private void handleUIForPaymentType(boolean emiUi) {
         if (!emiUi) {
@@ -344,6 +362,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void proceedForPayment(boolean fromCart) {
+        showProgress(true);
         double totalMrp = 0;
         double totalAmount = 0;
         double totalShippingCharge = 0;
@@ -616,6 +635,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
         Log.i(TAG, "Received place order response " + response);
 
         if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER) {
+            showProgress(false);
             if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
                 //Order placed successfully
                 if (fromCart) {

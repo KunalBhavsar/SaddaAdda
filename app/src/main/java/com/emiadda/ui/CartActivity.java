@@ -102,6 +102,8 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
                 startActivity(intent);
             }
         });
+
+        AppPreferences.getInstance().registerSharedPreferenceListener(this);
     }
 
     private void showProgress(final boolean visibile) {

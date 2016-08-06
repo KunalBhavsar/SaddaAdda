@@ -39,6 +39,9 @@ public class AppPreferences {
         editor = sharedPreferences.edit();
     }
 
+    public void registerSharedPreferenceListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+    }
     public static void init(Context context) {
         ourInstance = new AppPreferences(context);
     }
@@ -120,6 +123,7 @@ public class AppPreferences {
         }
         editor.putString(CART_LIST, new Gson().toJson(productList));
         editor.apply();
+
     }
 
     public void removeAllProductFromCartList() {

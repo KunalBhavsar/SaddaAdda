@@ -269,6 +269,11 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
                                                     AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.CART_TYPE_VALUE_EMI);
+                                                    Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+                                                    FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+                                                    fragTransaction.detach(currentFragment);
+                                                    fragTransaction.attach(currentFragment);
+                                                    fragTransaction.commit();
                                                 }
                                             })
                                             .setPositiveButton("Direct Payment", new DialogInterface.OnClickListener() {
@@ -276,6 +281,11 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
                                                     AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT);
+                                                    Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+                                                    FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+                                                    fragTransaction.detach(currentFragment);
+                                                    fragTransaction.attach(currentFragment);
+                                                    fragTransaction.commit();
                                                 }
                                             });
                                     alertDialog.show();
