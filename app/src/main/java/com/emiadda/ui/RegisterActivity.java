@@ -1,10 +1,12 @@
 package com.emiadda.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.emiadda.R;
 import com.emiadda.utils.AppUtils;
@@ -12,6 +14,7 @@ import com.emiadda.utils.AppUtils;
 public class RegisterActivity extends AppCompatActivity {
 
     private WebView webView;
+    private ProgressDialog progressDialog;
     private String regUrl = "http://www.mydevsystems.com/dev/emiaddanew/index.php?route=account/registercust";
 
     @Override
@@ -19,8 +22,12 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
         webView = (WebView) findViewById(R.id.webview);
         if(AppUtils.isNetworkAvailable(this)) {
+            progressDialog.show();
             webView.loadUrl(regUrl);
         }
 
@@ -40,7 +47,11 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
 
-
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                progressDialog.dismiss();
+            }
         });
 
     }
