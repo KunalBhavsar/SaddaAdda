@@ -18,7 +18,7 @@ import java.util.Hashtable;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
-public class productsparams implements KvmSerializable {
+public class ProductsParams implements KvmSerializable {
     
     public String product_id;
     public String thumb;
@@ -41,9 +41,9 @@ public class productsparams implements KvmSerializable {
     public String tax;
     public String reward;
     
-    public productsparams(){}
+    public ProductsParams(){}
     
-    public productsparams(SoapObject soapObject)
+    public ProductsParams(SoapObject soapObject)
     {
         if (soapObject == null)
             return;

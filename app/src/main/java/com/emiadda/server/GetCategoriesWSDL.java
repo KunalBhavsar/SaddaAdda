@@ -17,7 +17,6 @@ import android.os.AsyncTask;
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -427,13 +426,13 @@ public class GetCategoriesWSDL {
         return "";
     }
     
-    public void placeOrderAsync(orderparams params,Vectorproductsparams products_array,Vectortotalparams total_array) throws Exception{
+    public void placeOrderAsync(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array) throws Exception{
         if (this.eventHandler == null)
             throw new Exception("Async Methods Requires IWsdl2CodeEvents");
         placeOrderAsync(params, products_array, total_array, null);
     }
     
-    public void placeOrderAsync(final orderparams params,final Vectorproductsparams products_array,final Vectortotalparams total_array,final List<HeaderProperty> headers) throws Exception{
+    public void placeOrderAsync(final OrderParams params, final VectorProductsParams products_array, final VectorTotalParams total_array, final List<HeaderProperty> headers) throws Exception{
         
         new AsyncTask<Void, Void, String>(){
             @Override
@@ -455,16 +454,16 @@ public class GetCategoriesWSDL {
         }.execute();
     }
     
-    public String placeOrder(orderparams params,Vectorproductsparams products_array,Vectortotalparams total_array){
+    public String placeOrder(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array){
         return placeOrder(params, products_array, total_array, null);
     }
     
-    public String placeOrder(orderparams params,Vectorproductsparams products_array,Vectortotalparams total_array,List<HeaderProperty> headers){
+    public String placeOrder(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array, List<HeaderProperty> headers){
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
         SoapObject soapReq = new SoapObject("urn:server","placeOrder");
-        soapEnvelope.addMapping("urn:server","params",new orderparams().getClass());
+        soapEnvelope.addMapping("urn:server","params",new OrderParams().getClass());
         soapReq.addProperty("params",params);
         soapReq.addProperty("products_array",products_array);
         soapReq.addProperty("total_array",total_array);

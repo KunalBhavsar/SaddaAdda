@@ -19,12 +19,12 @@ import org.ksoap2.serialization.SoapObject;
 import java.util.Hashtable;
 import java.util.Vector;
 
-public class Vectorproductsparams extends Vector<productsparams> implements KvmSerializable {
+public class VectorProductsParams extends Vector<ProductsParams> implements KvmSerializable {
     
     
-    public Vectorproductsparams(){}
+    public VectorProductsParams(){}
     
-    public Vectorproductsparams(SoapObject soapObject)
+    public VectorProductsParams(SoapObject soapObject)
     {
         if (soapObject == null)
             return;
@@ -34,7 +34,7 @@ public class Vectorproductsparams extends Vector<productsparams> implements KvmS
                 Object obj = soapObject.getProperty(i0);
                 if (obj!=null && obj.getClass().equals(SoapObject.class)){
                     SoapObject j0 =(SoapObject) soapObject.getProperty(i0);
-                    productsparams j1= new productsparams(j0);
+                    ProductsParams j1= new ProductsParams(j0);
                     add(j1);
                 }
             }
@@ -53,7 +53,7 @@ public class Vectorproductsparams extends Vector<productsparams> implements KvmS
     @Override
     public void getPropertyInfo(int index, @SuppressWarnings("rawtypes") Hashtable arg1, PropertyInfo info) {
         info.name = "productsparams";
-        info.type = productsparams.class;
+        info.type = ProductsParams.class;
     }
     
     @Override

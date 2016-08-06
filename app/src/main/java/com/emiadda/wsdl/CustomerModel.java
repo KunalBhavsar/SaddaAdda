@@ -15,10 +15,37 @@ public class CustomerModel implements Serializable {
     String customer_group_id;
     String email;
     String telephone;
+    String fax;
+    String newsletter;
     String address_id;
     String registration_code;
     String customer_type;
     String credit_limit;
+    AddressModel address;
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getNewsletter() {
+        return newsletter;
+    }
+
+    public void setNewsletter(String newsletter) {
+        this.newsletter = newsletter;
+    }
+
+    public AddressModel getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressModel address) {
+        this.address = address;
+    }
 
     public String getCustomer_id() {
         return customer_id;

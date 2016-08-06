@@ -4,16 +4,18 @@ import android.app.Application;
 import android.content.Context;
 
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
+import com.emiadda.core.EAPlaceOrderRequeset;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerRequestResponseObserver;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.VectorProductsParams;
+import com.emiadda.server.VectorTotalParams;
+import com.emiadda.server.OrderParams;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.wsdl.ProductModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Kunal on 06/07/16.
@@ -83,6 +85,14 @@ public class EAApplication extends Application implements ServerRequestResponseO
         if(params.length > 0) {
             eaServerRequest.setParams(params);
         }
+        ServerRequestProcessingThread.getInstance().addServerRequeset(eaServerRequest);
+    }
+
+    public static void makePlaceOrderServerRequest(int requestCode, int extraRequestCode, int priority, String activityTag, OrderParams orderparams,
+                                  VectorProductsParams vectorproductsparams, VectorTotalParams vectortotalparams) {
+        EAPlaceOrderRequeset eaServerRequest = new EAPlaceOrderRequeset(requestCode, extraRequestCode, priority,
+                orderparams, vectorproductsparams, vectortotalparams);
+        eaServerRequest.setActivityTag(activityTag);
         ServerRequestProcessingThread.getInstance().addServerRequeset(eaServerRequest);
     }
 }

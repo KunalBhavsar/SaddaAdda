@@ -1,14 +1,15 @@
 package com.emiadda.ui;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -237,8 +238,12 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                     btnBuyNow.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(mAppContext, "Coming soon..", Toast.LENGTH_SHORT).show();
-                            //TODO: buy product option
+                            productModel.setQuantity(String.valueOf(currentQuantity));
+                            EAApplication.setTransientSelectedProductModel(productModel);
+
+                            Intent intent = new Intent(mActivityContext, PlaceOrderActivity.class);
+                            intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, false);
+                            startActivity(intent);
                         }
                     });
 
@@ -246,11 +251,49 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                         @Override
                         public void onClick(View v) {
                             productModel.setQuantity(String.valueOf(currentQuantity));
-                            EAApplication.setTransientSelectedProductModel(productModel);
 
-                            Intent intent = new Intent(mActivityContext, MakePaymentActivity.class);
-                            intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, fromCart);
-                            startActivity(intent);
+                            if(AppPreferences.getInstance().getCartType().isEmpty()) {
+                                if(Integer.parseInt(productModel.getShow_payment_option()) > 0) {
+                                    Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
+                                    AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT);
+                                }
+                                else {
+                                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivityContext)
+                                            .setTitle("Choose method of payment for selected product")
+                                            .setPositiveButton("EMI", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
+                                                    AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.CART_TYPE_VALUE_EMI);
+                                                }
+                                            })
+                                            .setPositiveButton("Direct Payment", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
+                                                    AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT);
+                                                }
+                                            });
+                                    alertDialog.show();
+
+                                    Toast.makeText(mAppContext, "Checkout all the EMI items from your cart for using Direct Payment option", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            else {
+                                if(AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
+                                    if(Integer.parseInt(productModel.getShow_payment_option()) > 0) {
+                                        Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
+                                        AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.getInstance().getCartType());
+                                    }
+                                    else {
+                                        Toast.makeText(mAppContext, "Checkout all the EMI items from your cart for using Direct Payment option", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                                else if(AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)){
+                                    Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
+                                    AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.getInstance().getCartType());
+                                }
+                            }
                             if(fromCart) {
                                 mActivityContext.finish();
                                 return;

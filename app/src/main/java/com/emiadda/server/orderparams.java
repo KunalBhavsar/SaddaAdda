@@ -18,7 +18,7 @@ import java.util.Hashtable;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
-public class orderparams implements KvmSerializable {
+public class OrderParams implements KvmSerializable {
     
     public String store_id;
     public String store_name;
@@ -94,9 +94,9 @@ public class orderparams implements KvmSerializable {
     public String selected_num_emi;
     public String per_emi;
     
-    public orderparams(){}
+    public OrderParams(){}
     
-    public orderparams(SoapObject soapObject)
+    public OrderParams(SoapObject soapObject)
     {
         if (soapObject == null)
             return;

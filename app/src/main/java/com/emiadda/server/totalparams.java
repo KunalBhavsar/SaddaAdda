@@ -18,16 +18,16 @@ import java.util.Hashtable;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
-public class totalparams implements KvmSerializable {
+public class TotalParams implements KvmSerializable {
     
     public String code;
     public String title;
     public String value;
     public String sort_order;
     
-    public totalparams(){}
+    public TotalParams(){}
     
-    public totalparams(SoapObject soapObject)
+    public TotalParams(SoapObject soapObject)
     {
         if (soapObject == null)
             return;

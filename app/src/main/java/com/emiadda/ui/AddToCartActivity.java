@@ -25,7 +25,7 @@ import com.emiadda.wsdl.ProductModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MakePaymentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class AddToCartActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String SAVED_INSTANCE_SELECTED_PAYMENT_TYPE = "payment_type";
     private static final String SAVED_INSTANCE_FROM_CART = "from_cart";
@@ -97,7 +97,9 @@ public class MakePaymentActivity extends AppCompatActivity implements View.OnCli
         txtEmi.setOnClickListener(this);
         btnConfirmOrder.setOnClickListener(this);
 
-        boolean showEmi = Integer.parseInt(productModel.getShow_payment_option()) > 0;
+        btnConfirmOrder.setText("ADD TO CART");
+
+        showEmi = Integer.parseInt(productModel.getShow_payment_option()) > 0;
 
         if(showEmi) {
             txtEmi.setVisibility(View.VISIBLE);

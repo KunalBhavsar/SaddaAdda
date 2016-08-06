@@ -57,7 +57,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".ui.MakePaymentActivity"
+            android:name=".ui.AddToCartActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"/>
