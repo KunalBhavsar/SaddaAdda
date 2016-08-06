@@ -18,6 +18,7 @@ import com.emiadda.R;
 import com.emiadda.asynctasks.LoginAsync;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.utils.AppUtils;
 import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
 
@@ -75,7 +76,12 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 }
                 break;
             case R.id.btn_register:
-
+                if(AppUtils.isNetworkAvailable(this)) {
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(mActivityContext, "Please check internet connection", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

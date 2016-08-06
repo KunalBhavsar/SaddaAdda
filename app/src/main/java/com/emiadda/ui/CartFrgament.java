@@ -39,4 +39,12 @@ public class CartFrgament extends Fragment {
             txtCount.setText(""+size);
         }
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 }
