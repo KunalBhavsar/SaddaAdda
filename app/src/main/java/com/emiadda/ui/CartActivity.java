@@ -40,6 +40,7 @@ import org.ksoap2.serialization.SoapObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,6 +62,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     private Context mAppContext;
     private Activity mActivityContext;
     private RelativeLayout rltProgress;
+    private DecimalFormat formater = new DecimalFormat("#.##");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,10 +172,10 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
             }
         }
 
-        ((TextView)findViewById(R.id.txt_sub_total)).setText(String.valueOf(subTotal));
-        ((TextView)findViewById(R.id.txt_delivery_charges)).setText(String.valueOf(deliveryCharges));
-        ((TextView)findViewById(R.id.txt_taxes)).setText(String.valueOf(taxes));
-        ((TextView)findViewById(R.id.txt_total)).setText(String.valueOf(subTotal + deliveryCharges + taxes));
+        ((TextView)findViewById(R.id.txt_sub_total)).setText(KeyConstants.rs + formater.format(subTotal));
+        ((TextView)findViewById(R.id.txt_delivery_charges)).setText(KeyConstants.rs + formater.format(deliveryCharges));
+        ((TextView)findViewById(R.id.txt_taxes)).setText(KeyConstants.rs + formater.format(taxes));
+        ((TextView)findViewById(R.id.txt_total)).setText(KeyConstants.rs + formater.format(subTotal + deliveryCharges + taxes));
     }
 
     @Override

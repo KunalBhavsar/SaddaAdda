@@ -15,4 +15,5 @@ public class KeyConstants {
     public static final String INTENT_IS_FROM_CART = "from_cart";
 
     public static final String CART_FRAGMENT = "cart";
+    public static final String rs = "Rs.";
 }

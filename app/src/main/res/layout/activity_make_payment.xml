@@ -125,7 +125,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginBottom="2dp"
                         android:background="@color/white"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
                         android:text="10" />

@@ -146,7 +146,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
 
                 // Spinner click listener
                 spnrEmiCount.setOnItemSelectedListener(this);
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spnrValues);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.view_spinner_item, spnrValues);
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spnrEmiCount.setAdapter(dataAdapter);
 

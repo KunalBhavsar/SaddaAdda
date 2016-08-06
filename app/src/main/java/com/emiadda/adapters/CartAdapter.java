@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     private static final String TAG = CartAdapter.class.getSimpleName();
     private Context context;
     public List<ProductModel> cartList;
+    private DecimalFormat formater = new DecimalFormat("#.##");
 
     public CartAdapter(Activity context) {
         this.context = context;
@@ -66,7 +68,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
         holder.txtBrandName.setText(productModel.getMeta_title());
         holder.txtAmount.setText(productModel.getPrice());
         holder.txtQunt.setText(productModel.getQuantity());
-        holder.txtAmount.setText(String.valueOf(Integer.valueOf(productModel.getQuantity()) * Double.parseDouble(productModel.getPrice())));
+        holder.txtAmount.setText(KeyConstants.rs + formater.format(Integer.valueOf(productModel.getQuantity()) * Double.parseDouble(productModel.getPrice())));
 
         Picasso.with(context).load(productModel.getActualImage()).fit().placeholder(R.drawable.placeholder_product).into(holder.imgCat);
 
