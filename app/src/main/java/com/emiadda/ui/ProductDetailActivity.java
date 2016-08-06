@@ -257,14 +257,14 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                             productModel.setQuantity(String.valueOf(currentQuantity));
 
                             if(AppPreferences.getInstance().getCartType().isEmpty()) {
-                                if(Integer.parseInt(productModel.getShow_payment_option()) > 0) {
+                                if(Integer.parseInt(productModel.getShow_payment_option()) == 0) {
                                     Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
                                     AppPreferences.getInstance().addProductToCartList(productModel, AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT);
                                 }
                                 else {
                                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivityContext)
-                                            .setTitle("Choose method of payment for selected product")
-                                            .setPositiveButton("EMI", new DialogInterface.OnClickListener() {
+                                            .setTitle("Choose method of Payment")
+                                            .setNegativeButton("EMI", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     Toast.makeText(mAppContext, "Added " + productModel.getQuantity() + " items of " + productModel.getName() + " to the cart", Toast.LENGTH_SHORT).show();
@@ -279,8 +279,6 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                                                 }
                                             });
                                     alertDialog.show();
-
-                                    Toast.makeText(mAppContext, "Checkout all the EMI items from your cart for using Direct Payment option", Toast.LENGTH_LONG).show();
                                 }
                             }
                             else {

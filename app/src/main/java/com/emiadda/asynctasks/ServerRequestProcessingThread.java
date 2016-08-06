@@ -124,6 +124,7 @@ public class ServerRequestProcessingThread extends Thread {
                         getSpecialProducts(item);
                         break;
                     case REQUEST_CODE_PLACE_ORDER:
+                        Log.i(TAG,"Found request for place order");
                         placeOrder((EAPlaceOrderRequeset) item);
                         break;
                 }
@@ -212,6 +213,7 @@ public class ServerRequestProcessingThread extends Thread {
     }
 
     private void placeOrder(EAPlaceOrderRequeset eaServerRequest) {
+        Log.i(TAG,"Started processing place order request");
         try {
             String response = new GetCategoriesWSDL().placeOrder(eaServerRequest.getOrderparams(),
                     eaServerRequest.getVectorproductsparams(), eaServerRequest.getVectortotalparams());
@@ -225,6 +227,7 @@ public class ServerRequestProcessingThread extends Thread {
             context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             Log.e(TAG, e.getMessage(), e);
         }
+        Log.i(TAG,"Processed place order request");
     }
 }
 

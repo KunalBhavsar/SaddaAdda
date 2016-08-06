@@ -283,14 +283,13 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 }
             }
 
-            if ((totalEmiAmount - totalDownPayemnt) > 200d) {
-                totalEmiValue = (totalEmiAmount - totalDownPayemnt) / numberOfEmiSelected;
-            } else {
-                Toast.makeText(mAppContext, "EMI option not available for selected product", Toast.LENGTH_SHORT).show();
-                handleUIForPaymentType(false);
-            }
-
             if(emiUi) {
+                if ((totalEmiAmount - totalDownPayemnt) > 200d) {
+                    totalEmiValue = (totalEmiAmount - totalDownPayemnt) / numberOfEmiSelected;
+                } else {
+                    Toast.makeText(mAppContext, "EMI option not available for selected product", Toast.LENGTH_SHORT).show();
+                    handleUIForPaymentType(false);
+                }
                 txtPaybleDPValue.setText(String.valueOf(totalDownPayemnt));
                 txtTaxesValue.setText(String.valueOf(totolTaxAmount));
                 txtDeliveryChargesValue.setText(String.valueOf(totalDeliveryCharges));
