@@ -21,12 +21,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class ServerRequestProcessingThread extends Thread {
     public static final int SHUTDOWN_REQUEST_CODE = -1;
     private static final String TAG = ServerRequestProcessingThread.class.getSimpleName();
-    private static final String NAMESPACE = "http://www.mydevsystems.com";
-    private static final String METHOD_NAME_GET_CATEGORY = "getCategories";
-    private static final String METHOD_NAME_GET_PRODUCT_BY_PRODUCT_ID = "getProductByProductID";
-    private static final String METHOD_NAME_GET_PRODUCT_IMAGE = "getProductImage";
-    private static final String METHOD_NAME_GET_PRODUCTS_BY_CATEGORY = "getProductsByCategory";
-    private static final String METHOD_NAME_GET_SPECIAL_PRODUCTS = "getSpecials";
 
     public static final int REQUEST_CODE_GET_CATEGORY = 1;
     public static final int REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID = 2;
@@ -217,6 +211,7 @@ public class ServerRequestProcessingThread extends Thread {
         try {
             String response = new GetCategoriesWSDL().placeOrder(eaServerRequest.getOrderparams(),
                     eaServerRequest.getVectorproductsparams(), eaServerRequest.getVectortotalparams());
+            Log.i(TAG, "place order response "+response);
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {

@@ -68,7 +68,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
     List<ProductModel> productCart;
     boolean fromCart;
 
-    private int numberOfEmiSelected;
+    private int numberOfEmiSelected = 1;
     private boolean showEmi;
 
     @Override
@@ -113,7 +113,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             selectedItemPaymentType = savedInstanceState.getString(SAVED_INSTANCE_SELECTED_PAYMENT_TYPE);
         }
         else {
-            fromCart = getIntent().hasExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT);
+            fromCart = getIntent().getBooleanExtra(KeyConstants.INTENT_IS_FROM_CART, false);
         }
 
         if(fromCart) {
@@ -123,6 +123,29 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 txtEmi.setVisibility(View.VISIBLE);
                 txtDirectPayment.setVisibility(View.GONE);
                 handleUIForPaymentType(true);
+
+                double totalEmiAmount = 0;
+                double totalDownPayemnt = 0;
+
+                for (ProductModel productModel : productCart) {
+                    int quantity = Integer.parseInt(String.valueOf(productModel.getQuantity()));
+                    totalEmiAmount += Double.parseDouble(productModel.getEmi_last_price()) * quantity;
+                    totalDownPayemnt += Double.parseDouble(productModel.getDown_payment()) * quantity;
+                }
+
+                int i = 1;
+                List<String> spnrValues = new ArrayList<>();
+                while (((totalEmiAmount - totalDownPayemnt) / i) > 200d && i <= 20) {
+                    spnrValues.add(String.valueOf(i));
+                    i++;
+                }
+
+                // Spinner click listener
+                spnrEmiCount.setOnItemSelectedListener(this);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spnrValues);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spnrEmiCount.setAdapter(dataAdapter);
+
             }
             else {
                 txtEmi.setVisibility(View.GONE);
@@ -152,10 +175,6 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spnrEmiCount.setAdapter(dataAdapter);
 
-                    if(numberOfEmiSelected == 0) {
-                        numberOfEmiSelected = 1;
-                    }
-
                     if(selectedItemPaymentType != null) {
                         if(selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
                             handleUIForPaymentType(true);
@@ -164,11 +183,15 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                             handleUIForPaymentType(false);
                         }
                     }
-                    else if(currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
-                        handleUIForPaymentType(true);
+                    else if(currentCartType != null) {
+                        if (currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
+                            handleUIForPaymentType(true);
+                        } else if (currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
+                            handleUIForPaymentType(false);
+                        }
                     }
-                    else if(currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
-                        handleUIForPaymentType(false);
+                    else {
+                        handleUIForPaymentType(true);
                     }
                 }
                 else {
@@ -237,6 +260,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price()) * quantity;
                 double downPayment = Double.parseDouble(productModel.getDown_payment()) * quantity;
                 if ((totalEMIAmount - downPayment) > 200d && showEmi) {
+
                     txtPaybleDPValue.setText(String.valueOf(totalEMIAmount));
 
                     double taxAmount = Double.parseDouble(productModel.getTax_data() != null ? String.valueOf(productModel.getTax_data().getTax_amt()) : "0.00") * quantity;
@@ -331,20 +355,13 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_emi_lable:
-                if(currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
-                    Toast.makeText(mAppContext, "Checkout all the Direct payment items from your cart for using EMI option", Toast.LENGTH_LONG).show();
-                    return;
-                }
                 handleUIForPaymentType(true);
                 break;
 
             case R.id.txt_direct_lable:
-                if(currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
-                    Toast.makeText(mAppContext, "Checkout all the EMI items from your cart for using Direct payment option", Toast.LENGTH_LONG).show();
-                    return;
-                }
                 handleUIForPaymentType(false);
                 break;
+
             case R.id.btn_confirm_order:
                 proceedForPayment(fromCart);
                 break;

@@ -12,5 +12,7 @@ public class KeyConstants {
     public static final String INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT = "product_item_selected_count";
     public static final String INTENT_CONSTANT_CATEGORY_NAME = "category_name";
 
+    public static final String INTENT_IS_FROM_CART = "from_cart";
+
     public static final String CART_FRAGMENT = "cart";
 }

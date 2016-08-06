@@ -246,7 +246,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                             EAApplication.setTransientSelectedProductModel(productModel);
 
                             Intent intent = new Intent(mActivityContext, PlaceOrderActivity.class);
-                            intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, false);
+                            intent.putExtra(KeyConstants.INTENT_IS_FROM_CART, false);
                             startActivity(intent);
                         }
                     });

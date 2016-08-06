@@ -98,7 +98,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
                     return;
                 }
                 Intent intent = new Intent(mActivityContext, PlaceOrderActivity.class);
-                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, true);
+                intent.putExtra(KeyConstants.INTENT_IS_FROM_CART, true);
                 startActivity(intent);
             }
         });
@@ -201,8 +201,9 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
                         try {
                             if (productImageModel != null) {
                                 product.setActualImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
+                                String cartType = AppPreferences.getInstance().getCartType();
                                 AppPreferences.getInstance().removeProductFromCartList(product);
-                                AppPreferences.getInstance().addProductToCartList(product, AppPreferences.getInstance().getCartType());
+                                AppPreferences.getInstance().addProductToCartList(product, cartType);
                                 if(inForeground) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -226,7 +227,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         if(requestCode == REQUEST_CODE_LOGIN) {
             if(resultCode == RESULT_OK) {
                 Intent intent = new Intent(mActivityContext, PlaceOrderActivity.class);
-                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, true);
+                intent.putExtra(KeyConstants.INTENT_IS_FROM_CART, true);
                 startActivity(intent);
             }
         }
