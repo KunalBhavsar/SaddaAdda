@@ -118,7 +118,6 @@ public class ServerRequestProcessingThread extends Thread {
                         getSpecialProducts(item);
                         break;
                     case REQUEST_CODE_PLACE_ORDER:
-                        Log.i(TAG,"Found request for place order");
                         placeOrder((EAPlaceOrderRequeset) item);
                         break;
                 }

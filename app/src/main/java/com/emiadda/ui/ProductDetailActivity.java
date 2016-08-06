@@ -47,6 +47,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     private static final int PRODUCT_DETIALS_REQUEST_CODE = 1;
     private static final String SAVED_INSTANCE_CURRENT_QUANTITY = "current_quantity";
     private static final String SAVED_INSTANCE_FROM_CART = "from_cart";
+    private static final int REQUEST_CODE_LOGIN = 1;
 
     private Context mAppContext;
     private Activity mActivityContext;
@@ -245,6 +246,13 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                     btnBuyNow.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!AppPreferences.getInstance().isUserLoggedIn()) {
+                                Toast.makeText(mAppContext, "Please login first to place an order", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(mActivityContext, LoginActivity.class);
+                                mActivityContext.startActivityForResult(intent, REQUEST_CODE_LOGIN);
+                                return;
+                            }
+
                             productModel.setQuantity(String.valueOf(currentQuantity));
                             EAApplication.setTransientSelectedProductModel(productModel);
 
@@ -425,6 +433,16 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
         setProductDetails();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_CODE_LOGIN) {
+            if(resultCode == RESULT_OK) {
+                Intent intent = new Intent(mActivityContext, PlaceOrderActivity.class);
+                intent.putExtra(KeyConstants.INTENT_IS_FROM_CART, true);
+                startActivity(intent);
+            }
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
