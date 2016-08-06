@@ -121,6 +121,11 @@ public class AppPreferences {
         editor.apply();
     }
 
+    public void removeAllProductFromCartList() {
+        remove(CART_LIST);
+        remove(CART_TYPE);
+    }
+
     public void clearAppOwnerData() {
         AppPreferences.getInstance().remove(AppPreferences.APP_OWNER_DATA);
     }

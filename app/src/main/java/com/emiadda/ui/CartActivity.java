@@ -23,18 +23,29 @@ import com.emiadda.adapters.CartAdapter;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.OrderParams;
+import com.emiadda.server.ProductsParams;
+import com.emiadda.server.TotalParams;
+import com.emiadda.server.VectorProductsParams;
+import com.emiadda.server.VectorTotalParams;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.utils.KeyConstants;
+import com.emiadda.wsdl.CustomerModel;
 import com.emiadda.wsdl.ProductImageModel;
 import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.ksoap2.serialization.SoapObject;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity implements ServerResponseSubscriber, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = CartActivity.class.getSimpleName();
-    private static final int PLACE_ORDER_REQUEST_CODE = 23;
     private static final int REQUEST_CODE_LOGIN = 1;
 
     private RecyclerView.LayoutManager layoutManager;
@@ -86,7 +97,9 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
                     mActivityContext.startActivityForResult(intent, REQUEST_CODE_LOGIN);
                     return;
                 }
-                proceedForPayment();
+                Intent intent = new Intent(mActivityContext, PlaceOrderActivity.class);
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, true);
+                startActivity(intent);
             }
         });
     }
@@ -212,16 +225,11 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CODE_LOGIN) {
             if(resultCode == RESULT_OK) {
-                proceedForPayment();
+                Intent intent = new Intent(mActivityContext, PlaceOrderActivity.class);
+                intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, true);
+                startActivity(intent);
             }
         }
-    }
-
-    private void proceedForPayment() {
-        Intent intent = new Intent(CartActivity.this, MakePaymentActivity.class);
-        startActivity(intent);
-        //EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER, PLACE_ORDER_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG,
-        // "orderParams", "productsParam[]", "totalParams[]");
     }
 
     @Override

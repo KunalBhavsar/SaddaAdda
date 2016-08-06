@@ -3,19 +3,13 @@ package com.emiadda.asynctasks;
 import android.util.Log;
 
 import com.emiadda.EAApplication;
+import com.emiadda.core.EAPlaceOrderRequeset;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.server.GetCategoriesWSDL;
-import com.emiadda.server.IWsdl2CodeEvents;
-import com.emiadda.server.Vectorproductsparams;
-import com.emiadda.server.Vectortotalparams;
-import com.emiadda.server.orderparams;
-import com.emiadda.wsdl.getCategories.ELLExtendedSoapSerializationEnvelope;
-import com.emiadda.wsdl.getCategories.ELLserverBinding;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
+import com.emiadda.server.VectorProductsParams;
+import com.emiadda.server.VectorTotalParams;
+import com.emiadda.server.OrderParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +124,7 @@ public class ServerRequestProcessingThread extends Thread {
                         getSpecialProducts(item);
                         break;
                     case REQUEST_CODE_PLACE_ORDER:
-                        placeOrder(item);
+                        placeOrder((EAPlaceOrderRequeset) item);
                         break;
                 }
             }
@@ -217,13 +211,10 @@ public class ServerRequestProcessingThread extends Thread {
         }
     }
 
-    private void placeOrder(EAServerRequest eaServerRequest) {
+    private void placeOrder(EAPlaceOrderRequeset eaServerRequest) {
         try {
-            orderparams orderparams = new orderparams();
-            Vectorproductsparams vectorproductsparams = new Vectorproductsparams();
-            Vectortotalparams vectortotalparams = new Vectortotalparams();
-
-            String response = new GetCategoriesWSDL().placeOrder(orderparams, vectorproductsparams, vectortotalparams);
+            String response = new GetCategoriesWSDL().placeOrder(eaServerRequest.getOrderparams(),
+                    eaServerRequest.getVectorproductsparams(), eaServerRequest.getVectortotalparams());
             if (response != null && !response.isEmpty()) {
                 context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
             } else {

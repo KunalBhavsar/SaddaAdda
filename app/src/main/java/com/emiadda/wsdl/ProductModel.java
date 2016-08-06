@@ -57,6 +57,8 @@ public class ProductModel implements Serializable {
     private String otp_discount_rate;
     private String emi_discount_rate;
     private String show_payment_option;
+    private String shipping;
+    private String shipping_value_type;
     private String shipping_charge;
     private TaxDataModel tax_data;
     private List<String> all_images;
@@ -496,6 +498,22 @@ public class ProductModel implements Serializable {
 
     public void setTax_data(TaxDataModel tax_data) {
         this.tax_data = tax_data;
+    }
+
+    public String getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(String shipping) {
+        this.shipping = shipping;
+    }
+
+    public String getShipping_value_type() {
+        return shipping_value_type;
+    }
+
+    public void setShipping_value_type(String shipping_value_type) {
+        this.shipping_value_type = shipping_value_type;
     }
 
     @Override
