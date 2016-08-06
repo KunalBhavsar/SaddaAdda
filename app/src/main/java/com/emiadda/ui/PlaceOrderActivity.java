@@ -37,6 +37,7 @@ import org.ksoap2.serialization.SoapObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,14 +63,15 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
     private TextView txtPaybleDPValue, txtPaybleDPTitle, txtTaxesValue, txtDeliveryChargesValue, txtTotalPayableValue;
     private RelativeLayout rltProgress;
 
-    String currentCartType, selectedItemPaymentType;
+    private String currentCartType, selectedItemPaymentType;
+    private DecimalFormat formater = new DecimalFormat("#.##");
 
-    Context mAppContext;
-    Activity mActivityContext;
+    private Context mAppContext;
+    private Activity mActivityContext;
 
-    ProductModel productModel;
-    List<ProductModel> productCart;
-    boolean fromCart;
+    private ProductModel productModel;
+    private List<ProductModel> productCart;
+    private boolean fromCart;
 
     private int numberOfEmiSelected = 1;
     private boolean showEmi;
@@ -163,7 +165,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price());
                 double downPayment = Double.parseDouble(productModel.getDown_payment());
                 if ((totalEMIAmount - downPayment) > 200d) {
-                    txtPaybleDPValue.setText(String.valueOf(totalEMIAmount * Integer.parseInt(productModel.getQuantity())));
+                    txtPaybleDPValue.setText(KeyConstants.rs + formater.format(totalEMIAmount * Integer.parseInt(productModel.getQuantity())));
                     int i = 1;
                     List<String> spnrValues = new ArrayList<>();
                     while ((totalEMIAmount / i) > 200d && i <= 20) {
@@ -241,40 +243,40 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             int quantity = Integer.parseInt(String.valueOf(productModel.getQuantity()));
             if (!emiUi) {
                 double totalOTPAmount = Double.parseDouble(productModel.getOtp_last_price()) * quantity;
-                txtPaybleDPValue.setText(String.valueOf(totalOTPAmount));
+                txtPaybleDPValue.setText(KeyConstants.rs + formater.format(totalOTPAmount));
 
                 double taxAmount = Double.parseDouble(productModel.getTax_data() != null ? String.valueOf(productModel.getTax_data().getTax_amt()) : "0.00")
                         * quantity;
-                txtTaxesValue.setText(String.valueOf(taxAmount));
+                txtTaxesValue.setText(KeyConstants.rs + formater.format(taxAmount));
 
                 double deliveryCharges = Double.valueOf(productModel.getShipping_charge()) * quantity;
-                txtDeliveryChargesValue.setText(String.valueOf(deliveryCharges));
+                txtDeliveryChargesValue.setText(KeyConstants.rs + formater.format(deliveryCharges));
 
-                txtTotalPayableValue.setText(String.valueOf(totalOTPAmount + taxAmount + deliveryCharges));
+                txtTotalPayableValue.setText(KeyConstants.rs + formater.format(totalOTPAmount + taxAmount + deliveryCharges));
             } else {
                 double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price()) * quantity;
                 double downPayment = Double.parseDouble(productModel.getDown_payment()) * quantity;
                 if ((totalEMIAmount - downPayment) > 200d && showEmi) {
 
-                    txtPaybleDPValue.setText(String.valueOf(totalEMIAmount));
+                    txtPaybleDPValue.setText(KeyConstants.rs + formater.format(totalEMIAmount));
 
                     double taxAmount = Double.parseDouble(productModel.getTax_data() != null ? String.valueOf(productModel.getTax_data().getTax_amt()) : "0.00") * quantity;
-                    txtTaxesValue.setText(String.valueOf(taxAmount));
+                    txtTaxesValue.setText(KeyConstants.rs + formater.format(taxAmount));
 
                     double deliveryCharges = Double.valueOf(productModel.getShipping_charge()) * quantity;
-                    txtDeliveryChargesValue.setText(String.valueOf(deliveryCharges));
+                    txtDeliveryChargesValue.setText(KeyConstants.rs + formater.format(deliveryCharges));
 
-                    txtTotalPayableValue.setText(String.valueOf(downPayment + taxAmount + deliveryCharges));
+                    txtTotalPayableValue.setText(KeyConstants.rs + formater.format(downPayment + taxAmount + deliveryCharges));
 
-                    txtPaybleDPValue.setText(String.valueOf(downPayment));
-                    txtDownPaymentValue.setText(String.valueOf(downPayment));
+                    txtPaybleDPValue.setText(KeyConstants.rs + formater.format(downPayment));
+                    txtDownPaymentValue.setText(KeyConstants.rs + formater.format(downPayment));
 
                     double emiValue = (totalEMIAmount - downPayment) / numberOfEmiSelected;
-                    txtEmiPriceValue.setText(String.format("%.2f", emiValue));
+                    txtEmiPriceValue.setText(KeyConstants.rs + formater.format(emiValue));
 
-                    txtNetEmiValue.setText(String.valueOf(totalEMIAmount - downPayment));
+                    txtNetEmiValue.setText(KeyConstants.rs + formater.format(totalEMIAmount - downPayment));
 
-                    txtTotalValue.setText(String.valueOf(totalEMIAmount));
+                    txtTotalValue.setText(KeyConstants.rs + formater.format(totalEMIAmount));
                 } else {
                     Toast.makeText(mAppContext, "EMI option not available for selected product", Toast.LENGTH_SHORT).show();
                     handleUIForPaymentType(false);
@@ -308,20 +310,20 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(mAppContext, "EMI option not available for selected product", Toast.LENGTH_SHORT).show();
                     handleUIForPaymentType(false);
                 }
-                txtPaybleDPValue.setText(String.valueOf(totalDownPayemnt));
-                txtTaxesValue.setText(String.valueOf(totolTaxAmount));
-                txtDeliveryChargesValue.setText(String.valueOf(totalDeliveryCharges));
-                txtTotalPayableValue.setText(String.valueOf(totalDownPayemnt + totolTaxAmount + totalDeliveryCharges));
+                txtPaybleDPValue.setText(KeyConstants.rs + formater.format(totalDownPayemnt));
+                txtTaxesValue.setText(KeyConstants.rs + formater.format(totolTaxAmount));
+                txtDeliveryChargesValue.setText(KeyConstants.rs + formater.format(totalDeliveryCharges));
+                txtTotalPayableValue.setText(KeyConstants.rs + formater.format(totalDownPayemnt + totolTaxAmount + totalDeliveryCharges));
 
-                txtDownPaymentValue.setText(String.valueOf(totalDownPayemnt));
-                txtEmiPriceValue.setText(String.format("%.2f", totalEmiValue));
-                txtNetEmiValue.setText(String.format("%.2f", (totalEmiValue * numberOfEmiSelected)));
-                txtTotalValue.setText(String.valueOf(totalEmiAmount));
+                txtDownPaymentValue.setText(KeyConstants.rs + formater.format(totalDownPayemnt));
+                txtEmiPriceValue.setText(KeyConstants.rs + formater.format(totalEmiValue));
+                txtNetEmiValue.setText(KeyConstants.rs + formater.format(totalEmiValue * numberOfEmiSelected));
+                txtTotalValue.setText(KeyConstants.rs + formater.format(totalEmiAmount));
             } else {
-                txtPaybleDPValue.setText(String.valueOf(totalOTPAmount));
-                txtTaxesValue.setText(String.valueOf(totolTaxAmount));
-                txtDeliveryChargesValue.setText(String.valueOf(totalDeliveryCharges));
-                txtTotalPayableValue.setText(String.valueOf(totalOTPAmount + totolTaxAmount + totalDeliveryCharges));
+                txtPaybleDPValue.setText(KeyConstants.rs + formater.format(totalOTPAmount));
+                txtTaxesValue.setText(KeyConstants.rs + formater.format(totolTaxAmount));
+                txtDeliveryChargesValue.setText(KeyConstants.rs + formater.format(totalDeliveryCharges));
+                txtTotalPayableValue.setText(KeyConstants.rs + formater.format(totalOTPAmount + totolTaxAmount + totalDeliveryCharges));
             }
         }
     }

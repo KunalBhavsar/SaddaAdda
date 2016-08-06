@@ -39,11 +39,11 @@ public class ThankYouActivity extends AppCompatActivity implements View.OnClickL
         CustomerModel customerModel = AppPreferences.getInstance().getAppOwnerData();
         if(null != customerModel.getAddress()) {
             AddressModel addressModel = customerModel.getAddress();
-            String address = addressModel.getAddress_1() + "," +
-                                addressModel.getCity_name() +"," +
-                                addressModel.getDistrict_name() +"," +
-                                addressModel.getZone() +"," +
-                                addressModel.getCountry() +"," + "Postcode:" +
+            String address = addressModel.getAddress_1() + ", " +
+                                addressModel.getCity_name() +", " +
+                                addressModel.getDistrict_name() +", " +
+                                addressModel.getZone() +", " +
+                                addressModel.getCountry() +", " + "Postcode: " +
                                 addressModel.getPostcode();
             txtAddress.setText(address);
         }

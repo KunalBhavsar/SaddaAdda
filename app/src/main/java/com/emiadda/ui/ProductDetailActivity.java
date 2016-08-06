@@ -36,6 +36,8 @@ import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Kunal on 12/07/16.
  */
@@ -75,6 +77,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
 
     private Fragment cartFragment;
     private boolean fromCart;
+    private DecimalFormat formater = new DecimalFormat("#.##");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -203,7 +206,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
 
                     txtBrandName.setText(productModel.getName());
                     double price = Double.parseDouble(productModel.getPrice());
-                    txtAmount.setText("Rs." + price);
+                    txtAmount.setText(KeyConstants.rs + formater.format(price));
                     txtDescription.setText(productModel.getDescription());
                     txtManufacturer.setText(productModel.getManufacturer());
                     txtStockStatus.setText(productModel.getStock_status());
