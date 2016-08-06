@@ -105,6 +105,10 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(((CartFrgament)cartFragment).getSize() <= 0) {
+                    Toast.makeText(ProductListActivity.this, "Add products into cart", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(mActivityContext, CartActivity.class);
                 startActivity(intent);
             }

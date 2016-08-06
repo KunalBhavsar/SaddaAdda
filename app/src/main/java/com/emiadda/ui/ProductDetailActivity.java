@@ -96,6 +96,10 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                     mActivityContext.finish();
                     return;
                 }
+                if(((CartFrgament)cartFragment).getSize() <= 0) {
+                    Toast.makeText(ProductDetailActivity.this, "Add products into cart", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(mActivityContext, CartActivity.class);
                 startActivity(intent);
             }

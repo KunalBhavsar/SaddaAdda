@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -16,6 +18,7 @@ public class RegisterActivity extends AppCompatActivity {
     private WebView webView;
     private ProgressDialog progressDialog;
     private String regUrl = "http://www.mydevsystems.com/dev/emiaddanew/index.php?route=account/registercust";
+    private String errorUrl = "file:///android_asset/error.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,12 @@ public class RegisterActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 progressDialog.dismiss();
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                view.loadUrl(errorUrl);
             }
         });
 
