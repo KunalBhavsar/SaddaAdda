@@ -46,6 +46,7 @@ public class MakePaymentActivity extends AppCompatActivity implements View.OnCli
     ProductModel productModel;
     boolean fromCart;
     private int numberOfEmiSelected;
+    private boolean showEmi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,43 +97,59 @@ public class MakePaymentActivity extends AppCompatActivity implements View.OnCli
         txtEmi.setOnClickListener(this);
         btnConfirmOrder.setOnClickListener(this);
 
-        double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price());
-        double downPayment = Double.parseDouble(productModel.getDown_payment());
-        if((totalEMIAmount - downPayment) > 200d) {
-            txtPaybleDPValue.setText(String.valueOf(totalEMIAmount * Integer.parseInt(productModel.getQuantity())));
-            int i = 1;
-            List<String> spnrValues = new ArrayList<>();
-            while ((totalEMIAmount / i) > 200d && i <= 20) {
-                spnrValues.add(String.valueOf(i));
-                i++;
-            }
+        boolean showEmi = Integer.parseInt(productModel.getShow_payment_option()) > 0;
 
-            // Spinner click listener
-            spnrEmiCount.setOnItemSelectedListener(this);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spnrValues);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spnrEmiCount.setAdapter(dataAdapter);
+        if(showEmi) {
+            txtEmi.setVisibility(View.VISIBLE);
+            double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price());
+            double downPayment = Double.parseDouble(productModel.getDown_payment());
+            if((totalEMIAmount - downPayment) > 200d) {
+                txtPaybleDPValue.setText(String.valueOf(totalEMIAmount * Integer.parseInt(productModel.getQuantity())));
+                int i = 1;
+                List<String> spnrValues = new ArrayList<>();
+                while ((totalEMIAmount / i) > 200d && i <= 20) {
+                    spnrValues.add(String.valueOf(i));
+                    i++;
+                }
 
-            if(numberOfEmiSelected == 0) {
-                numberOfEmiSelected = 1;
-            }
+                // Spinner click listener
+                spnrEmiCount.setOnItemSelectedListener(this);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spnrValues);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spnrEmiCount.setAdapter(dataAdapter);
 
-            if(selectedItemPaymentType != null) {
-                if(selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
+                if(numberOfEmiSelected == 0) {
+                    numberOfEmiSelected = 1;
+                }
+
+                if(selectedItemPaymentType != null) {
+                    if(selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
+                        handleUIForPaymentType(true);
+                    }
+                    else if(selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
+                        handleUIForPaymentType(false);
+                    }
+                }
+                else if(currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
                     handleUIForPaymentType(true);
                 }
-                else if(selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
+                else if(currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
                     handleUIForPaymentType(false);
                 }
             }
-            else if(currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_EMI)) {
-                handleUIForPaymentType(true);
-            }
-            else if(currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
-                handleUIForPaymentType(false);
+            else {
+                if((selectedItemPaymentType != null && (selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)))
+                        || currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
+                    handleUIForPaymentType(false);
+                }
+                else {
+                    Toast.makeText(mAppContext, "EMI option not available for selected product, clear your cart for direct payment", Toast.LENGTH_LONG).show();
+                    finish();
+                }
             }
         }
         else {
+            txtEmi.setVisibility(View.GONE);
             if((selectedItemPaymentType != null && (selectedItemPaymentType.isEmpty() || selectedItemPaymentType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)))
                     || currentCartType.isEmpty() || currentCartType.equals(AppPreferences.CART_TYPE_VALUE_DIRECT_PAYMENT)) {
                 handleUIForPaymentType(false);
@@ -180,7 +197,7 @@ public class MakePaymentActivity extends AppCompatActivity implements View.OnCli
 
             double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price()) * quantity;
             double downPayment = Double.parseDouble(productModel.getDown_payment()) * quantity;
-            if((totalEMIAmount - downPayment) > 200d) {
+            if((totalEMIAmount - downPayment) > 200d && showEmi) {
                 txtPaybleDPValue.setText(String.valueOf(totalEMIAmount));
 
                 double taxAmount = Double.parseDouble(productModel.getTax_data() != null ? String.valueOf(productModel.getTax_data().getTax_amt()) : "0.00") * quantity;
