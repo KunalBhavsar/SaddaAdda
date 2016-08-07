@@ -17,9 +17,12 @@
             android:layout_margin="@dimen/_5dp"
             android:background="@color/white"
             android:scaleType="fitXY"
-            app:civ_border="true"
-            app:civ_borderColor="@color/normal_gray"
-            app:civ_borderWidth="2dp" />
+             />
+
+        <!--android:src="@drawable/western"
+        app:civ_border="true"
+        app:civ_borderColor="@color/normal_gray"
+        app:civ_borderWidth="2dp"-->
 
         <TextView
             android:id="@+id/txt_category"

@@ -124,6 +124,9 @@ public class CategoryAdapter extends BaseAdapter implements Filterable {
         else if(catName.contains("hit")) {
             identifier = context.getResources().getIdentifier("elec", "drawable", context.getPackageName());
         }
+        else if(catName.contains("western")) {
+            identifier = context.getResources().getIdentifier("western", "drawable", context.getPackageName());
+        }
         else {
             identifier = R.drawable.placeholder_product;
         }
