@@ -13,9 +13,9 @@
                    android:padding="@dimen/_5dp"
                    android:layout_height="@dimen/_40dp"
                    android:layout_centerVertical="true"
-                   android:layout_marginLeft="@dimen/_10dp"/>
+                   android:layout_marginLeft="@dimen/_15dp"/>
 
-        <TextView android:id="@+id/txt_category"
+         <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_category"
                   style="@style/DrawerText"
                   android:layout_width="match_parent"
                   android:layout_height="@dimen/_50dp"

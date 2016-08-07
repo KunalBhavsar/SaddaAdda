@@ -24,7 +24,7 @@
         app:civ_borderColor="@color/normal_gray"
         app:civ_borderWidth="2dp"-->
 
-        <TextView
+        <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_category"
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -34,6 +34,7 @@
             android:maxLines="1"
             android:padding="@dimen/_5dp"
             android:text="MEN"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@color/blue_login_btn"
             android:textSize="12sp" />
     </RelativeLayout>

@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_margin="1dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/circular_design"
+        android:layout_height="35dp"
         >
 
         <ImageView
             android:id="@+id/img_category"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/rounded_rect_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:padding="7dp"
-            android:src="@drawable/sub_cat" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_5dp"
+            android:src="@drawable/arrow"/>
 
 
-        <TextView
+        <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_category"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -30,8 +28,9 @@
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:text="Clothing"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
 
         <ImageView
@@ -41,9 +40,15 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:src="@drawable/arrow" />
+            />
 
 
     </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+          android:layout_marginLeft="@dimen/_10dp"
+          android:layout_marginRight="@dimen/_10dp"
+          android:layout_height="1dp"
+          android:background="@color/light_grey"/>
 
 </LinearLayout>

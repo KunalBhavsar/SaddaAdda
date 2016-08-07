@@ -1,6 +1,7 @@
 package com.emiadda.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,8 @@ public class CategoryAdapter extends BaseAdapter implements Filterable {
             viewHolder = new ViewHolder();
             viewHolder.imgCategory = (CircularImageView)convertView.findViewById(R.id.img_category);
             viewHolder.txtCategory = (TextView) convertView.findViewById(R.id.txt_category);
+            Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.otf");
+            viewHolder.txtCategory.setTypeface(tf);
             convertView.setTag(viewHolder);
         }
         else {

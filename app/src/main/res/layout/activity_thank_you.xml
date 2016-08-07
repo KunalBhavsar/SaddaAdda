@@ -13,11 +13,12 @@
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary">
+        android:background="@color/blue_login_btn">
 
         <ImageView
             android:id="@+id/txt_title"
             android:layout_width="120dp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/logo"/>
@@ -50,7 +51,7 @@
             android:layout_centerInParent="true"
             android:orientation="vertical">
 
-            <TextView
+             <com.emiadda.utils.CustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_15dp"
@@ -63,7 +64,7 @@
                 android:textSize="24sp"/>
 
 
-            <TextView
+             <com.emiadda.utils.CustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_15dp"
@@ -83,7 +84,7 @@
                 android:orientation="vertical"
                 android:paddingTop="@dimen/_15dp">
 
-                <TextView
+                 <com.emiadda.utils.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -95,7 +96,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
-                <TextView
+                 <com.emiadda.utils.CustomFontTextView
                     android:id="@id/txt_address"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="@dimen/_10dp"
@@ -108,7 +109,7 @@
                     android:textSize="18sp"/>
 
 
-                <TextView
+                 <com.emiadda.utils.CustomFontTextView
                     android:id="@+id/txt_review"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40dp"

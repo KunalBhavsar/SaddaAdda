@@ -19,7 +19,7 @@
             android:layout_height="@dimen/_5dp"
             android:background="@color/colorAccent"
             />
-        <TextView
+        <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_address"
             android:layout_below="@+id/temp_top_view"
             android:text="ADDRESS"

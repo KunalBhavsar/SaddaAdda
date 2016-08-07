@@ -9,6 +9,7 @@
     <color name="blue_login_btn">#5baee0</color>
     <color name="blue_light">#95c9e9</color>
     <color name="light_gray">#E3E3E3</color>
+    <color name="sub_gray">#F8F4FF</color>
     <color name="normal_gray">#808080</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>

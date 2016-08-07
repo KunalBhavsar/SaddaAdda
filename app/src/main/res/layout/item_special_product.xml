@@ -16,7 +16,7 @@
         android:scaleType="fitXY"
         android:src="@drawable/placeholder_product" />
 
-    <TextView
+        <com.emiadda.utils.CustomFontTextView
         android:id="@+id/txt_product_name"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -27,6 +27,6 @@
         android:padding="@dimen/_5dp"
         android:text="MEN"
         android:textColor="@color/blue_login_btn"
-        android:textSize="12sp"/>
+        android:textSize="14sp"/>
         </RelativeLayout>
 </RelativeLayout>

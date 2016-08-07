@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -55,6 +57,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements ServerResponseSubscriber {
 
@@ -91,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private TextView txtNoSpecialProducts;
 
     private View navDrawerHeaderView;
+    Timer repeatTask = new Timer();
+    int repeatInterval = 2000;
+    int count;
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,6 +239,19 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(0));
         EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
     }
+
+/*
+    public void timerDelayRunForScroll(long time) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                try {
+                    int widthOfOneElement = linSpecialProducts.getChildAt(0).getMeasuredWidth();
+                    horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() + widthOfOneElement, (int)horizontalScrollView.getScrollY());
+                } catch (Exception e) {}
+            }
+        }, time);
+    }*/
 
     private void setUpCartFragment() {
         cartFragment = new CartFrgament();
@@ -463,7 +484,10 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                                 mActivityContext.startActivity(intent);
                             }
                         });
-                        ((TextView)view.findViewById(R.id.txt_product_name)).setText(productModel.getName().replaceAll("&amp;","&"));
+                        TextView txtSplProd = (TextView)view.findViewById(R.id.txt_product_name);
+                        txtSplProd.setText(productModel.getName().replaceAll("&amp;","&"));
+                        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.otf");
+                        txtSplProd.setTypeface(tf);
                         Picasso.with(mAppContext).load(productModel.getActualImage())
                                 .placeholder(R.drawable.placeholder_product).into((ImageView) view.findViewById(R.id.img_product));
                         linSpecialProducts.addView(view);
@@ -478,14 +502,38 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                     }
                     else {
                         txtNoSpecialProducts.setVisibility(View.GONE);
-                        btnNext.setVisibility(View.VISIBLE);
-                        btnPrev.setVisibility(View.VISIBLE);
+                        btnNext.setVisibility(View.GONE);
+                        btnPrev.setVisibility(View.GONE);
                         linSpecialProducts.setVisibility(View.VISIBLE);
                         btnViewAll.setVisibility(View.VISIBLE);
+                        //timerDelayRunForScroll(500);
+                        count = linSpecialProducts.getChildCount();
+                        repeatTask.scheduleAtFixedRate(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if(!canScroll(horizontalScrollView)) {
+                                    horizontalScrollView.fullScroll(View.FOCUS_LEFT);
+                                } else {
+                                    int widthOfOneElement = linSpecialProducts.getChildAt(0).getMeasuredWidth();
+                                    horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() + widthOfOneElement, (int)horizontalScrollView.getScrollY());
+                                }
+
+                            }
+                        }, 0, repeatInterval);
                     }
                 }
             });
         }
+    }
+
+    private boolean canScroll(HorizontalScrollView horizontalScrollView) {
+        View child = (View) horizontalScrollView.getChildAt(0);
+        if (child != null) {
+            int childWidth = (child).getWidth();
+            return horizontalScrollView.getWidth() < childWidth + horizontalScrollView.getPaddingLeft() + horizontalScrollView.getPaddingRight();
+        }
+        return false;
+
     }
 
     private void updateImagesOfSpecialProductsUI() {

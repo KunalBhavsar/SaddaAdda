@@ -55,7 +55,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
-            <TextView
+             <com.emiadda.utils.CustomFontTextView
                 android:id="@+id/txt_email"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30dp"
@@ -94,7 +94,7 @@
         android:layout_height="2dp"
         android:background="@color/gray_product_bg" />
 
-    <TextView
+    <com.emiadda.utils.CustomFontTextView
         android:id="@+id/txt_home"
         style="@style/DrawerText"
         android:layout_width="match_parent"

@@ -30,28 +30,28 @@
         android:background="@drawable/light_grey_border"
         android:padding="@dimen/_5dp">
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_brand_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Brand Name"
             android:textColor="@color/black" />
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_brand_name_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_brand_name"
             android:text="Brand name" />
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_brand_name_value"
             android:text="Size: " />
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_size_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,14 +61,14 @@
             android:textColor="@color/black" />
 
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_qun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_size"
             android:text="Qty: " />
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_qun_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,14 +78,14 @@
             android:textColor="@color/black" />
 
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_qun"
             android:text="Amount to pay: " />
 
-        <TextView
+         <com.emiadda.utils.CustomFontTextView
             android:id="@+id/txt_amount_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

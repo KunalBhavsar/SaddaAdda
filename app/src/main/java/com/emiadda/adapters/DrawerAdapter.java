@@ -2,6 +2,7 @@ package com.emiadda.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -78,6 +79,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof ListHolder) {
             ListHolder viewHolder = (ListHolder) holder;
             viewHolder.txtCat.setText(categoryList.get(position).getCategoryName().replaceAll("&amp;","&").toUpperCase());
+            Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.otf");
+            viewHolder.txtCat.setTypeface(tf);
 
             String catName = categoryList.get(position).getCategoryName().toLowerCase();
             //Set category image logic
