@@ -31,7 +31,7 @@ public class ThankYouActivity extends AppCompatActivity implements View.OnClickL
         btnContinue = (Button) findViewById(R.id.btn_continue);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         btnContinue.setOnClickListener(this);
         txtReview.setOnClickListener(this);

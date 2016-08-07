@@ -113,7 +113,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (savedInstanceState != null) {
             fromCart = savedInstanceState.getBoolean(SAVED_INSTANCE_FROM_CART);

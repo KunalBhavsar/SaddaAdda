@@ -76,7 +76,7 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         btnPlaceOrder = (Button) findViewById(R.id.btn_place_order);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);

@@ -11,7 +11,10 @@
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue_login_btn">
+        android:background="@color/blue_login_btn"
+        app:titleTextColor="@color/white"
+        app:title="@string/app_name"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <ImageView
             android:id="@+id/txt_title"
@@ -122,13 +125,14 @@
                 android:layout_height="wrap_content"
                 android:text="Sub Total"/>
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomFontTextView
                 android:id="@+id/txt_sub_total"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/txt_total"
                 android:layout_alignParentRight="true"
+                android:singleLine="true"
                 android:text="RS. 4521"/>
 
             <com.emiadda.utils.CustomFontTextView
@@ -147,6 +151,7 @@
                 android:layout_alignLeft="@+id/txt_total"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/txt_sub_total_label"
+                android:singleLine="true"
                 android:text="Rs. 5465 "/>
 
             <com.emiadda.utils.CustomFontTextView
@@ -157,7 +162,7 @@
                 android:layout_below="@id/txt_delivery_charges_label"
                 android:text="Taxes"/>
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomFontTextView
                 android:id="@+id/txt_taxes"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -165,9 +170,10 @@
                 android:layout_alignLeft="@+id/txt_total"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/txt_delivery_charges_label"
+                android:singleLine="true"
                 android:text="Rs 3135"/>
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomFontTextView
                 android:id="@+id/txt_total_label"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -175,9 +181,10 @@
                 android:layout_below="@id/txt_taxes_label"
                 android:layout_marginTop="@dimen/_5dp"
                 android:text="Total"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textSize="17sp"/>
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomFontTextView
                 android:id="@+id/txt_total"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -185,8 +192,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/txt_taxes_label"
                 android:layout_marginTop="@dimen/_5dp"
-                android:text="Rs. 556451"
-                android:textColor="@color/black"/>
+                android:singleLine="true"
+                android:text="Rs. 5564531"
+                android:textColor="@color/black"
+                android:textSize="17sp"/>
         </RelativeLayout>
 
         <Button

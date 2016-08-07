@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/light_gray"
     android:orientation="vertical"
     tools:context="com.emiadda.ui.ThankYouActivity">
@@ -13,15 +13,18 @@
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue_login_btn">
+        android:background="@color/blue_login_btn"
+        app:titleTextColor="@color/white"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/app_name">
 
         <ImageView
             android:id="@+id/txt_title"
             android:layout_width="120dp"
-            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/logo"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/img_cart"
@@ -51,27 +54,27 @@
             android:layout_centerInParent="true"
             android:orientation="vertical">
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_15dp"
                 android:layout_marginRight="@dimen/_15dp"
                 android:gravity="center_vertical"
-                android:textStyle="bold"
                 android:paddingLeft="@dimen/_10dp"
                 android:text="Thank you,your order has been placed."
                 android:textColor="@color/blue_login_btn"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:textStyle="bold"/>
 
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_15dp"
                 android:layout_marginRight="@dimen/_15dp"
+                android:layout_marginTop="@dimen/_5dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_5dp"
                 android:text="An email confirmation has been send to you."
                 android:textColor="@color/black"
                 android:textSize="18sp"/>
@@ -84,24 +87,24 @@
                 android:orientation="vertical"
                 android:paddingTop="@dimen/_15dp">
 
-                 <com.emiadda.utils.CustomFontTextView
+                <com.emiadda.utils.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginLeft="@dimen/_10dp"
                     android:layout_marginRight="@dimen/_10dp"
+                    android:gravity="center"
                     android:paddingLeft="@dimen/_10dp"
                     android:text="Your item will be shipped to your address:"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
-                 <com.emiadda.utils.CustomFontTextView
+                <com.emiadda.utils.CustomFontTextView
                     android:id="@id/txt_address"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_10dp"
                     android:layout_marginRight="@dimen/_10dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10dp"
                     android:gravity="center"
                     android:paddingLeft="@dimen/_10dp"
@@ -109,15 +112,15 @@
                     android:textSize="18sp"/>
 
 
-                 <com.emiadda.utils.CustomFontTextView
+                <com.emiadda.utils.CustomFontTextView
                     android:id="@+id/txt_review"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40dp"
                     android:layout_marginTop="@dimen/_10dp"
+                    android:background="@color/light_gray"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/_10dp"
                     android:text="Review or edit order"
-                    android:background="@color/light_gray"
                     android:textColor="@color/black"
                     android:textSize="18sp"/>
             </LinearLayout>
@@ -133,7 +136,7 @@
                 android:layout_marginRight="@dimen/_30dp"
                 android:background="@drawable/ripple_orange"
                 android:text="CONTINUE SHOPPING "
-                android:textColor="@color/white" />
+                android:textColor="@color/white"/>
 
         </LinearLayout>
 
