@@ -29,6 +29,6 @@
     <string name="home_living">HOME AND LIVING</string>
     <string name="my_wish_list">MY WISH LIST</string>
 
-    <string name="search_hint">Search categories,products &amp; more</string>
+    <string name="search_hint">Search categories, products &amp; more</string>
     <string name="no_result">NO RESULTS FOUND</string>
 </resources>

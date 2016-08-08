@@ -2,50 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:visibility="gone">
 
-     <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_my_wish_list"
-              style="@style/DrawerText"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/_50dp"
-              android:visibility="gone"
-              android:drawableLeft="@drawable/wishlist"
-              android:text="@string/my_wish_list"
-              android:textColor="@color/black"/>
-
-    <View android:layout_width="match_parent"
-          android:visibility="gone"
-          android:background="@color/gray_product_bg"
-          android:layout_height="1dp"/>
-
-     <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_account"
-              style="@style/DrawerText"
-              android:drawableLeft="@drawable/account"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/_50dp"
-              android:text="@string/my_account"/>
+    <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_my_wish_list"
+                                          style="@style/DrawerText"
+                                          android:layout_width="match_parent"
+                                          android:layout_height="@dimen/_50dp"
+                                          android:drawableLeft="@drawable/wishlist"
+                                          android:text="@string/my_wish_list"
+                                          android:textColor="@color/black"
+                                          android:visibility="gone"/>
 
     <View android:layout_width="match_parent"
+          android:layout_height="1dp"
           android:background="@color/gray_product_bg"
-          android:layout_height="1dp"/>
+          android:visibility="gone"/>
 
-     <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_track_my_order"
-              style="@style/DrawerText"
-              android:drawableLeft="@drawable/tarck"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/_50dp"
-              android:text="@string/track_order"/>
+    <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_account"
+                                          style="@style/DrawerText"
+                                          android:layout_width="match_parent"
+                                          android:layout_height="@dimen/_50dp"
+                                          android:drawableLeft="@drawable/account"
+                                          android:text="@string/my_account"/>
 
     <View android:layout_width="match_parent"
-          android:background="@color/gray_product_bg"
-          android:layout_height="1dp"/>
+          android:layout_height="1dp"
+          android:background="@color/gray_product_bg"/>
 
-     <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_policies"
-              android:visibility="gone"
-              android:drawableLeft="@drawable/polic"
-              android:layout_width="match_parent"
-              style="@style/DrawerText"
-              android:layout_height="@dimen/_50dp"
-              android:text="@string/policies"/>
+    <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_track_my_order"
+                                          style="@style/DrawerText"
+                                          android:layout_width="match_parent"
+                                          android:layout_height="@dimen/_50dp"
+                                          android:drawableLeft="@drawable/tarck"
+                                          android:text="@string/track_order"/>
+
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/gray_product_bg"/>
+
+    <com.emiadda.utils.CustomFontTextView android:id="@+id/txt_policies"
+                                          style="@style/DrawerText"
+                                          android:layout_width="match_parent"
+                                          android:layout_height="@dimen/_50dp"
+                                          android:drawableLeft="@drawable/polic"
+                                          android:text="@string/policies"
+                                          android:visibility="gone"/>
 
 </LinearLayout>
