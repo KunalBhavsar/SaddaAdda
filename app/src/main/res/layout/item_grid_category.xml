@@ -24,7 +24,8 @@
         app:civ_borderColor="@color/normal_gray"
         app:civ_borderWidth="2dp"-->
 
-        <com.emiadda.utils.CustomFontTextView
+        <com.emiadda.utils.CustomTextView
+            app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_category"
             android:layout_width="match_parent"
             android:layout_height="30dp"

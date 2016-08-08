@@ -52,7 +52,7 @@ public class VectorTotalParams extends Vector<TotalParams> implements KvmSeriali
     
     @Override
     public void getPropertyInfo(int index, @SuppressWarnings("rawtypes") Hashtable arg1, PropertyInfo info) {
-        info.name = "totalparams";
+        info.name = "item";
         info.type = TotalParams.class;
     }
     

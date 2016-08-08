@@ -54,7 +54,8 @@
             android:layout_centerInParent="true"
             android:orientation="vertical">
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_15dp"
@@ -67,7 +68,8 @@
                 android:textStyle="bold"/>
 
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_15dp"
@@ -87,7 +89,8 @@
                 android:orientation="vertical"
                 android:paddingTop="@dimen/_15dp">
 
-                <com.emiadda.utils.CustomFontTextView
+                <com.emiadda.utils.CustomTextView
+                    app:font="@string/font_monteserrat_regular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_10dp"
@@ -99,7 +102,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
-                <com.emiadda.utils.CustomFontTextView
+                <com.emiadda.utils.CustomTextView
+                    app:font="@string/font_monteserrat_regular"
                     android:id="@id/txt_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -112,7 +116,8 @@
                     android:textSize="18sp"/>
 
 
-                <com.emiadda.utils.CustomFontTextView
+                <com.emiadda.utils.CustomTextView
+                    app:font="@string/font_monteserrat_regular"
                     android:id="@+id/txt_review"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40dp"

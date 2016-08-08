@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -19,9 +20,10 @@
             android:layout_height="@dimen/_5dp"
             android:background="@color/colorAccent"
             />
-        <com.emiadda.utils.CustomFontTextView
+        <com.emiadda.utils.CustomTextView
             android:id="@+id/txt_address"
             android:layout_below="@+id/temp_top_view"
+            app:font="@string/font_monteserrat_regular"
             android:text="ADDRESS"
             android:padding="@dimen/_10dp"
             android:textSize="19sp"

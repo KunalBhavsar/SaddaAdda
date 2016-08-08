@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -30,28 +31,32 @@
         android:background="@drawable/light_grey_border"
         android:padding="@dimen/_5dp">
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_brand_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Brand Name"
             android:textColor="@color/black" />
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_brand_name_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_brand_name"
             android:text="Brand name" />
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_brand_name_value"
             android:text="Size: " />
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_size_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,14 +66,16 @@
             android:textColor="@color/black" />
 
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_qun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_size"
             android:text="Qty: " />
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_qun_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,14 +85,16 @@
             android:textColor="@color/black" />
 
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_qun"
             android:text="Amount to pay: " />
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_amount_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

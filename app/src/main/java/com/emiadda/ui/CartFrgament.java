@@ -26,8 +26,6 @@ public class CartFrgament extends Fragment {
         View view = inflater.inflate(R.layout.toolbar_layout, container, false);
         txtCount = (TextView) view.findViewById(R.id.txt_count);
         txtHeading = (TextView) view.findViewById(R.id.txt_heading);
-        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Montserrat-Regular.otf");
-        txtHeading.setTypeface(tf);
         size = AppPreferences.getInstance().getCartList().size();
         return view;
     }

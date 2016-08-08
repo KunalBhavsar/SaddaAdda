@@ -52,7 +52,7 @@ public class VectorProductsParams extends Vector<ProductsParams> implements KvmS
     
     @Override
     public void getPropertyInfo(int index, @SuppressWarnings("rawtypes") Hashtable arg1, PropertyInfo info) {
-        info.name = "productsparams";
+        info.name = "item";
         info.type = ProductsParams.class;
     }
     

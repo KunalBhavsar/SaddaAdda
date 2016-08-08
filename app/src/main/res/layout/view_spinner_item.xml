@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.emiadda.utils.CustomFontTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.emiadda.utils.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@android:id/text1"
     style="?android:attr/spinnerItemStyle"
-    android:gravity="center"
+    app:font="@string/font_monteserrat_regular"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@drawable/light_grey_border"
     android:drawablePadding="@dimen/_10dp"
     android:drawableRight="@drawable/arrow_down"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:gravity="center"
     android:singleLine="true"
-    android:textSize="16sp"
-/>
+    android:textSize="16sp" />

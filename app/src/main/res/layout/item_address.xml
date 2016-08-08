@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,7 +14,8 @@
         android:layout_height="wrap_content"
         >
 
-        <TextView
+        <com.emiadda.utils.CustomTextView
+            app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +38,8 @@
             android:layout_below="@+id/view_below_user_name"
             android:padding="@dimen/_10dp">
 
-            <TextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_default_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +49,8 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

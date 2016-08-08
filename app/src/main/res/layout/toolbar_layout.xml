@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:id="@+id/rel_cart"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/txt_title"
@@ -15,10 +16,11 @@
         android:transitionName="login"
         android:visibility="gone"/>
 
-    <com.emiadda.utils.CustomFontTextView
+    <com.emiadda.utils.CustomTextView
         android:id="@+id/txt_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:font="@string/font_monteserrat_regular"
         android:layout_below="@+id/temp_top_view"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
@@ -36,8 +38,7 @@
         android:layout_gravity="end|center_vertical"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/img_cart"
-        android:focusable="true"
-        android:src="@drawable/search"/>
+        android:focusable="true"/>
 
 
     <ImageView
@@ -50,9 +51,10 @@
         android:layout_gravity="end|center_vertical"
         android:layout_marginRight="20dp"
         android:focusable="true"
-        android:src="@drawable/cart1"/>
+        android:src="@drawable/ic_cart1"/>
 
-    <TextView android:id="@+id/txt_count"
+    <TextView
+        android:id="@+id/txt_count"
               android:layout_width="20dp"
               android:layout_height="20dp"
               android:layout_alignParentRight="true"

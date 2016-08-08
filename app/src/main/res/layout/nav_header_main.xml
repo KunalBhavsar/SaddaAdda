@@ -11,8 +11,8 @@
         android:id="@+id/rlt_user_profile"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_140dp"
-        android:visibility="gone"
-        android:background="@color/blue_login_btn">
+        android:background="@color/blue_login_btn"
+        android:visibility="gone">
 
         <com.emiadda.views.CircularImageView
             android:id="@+id/img_app_owner"
@@ -43,7 +43,7 @@
             android:layout_toRightOf="@+id/img_app_owner"
             android:padding="@dimen/_5dp">
 
-            <TextView
+            <com.emiadda.utils.CustomTextView
                 android:id="@+id/txt_name"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30dp"
@@ -53,9 +53,10 @@
                 android:text="Android Studio"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:font="@string/font_monteserrat_regular" />
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
                 android:id="@+id/txt_email"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30dp"
@@ -65,7 +66,8 @@
                 android:padding="@dimen/_5dp"
                 android:text="android.studio@android.com"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:font="@string/font_monteserrat_regular" />
         </RelativeLayout>
 
         <Button
@@ -84,19 +86,21 @@
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:gravity="center"
         android:background="@color/blue_login_btn"
+        android:gravity="center"
         android:padding="@dimen/_5dp"
         android:text="SIGN IN"
         android:textColor="@color/white" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/gray_product_bg" />
 
-    <com.emiadda.utils.CustomFontTextView
+    <com.emiadda.utils.CustomTextView
         android:id="@+id/txt_home"
         style="@style/DrawerText"
+        app:font="@string/font_monteserrat_regular"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp"
         android:drawableLeft="@drawable/home1"

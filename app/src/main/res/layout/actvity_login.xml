@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/imgpsh_fullsize"
     android:orientation="vertical">
 
@@ -82,7 +83,8 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
-            <TextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/btn_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

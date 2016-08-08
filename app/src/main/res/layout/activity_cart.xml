@@ -49,7 +49,8 @@
             android:layout_height="3dp"
             android:background="@color/blue_login_btn"/>
 
-        <com.emiadda.utils.CustomFontTextView
+        <com.emiadda.utils.CustomTextView
+            app:font="@string/font_monteserrat_regular"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_35dp"
             android:gravity="center_vertical"
@@ -93,7 +94,8 @@
                 android:background="@android:color/transparent"
                 android:paddingLeft="@dimen/_10dp"/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_coupons"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_35dp"
@@ -118,14 +120,16 @@
             android:paddingRight="@dimen/_5dp"
             android:paddingTop="@dimen/_5dp">
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_sub_total_label"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sub Total"/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_sub_total"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -135,7 +139,8 @@
                 android:singleLine="true"
                 android:text="RS. 4521"/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_delivery_charges_label"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -143,7 +148,8 @@
                 android:layout_below="@+id/txt_sub_total_label"
                 android:text="Delivery Charges"/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_delivery_charges"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -154,7 +160,8 @@
                 android:singleLine="true"
                 android:text="Rs. 5465 "/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_taxes_label"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -162,7 +169,8 @@
                 android:layout_below="@id/txt_delivery_charges_label"
                 android:text="Taxes"/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_taxes"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -173,7 +181,8 @@
                 android:singleLine="true"
                 android:text="Rs 3135"/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_total_label"
                 style="@style/CartText"
                 android:layout_width="wrap_content"
@@ -184,7 +193,8 @@
                 android:textColor="@color/black"
                 android:textSize="17sp"/>
 
-            <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:id="@+id/txt_total"
                 style="@style/CartText"
                 android:layout_width="wrap_content"

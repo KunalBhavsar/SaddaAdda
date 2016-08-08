@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.emiadda.ui.PlaceOrderActivity">
 
@@ -11,32 +11,32 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
-        app:title="@string/app_name"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/blue_login_btn"
         android:titleTextColor="@color/white"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue_login_btn">
+        app:title="@string/app_name">
 
         <ImageView
             android:id="@+id/txt_title"
-            android:visibility="gone"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo"
+            android:visibility="gone" />
     </android.support.v7.widget.Toolbar>
 
     <View
         android:id="@+id/temp_view"
-        android:layout_below="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@+id/my_awesome_toolbar"
         android:background="@color/gray_product_bg" />
 
     <ScrollView
-        android:layout_below="@+id/temp_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/temp_view"
         android:background="@color/light_gray">
 
         <LinearLayout
@@ -51,7 +51,7 @@
                 android:layout_height="3dp"
                 android:background="@color/blue_login_btn" />
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35dp"
                 android:gravity="center_vertical"
@@ -59,7 +59,8 @@
                 android:text="MAKE PAYMENT"
                 android:textColor="@color/blue_login_btn"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:font="@string/font_monteserrat_regular" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,7 +78,7 @@
                     android:background="@color/light_gray"
                     android:orientation="horizontal">
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_emi_lable"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35dp"
@@ -85,19 +86,21 @@
                         android:gravity="center"
                         android:text="EMI"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:font="@string/font_monteserrat_regular" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_direct_lable"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35dp"
                         android:layout_weight="1"
                         android:background="#fff"
-
                         android:gravity="center"
+
                         android:text="Direct Payment"
                         android:textColor="@color/gray_dark"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:font="@string/font_monteserrat_regular" />
                 </LinearLayout>
 
                 <RelativeLayout
@@ -107,7 +110,7 @@
                     android:paddingLeft="@dimen/_5dp"
                     android:paddingRight="@dimen/_5dp">
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_emi"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -119,7 +122,8 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="No of EMI's" />
+                        android:text="No of EMI's"
+                        app:font="@string/font_monteserrat_regular" />
 
                     <Spinner
                         android:id="@+id/spnr_emi_count"
@@ -135,7 +139,7 @@
                         android:text="10" />
 
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_down_payment"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -147,9 +151,10 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Down Payment" />
+                        android:text="Down Payment"
+                        app:font="@string/font_monteserrat_regular" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_down_payment_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -161,9 +166,10 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 100" />
+                        android:text="Rs. 100"
+                        app:font="@string/font_monteserrat_regular" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_emi_price"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -175,9 +181,10 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="EMI" />
+                        android:text="EMI"
+                        app:font="@string/font_monteserrat_regular" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_emi_price_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -189,9 +196,10 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 810" />
+                        android:text="Rs. 810"
+                        app:font="@string/font_monteserrat_regular" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_net_emi"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -203,9 +211,10 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Net EMI Value" />
+                        android:text="Net EMI Value"
+                        app:font="@string/font_monteserrat_regular" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_net_emi_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -217,10 +226,11 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
-                        android:text="Rs. 810" />
+                        android:text="Rs. 810"
+                        app:font="@string/font_monteserrat_regular" />
 
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_total"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -233,9 +243,10 @@
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_10dp"
                         android:text="Total"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        app:font="@string/font_monteserrat_regular" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
                         android:id="@+id/txt_total_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -247,14 +258,16 @@
                         android:paddingLeft="@dimen/_10dp"
                         android:paddingRight="@dimen/_30dp"
                         android:text="Rs. 8100"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        app:font="@string/font_monteserrat_regular" />
 
                 </RelativeLayout>
 
             </LinearLayout>
 
 
-             <com.emiadda.utils.CustomFontTextView
+            <com.emiadda.utils.CustomTextView
+                app:font="@string/font_monteserrat_regular"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35dp"
                 android:gravity="center_vertical"
@@ -276,7 +289,8 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_5dp">
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_payable_down_payment"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -289,7 +303,8 @@
                         android:paddingRight="@dimen/_10dp"
                         android:text="Down Payment" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_payable_down_payment_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -302,7 +317,8 @@
                         android:paddingRight="@dimen/_10dp"
                         android:text="Rs. 100" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_taxes"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -316,7 +332,8 @@
                         android:paddingRight="@dimen/_10dp"
                         android:text="Taxes" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_taxes_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -330,7 +347,8 @@
                         android:paddingRight="@dimen/_10dp"
                         android:text="Rs. 810" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_delivery_charges"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -344,7 +362,8 @@
                         android:paddingRight="@dimen/_10dp"
                         android:text="Delivery Charges" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_delivery_charges_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -359,7 +378,8 @@
                         android:text="Rs. 810" />
 
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_payable_total"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -374,7 +394,8 @@
                         android:text="Total"
                         android:textColor="@color/black" />
 
-                     <com.emiadda.utils.CustomFontTextView
+                    <com.emiadda.utils.CustomTextView
+                        app:font="@string/font_monteserrat_regular"
                         android:id="@+id/txt_total_payable_value"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_35dp"
@@ -404,12 +425,13 @@
                 android:textColor="@color/white" />
         </LinearLayout>
     </ScrollView>
+
     <RelativeLayout
         android:id="@+id/rlt_progress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blackglass"
         android:layout_below="@+id/my_awesome_toolbar"
+        android:background="@color/blackglass"
         android:visibility="gone">
 
         <ProgressBar

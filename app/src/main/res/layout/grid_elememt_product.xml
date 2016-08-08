@@ -26,7 +26,8 @@
             android:layout_marginTop="@dimen/_5dp" />
 
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_new"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
@@ -39,7 +40,8 @@
             android:text="New"
             android:textColor="@android:color/white" />
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_brand"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_40dp"
@@ -53,7 +55,8 @@
             android:textColor="@android:color/white"
             android:textSize="12sp" />
 
-         <com.emiadda.utils.CustomFontTextView
+         <com.emiadda.utils.CustomTextView
+             app:font="@string/font_monteserrat_regular"
             android:id="@+id/txt_price"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_40dp"
