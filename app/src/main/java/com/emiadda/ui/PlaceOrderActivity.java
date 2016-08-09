@@ -25,13 +25,16 @@ import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.server.OrderParams;
 import com.emiadda.server.ProductsParams;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.server.TotalParams;
 import com.emiadda.server.VectorProductsParams;
 import com.emiadda.server.VectorTotalParams;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CustomerModel;
+import com.emiadda.wsdl.PlaceOrderResponse;
 import com.emiadda.wsdl.ProductModel;
+import com.google.gson.Gson;
 
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -137,7 +140,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 for (ProductModel productModel : productCart) {
                     int quantity = Integer.parseInt(String.valueOf(productModel.getQuantity()));
                     totalEmiAmount += Double.parseDouble(productModel.getEmi_last_price()) * quantity;
-                    totalDownPayemnt += Double.parseDouble(productModel.getDown_payment()) * quantity;
+                    totalDownPayemnt += (Double.parseDouble(productModel.getDown_payment()) * Double.parseDouble(productModel.getPrice()) * quantity) /  100;
                 }
 
                 int i = 1;
@@ -164,19 +167,20 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             if (showEmi) {
                 txtEmi.setVisibility(View.VISIBLE);
                 double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price());
-                double downPayment = Double.parseDouble(productModel.getDown_payment());
+                double downPayment = (Double.parseDouble(productModel.getDown_payment()) * Integer.parseInt(productModel.getQuantity())
+                        * Double.parseDouble(productModel.getPrice()))/100;
                 if ((totalEMIAmount - downPayment) > 200d) {
                     txtPaybleDPValue.setText(KeyConstants.rs + formater.format(totalEMIAmount * Integer.parseInt(productModel.getQuantity())));
                     int i = 1;
                     List<String> spnrValues = new ArrayList<>();
-                    while ((totalEMIAmount / i) > 200d && i <= 20) {
+                    while (((totalEMIAmount - downPayment) / i) > 200d && i <= 20) {
                         spnrValues.add(String.valueOf(i));
                         i++;
                     }
 
                     // Spinner click listener
                     spnrEmiCount.setOnItemSelectedListener(this);
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spnrValues);
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.view_spinner_item, spnrValues);
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spnrEmiCount.setAdapter(dataAdapter);
 
@@ -250,13 +254,21 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                         * quantity;
                 txtTaxesValue.setText(KeyConstants.rs + formater.format(taxAmount));
 
-                double deliveryCharges = Double.valueOf(productModel.getShipping_charge()) * quantity;
+                double deliveryCharges = 0;
+                if(Integer.parseInt(productModel.getShipping_value_type()) > 0) {
+                    //Percentage
+                    deliveryCharges += (Double.valueOf(productModel.getShipping_charge())
+                            * Double.parseDouble(productModel.getPrice()) * quantity) /  100;
+                }
+                else {
+                    deliveryCharges += Double.valueOf(productModel.getShipping_charge()) * quantity;
+                }
                 txtDeliveryChargesValue.setText(KeyConstants.rs + formater.format(deliveryCharges));
 
                 txtTotalPayableValue.setText(KeyConstants.rs + formater.format(totalOTPAmount + taxAmount + deliveryCharges));
             } else {
                 double totalEMIAmount = Double.parseDouble(productModel.getEmi_last_price()) * quantity;
-                double downPayment = Double.parseDouble(productModel.getDown_payment()) * quantity;
+                double downPayment = (Double.parseDouble(productModel.getDown_payment()) * Double.parseDouble(productModel.getPrice()) * quantity) /  100;
                 if ((totalEMIAmount - downPayment) > 200d && showEmi) {
 
                     txtPaybleDPValue.setText(KeyConstants.rs + formater.format(totalEMIAmount));
@@ -264,7 +276,15 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                     double taxAmount = Double.parseDouble(productModel.getTax_data() != null ? String.valueOf(productModel.getTax_data().getTax_amt()) : "0.00") * quantity;
                     txtTaxesValue.setText(KeyConstants.rs + formater.format(taxAmount));
 
-                    double deliveryCharges = Double.valueOf(productModel.getShipping_charge()) * quantity;
+                    double deliveryCharges = 0;
+                    if(Integer.parseInt(productModel.getShipping_value_type()) > 0) {
+                        //Percentage
+                        deliveryCharges += (Double.valueOf(productModel.getShipping_charge())
+                                * Double.parseDouble(productModel.getPrice()) * quantity) /  100;
+                    }
+                    else {
+                        deliveryCharges += Double.valueOf(productModel.getShipping_charge()) * quantity;
+                    }
                     txtDeliveryChargesValue.setText(KeyConstants.rs + formater.format(deliveryCharges));
 
                     txtTotalPayableValue.setText(KeyConstants.rs + formater.format(downPayment + taxAmount + deliveryCharges));
@@ -295,12 +315,19 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             for (ProductModel productModel : productCart) {
                 int quantity = Integer.parseInt(String.valueOf(productModel.getQuantity()));
                 totolTaxAmount += productModel.getTax_data() != null ? productModel.getTax_data().getTax_amt() * quantity : 0;
-                totalDeliveryCharges += Double.valueOf(productModel.getShipping_charge()) * quantity;
+                if(Integer.parseInt(productModel.getShipping_value_type()) > 0) {
+                    //Percentage
+                    totalDeliveryCharges += (Double.valueOf(productModel.getShipping_charge())
+                            * Double.parseDouble(productModel.getPrice()) * quantity) /  100;
+                }
+                else {
+                    totalDeliveryCharges += Double.valueOf(productModel.getShipping_charge()) * quantity;
+                }
                 if (!emiUi) {
                     totalOTPAmount += Double.parseDouble(productModel.getOtp_last_price()) * quantity;
                 } else {
                     totalEmiAmount += Double.parseDouble(productModel.getEmi_last_price()) * quantity;
-                    totalDownPayemnt += Double.parseDouble(productModel.getDown_payment()) * quantity;
+                    totalDownPayemnt += (Double.parseDouble(productModel.getDown_payment()) * Double.parseDouble(productModel.getPrice()) * quantity) /  100;
                 }
             }
 
@@ -382,11 +409,14 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
 
                 int productQuantity = Integer.parseInt(productModel.getQuantity());
                 int shippingValueType = Integer.parseInt(productModel.getShipping_value_type());
+
                 double shippingCharge = Double.parseDouble(productModel.getShipping_charge()) * productQuantity;
+
                 double productMRP = Double.parseDouble(productModel.getPrice()) * productQuantity;
                 double productOTPLastPrice = Double.parseDouble(productModel.getOtp_last_price()) * productQuantity;
                 double productEMILastPrice = Double.parseDouble(productModel.getEmi_last_price()) * productQuantity;
-                double productDownPayment = Double.parseDouble(productModel.getDown_payment()) * productQuantity;
+                double productDownPayment = (Double.parseDouble(productModel.getDown_payment()) * Double.parseDouble(productModel.getPrice()) * productQuantity) /  100;
+
                 double productShippingCharge = shippingValueType == 1 ? (shippingCharge * productMRP) / 100 : shippingCharge;
                 double productPrice = productMRP - (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ?
                         productEMILastPrice : productOTPLastPrice);
@@ -436,7 +466,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             double productMRP = Double.parseDouble(productModel.getPrice()) * productQuantity;
             double productOTPLastPrice = Double.parseDouble(productModel.getOtp_last_price()) * productQuantity;
             double productEMILastPrice = Double.parseDouble(productModel.getEmi_last_price()) * productQuantity;
-            double productDownPayment = Double.parseDouble(productModel.getDown_payment()) * productQuantity;
+            double productDownPayment = (Double.parseDouble(productModel.getDown_payment()) * productQuantity * productMRP)/100;
             double productShippingCharge = shippingValueType == 1 ? (shippingCharge * productMRP) / 100 : shippingCharge;
             double productPrice = productMRP - (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ?
                     productEMILastPrice : productOTPLastPrice);
@@ -644,15 +674,20 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+    public void responseReceived(final ServerResponse response, int requestCode, int extraRequestCode, String activityTag) {
         if (!TAG.equals(activityTag)) {
             return;
         }
         Log.i(TAG, "Received place order response " + response);
 
+        if(response == null) {
+            Log.e(TAG, "Received null response for request code "+requestCode);
+            return;
+        }
+
         if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_PLACE_ORDER) {
             showProgress(false);
-            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
+            if (response.getResponseStatus() == ServerResponse.SERVER_OK) {
                 //Order placed successfully
                 if (fromCart) {
                     AppPreferences.getInstance().removeAllProductFromCartList();
@@ -660,15 +695,22 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        PlaceOrderResponse placeOrderResponse = new Gson().fromJson(response.getResponse(), PlaceOrderResponse.class);
+
                         Toast.makeText(mAppContext, "Successfully placed your Order", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(PlaceOrderActivity.this, ThankYouActivity.class);
+
+                        intent.putExtra(KeyConstants.INTENT_CONSTANT_ORDER_ID, placeOrderResponse.getOrder_id());
+                        intent.putExtra(KeyConstants.INTENT_CONSTANT_ORDER_PAYMENT_ID, placeOrderResponse.getOrder_payment_id());
+
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
                     }
                 });
             }
-            else {
+            else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR){
                 Toast.makeText(mAppContext, "Error in placing your Order", Toast.LENGTH_SHORT).show();
                 finish();
                 runOnUiThread(new Runnable() {
@@ -678,6 +720,9 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                         finish();
                     }
                 });
+            }
+            else if(response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
+                //TODO: handle retry option
             }
         }
 

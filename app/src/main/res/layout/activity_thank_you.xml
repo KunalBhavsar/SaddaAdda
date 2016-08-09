@@ -55,6 +55,7 @@
             android:orientation="vertical">
 
             <com.emiadda.utils.CustomTextView
+                android:id="@+id/txt_thankyou_heading"
                 app:font="@string/font_monteserrat_regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

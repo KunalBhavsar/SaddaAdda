@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/gray_product_bg">
+
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
@@ -26,11 +27,11 @@
             android:layout_marginTop="@dimen/_5dp" />
 
 
-         <com.emiadda.utils.CustomTextView
-             app:font="@string/font_monteserrat_regular"
+        <com.emiadda.utils.CustomTextView
             android:id="@+id/txt_new"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/_10dp"
             android:background="#aaaaaa"
@@ -38,36 +39,76 @@
             android:paddingLeft="@dimen/_5dp"
             android:paddingRight="@dimen/_5dp"
             android:text="New"
-            android:textColor="@android:color/white" />
-
-         <com.emiadda.utils.CustomTextView
-             app:font="@string/font_monteserrat_regular"
-            android:id="@+id/txt_brand"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/image"
-            android:layout_toLeftOf="@+id/txt_price"
-            android:background="@color/blue_login_btn"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/_10dp"
-            android:text="brand name"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:visibility="gone"
+            app:font="@string/font_monteserrat_regular" />
 
-         <com.emiadda.utils.CustomTextView
-             app:font="@string/font_monteserrat_regular"
-            android:id="@+id/txt_price"
+        <com.emiadda.utils.CustomTextView
+            android:id="@+id/txt_sale"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_40dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="#ff0000"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_5dp"
+            android:paddingRight="@dimen/_5dp"
+            android:text="Sale"
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            app:font="@string/font_monteserrat_regular" />
+
+        <com.emiadda.utils.CustomTextView
+            android:id="@+id/txt_brand"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_20dp"
             android:layout_below="@+id/image"
             android:background="@color/blue_login_btn"
             android:gravity="center"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingLeft="@dimen/_10dp"
             android:paddingRight="@dimen/_10dp"
-            android:text="Rs. 5120"
+            android:paddingStart="@dimen/_10dp"
+            android:text="brand name"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:font="@string/font_monteserrat_regular" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_brand"
+            android:background="@color/blue_login_btn"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingLeft="@dimen/_10dp"
+            android:paddingRight="@dimen/_10dp"
+            android:paddingStart="@dimen/_10dp">
+
+            <com.emiadda.utils.CustomTextView
+                android:id="@+id/txt_current_price"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_20dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Rs. 5120"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                app:font="@string/font_monteserrat_regular" />
+
+            <com.emiadda.utils.CustomTextView
+                android:id="@+id/txt_actual_price"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_20dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Rs. 5120"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                app:font="@string/font_monteserrat_regular" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

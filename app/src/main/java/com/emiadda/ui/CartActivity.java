@@ -25,6 +25,7 @@ import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.server.OrderParams;
 import com.emiadda.server.ProductsParams;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.server.TotalParams;
 import com.emiadda.server.VectorProductsParams;
 import com.emiadda.server.VectorTotalParams;
@@ -196,37 +197,48 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+    public void responseReceived(ServerResponse response, int requestCode, int extraRequestCode, String activityTag) {
         if(!TAG.equals(activityTag)) {
+            return;
+        }
+
+        if(response == null) {
+            Log.e(TAG, "Received null response for request code "+requestCode);
             return;
         }
 
         Log.i(TAG, "Received image download response "+response);
         if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
-            if(response != null && !response.isEmpty()) {
-                ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {}.getType());
-                for (ProductModel product : masterProductModelList) {
-                    if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
-                        try {
-                            if (productImageModel != null) {
-                                product.setActualImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
-                                String cartType = AppPreferences.getInstance().getCartType();
-                                AppPreferences.getInstance().removeProductFromCartList(product);
-                                AppPreferences.getInstance().addProductToCartList(product, cartType);
-                                if(inForeground) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            cartAdapter.notifyDataSetChanged();
-                                        }
-                                    });
+            if(response.getResponseStatus() == ServerResponse.SERVER_OK) {
+                if (response.getResponse() != null && !response.getResponse().isEmpty()) {
+                    ProductImageModel productImageModel = new Gson().fromJson(response.getResponse(), new TypeToken<ProductImageModel>() {
+                    }.getType());
+                    for (ProductModel product : masterProductModelList) {
+                        if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
+                            try {
+                                if (productImageModel != null) {
+                                    product.setActualImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
+                                    String cartType = AppPreferences.getInstance().getCartType();
+                                    AppPreferences.getInstance().removeProductFromCartList(product);
+                                    AppPreferences.getInstance().addProductToCartList(product, cartType);
+                                    if (inForeground) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cartAdapter.notifyDataSetChanged();
+                                            }
+                                        });
+                                    }
                                 }
+                            } catch (Exception e) {
+                                Log.e(TAG, e.getMessage(), e);
                             }
-                        } catch (Exception e) {
-                            Log.e(TAG, e.getMessage(), e);
                         }
                     }
                 }
+            }
+            else {
+
             }
         }
     }

@@ -33,4 +33,6 @@
     <string name="no_result">NO RESULTS FOUND</string>
 
     <string name="font_monteserrat_regular">fonts/Montserrat-Regular.otf</string>
+
+    <string name="no_network_toast">Please check your internet connection</string>
 </resources>

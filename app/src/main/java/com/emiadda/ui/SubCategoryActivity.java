@@ -1,7 +1,6 @@
 package com.emiadda.ui;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -30,6 +29,8 @@ import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EACategory;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.ServerResponse;
+import com.emiadda.utils.AppUtils;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CategoryModel;
 import com.google.gson.Gson;
@@ -45,6 +46,8 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     Activity mActivityContext;
     Context mAppContext;
 
+    private int getSubCategoriesStatus;
+
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView subcategoryRecyclerView;
     private SubCategoryAdapter subCategoryAdapter;
@@ -52,10 +55,15 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     private EditText edtSearch;
     private List<EACategory> masterCategoryList;
     private boolean inForeground;
-    private boolean dismissProgress;
-    private RelativeLayout rltProgress;
+    private boolean dismissSubCategoryProgress;
     private String categorySelected;
-    private TextView txtNoSubCategories;
+
+    private RelativeLayout relRetrySC;
+    private TextView txtRetrySC;
+    private ImageView imgRetrySC;
+    private RelativeLayout relProgressSC;
+
+    private long selectedMainCategoryId;
 
     private Fragment cartFragment;
 
@@ -76,8 +84,12 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         subcategoryRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         subcategoryRecyclerView.setHasFixedSize(true);
 
-        rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
-        txtNoSubCategories = (TextView)findViewById(R.id.txt_no_sub_categories);
+        relRetrySC = (RelativeLayout) findViewById(R.id.rel_retry_sub_categories);
+        txtRetrySC = (TextView) findViewById(R.id.txt_retry_sub_categories);
+        imgRetrySC = (ImageView) findViewById(R.id.img_retry_sub_categories);
+
+        relProgressSC = (RelativeLayout) findViewById(R.id.rlt_progress_sub_categories);
+
         masterCategoryList = new ArrayList<>();
         subCategoryAdapter = new SubCategoryAdapter(this, new SubCategoryAdapter.OnItemClickListener() {
             @Override
@@ -98,7 +110,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((CartFrgament)cartFragment).getSize() <= 0) {
+                if (((CartFrgament) cartFragment).getSize() <= 0) {
                     Toast.makeText(SubCategoryActivity.this, "Add products into cart", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -120,7 +132,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(masterCategoryList == null) {
+                if (masterCategoryList == null) {
                     return;
                 }
                 subCategoryAdapter.getFilter().filter(s.toString());
@@ -132,98 +144,138 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
             @Override
             public void onChanged() {
                 super.onChanged();
-                if(subCategoryAdapter.getItemCount() == 0) {
-                    txtNoSubCategories.setVisibility(View.VISIBLE);
-                    subcategoryRecyclerView.setVisibility(View.GONE);
-                }
-                else {
-                    subcategoryRecyclerView.setVisibility(View.VISIBLE);
-                    txtNoSubCategories.setVisibility(View.GONE);
+                if (getSubCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_SUCCESS) {
+                    if (subCategoryAdapter.getItemCount() == 0) {
+                        relRetrySC.setVisibility(View.VISIBLE);
+                        txtRetrySC.setVisibility(View.VISIBLE);
+                        subcategoryRecyclerView.setVisibility(View.GONE);
+                    } else {
+                        subcategoryRecyclerView.setVisibility(View.VISIBLE);
+                        relRetrySC.setVisibility(View.GONE);
+                        txtRetrySC.setVisibility(View.GONE);
+                    }
                 }
             }
         });
 
-        long categoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, 0);
+        selectedMainCategoryId = getIntent().getLongExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_ID, 0);
         categorySelected = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_CATEGORY_NAME);
         TextView txtCat = (TextView) findViewById(R.id.txt_category);
-        if(txtCat != null) {
+        if (txtCat != null) {
             txtCat.setText(categorySelected.toUpperCase());
         }
-        ((EAApplication)mAppContext).attach(this);
-        showProgress(true);
-        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY,
-                GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(categoryId));
+        ((EAApplication) mAppContext).attach(this);
+
+        if(AppUtils.isNetworkAvailable(mAppContext)) {
+            relProgressSC.setVisibility(View.VISIBLE);
+            getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ONGOING;
+            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY,
+                    GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(selectedMainCategoryId));
+        }
+        else {
+            getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+
+            refreshEmptyListUI();
+            Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setUpCartFragment() {
         cartFragment = new CartFrgament();
-        FragmentManager fragmentManager =getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.cart_fragment, cartFragment, KeyConstants.CART_FRAGMENT);
         fragmentTransaction.commit();
     }
 
-    private void showProgress(final boolean visibile) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(visibile) {
-                    rltProgress.setVisibility(View.VISIBLE);
-                }
-                else {
-                    rltProgress.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
-        ((EAApplication)mAppContext).attach(this);
+        ((EAApplication) mAppContext).attach(this);
     }
 
     @Override
     protected void onDestroy() {
-        ((EAApplication)mAppContext).dettach(this);
+        ((EAApplication) mAppContext).dettach(this);
         super.onDestroy();
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
-        if(!TAG.equals(activityTag)) {
+    public void responseReceived(ServerResponse response, int requestCode, int extraRequestCode, String activityTag) {
+        if (!TAG.equals(activityTag)) {
             return;
         }
 
-        if(inForeground) {
-            showProgress(false);
+        if (response == null) {
+            Log.e(TAG, "Received null response for request code " + requestCode);
+            return;
         }
-        else {
-            dismissProgress = true;
-        }
+
         if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY
                 && extraRequestCode == GET_CATEGORIES_REQUEST_CODE) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (inForeground) {
+                        relProgressSC.setVisibility(View.GONE);
+                    } else {
+                        dismissSubCategoryProgress = true;
+                    }
+                }
+            });
+
             Log.i(TAG, "Response of get categories : " + response);
-            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-                if(!response.isEmpty()) {
-                    List<CategoryModel> categoryModelList = new Gson().fromJson(response,
-                            new TypeToken<ArrayList<CategoryModel>>() {}.getType());
+            if (response.getResponseStatus() == ServerResponse.SERVER_OK) {
+                getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_SUCCESS;
+                refreshEmptyListUI();
+                if (response.getResponse() != null && !response.getResponse().isEmpty()) {
+                    List<CategoryModel> categoryModelList = new Gson().fromJson(response.getResponse(),
+                            new TypeToken<ArrayList<CategoryModel>>() {
+                            }.getType());
                     processGetCategoriesResponse(categoryModelList);
                     refreshCatergoryUI();
                 }
-            }
-            else {
-                if(inForeground) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mAppContext, categorySelected + " data not available", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    });
-                }
+            } else if (response.getResponseStatus() == ServerResponse.SERVER_ERROR
+                    || response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
+                getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                refreshEmptyListUI();
             }
         }
+    }
+
+    private void refreshEmptyListUI() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (getSubCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ONGOING) {
+                    imgRetrySC.setVisibility(View.GONE);
+                    txtRetrySC.setVisibility(View.GONE);
+                    relRetrySC.setVisibility(View.GONE);
+                } else if (getSubCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED) {
+                    relRetrySC.setVisibility(View.VISIBLE);
+                    imgRetrySC.setVisibility(View.VISIBLE);
+                    txtRetrySC.setVisibility(View.VISIBLE);
+                    txtRetrySC.setText("Error in fetching sub categories, Retry..");
+
+                    relRetrySC.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            relProgressSC.setVisibility(View.VISIBLE);
+                            getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ONGOING;
+                            imgRetrySC.setVisibility(View.GONE);
+                            txtRetrySC.setVisibility(View.GONE);
+                            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY,
+                                    GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(selectedMainCategoryId));
+                        }
+                    });
+                } else if (getSubCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_SUCCESS) {
+                    relRetrySC.setVisibility(View.GONE);
+                    imgRetrySC.setVisibility(View.GONE);
+                    txtRetrySC.setVisibility(View.GONE);
+                    txtRetrySC.setText(mActivityContext.getString(R.string.no_result));
+                }
+            }
+        });
     }
 
     private void processGetCategoriesResponse(List<CategoryModel> categoryModelList) {
@@ -267,13 +319,13 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
     @Override
     protected void onResume() {
         super.onResume();
-        ((EAApplication)mAppContext).attach(this);
+        ((EAApplication) mAppContext).attach(this);
         inForeground = true;
-        if(dismissProgress) {
-            showProgress(false);
-            dismissProgress = false;
+        if (dismissSubCategoryProgress) {
+            relProgressSC.setVisibility(View.GONE);
+            dismissSubCategoryProgress = false;
         }
-        Fragment currentFragment  = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(KeyConstants.CART_FRAGMENT);
         FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
         fragTransaction.detach(currentFragment);
         fragTransaction.attach(currentFragment);

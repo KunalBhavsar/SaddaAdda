@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.emiadda.R;
 import com.emiadda.asynctasks.LoginAsync;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.AppUtils;
 import com.emiadda.wsdl.CustomerModel;
@@ -111,15 +112,20 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     }
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+    public void responseReceived(ServerResponse response, int requestCode, int extraRequestCode, String activityTag) {
         if(requestCode == REQUEST_CODE_LOGIN) {
             if(progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
+            if(response == null) {
+                Log.e(TAG, "Error in processing login call");
+                return;
+            }
+
+            if(response.getResponseStatus() == ServerResponse.SERVER_OK) {
                 Log.i(TAG, "received response : "+response);
                 try {
-                    final CustomerModel customerModel = new Gson().fromJson(new JSONObject(response).toString(), CustomerModel.class);
+                    final CustomerModel customerModel = new Gson().fromJson(new JSONObject(response.getResponse()).toString(), CustomerModel.class);
 
                     if(customerModel.getCustomer_id() == null) {
                         Snackbar.make(btnSubmit, "Wrong username and password combination.", Snackbar.LENGTH_SHORT).show();
@@ -140,14 +146,14 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
-                    boolean falseResponse = Boolean.getBoolean(response);
+                    boolean falseResponse = Boolean.getBoolean(response.getResponse());
                     if(!falseResponse) {
                         Toast.makeText(mActivityContext, "Invalid credentials", Toast.LENGTH_SHORT).show();
                     }
                 }
 
             }
-            else if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION){
+            else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR){
                 Toast.makeText(mActivityContext, "Error in logging in", Toast.LENGTH_SHORT).show();
             }
         }

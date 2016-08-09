@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.AddressModel;
 import com.emiadda.wsdl.CustomerModel;
 
@@ -19,7 +20,10 @@ public class ThankYouActivity extends AppCompatActivity implements View.OnClickL
     private Toolbar toolbar;
     private Button btnContinue;
     private TextView txtAddress;
-    private TextView txtReview;
+    private TextView txtReview, txtThnkyouHeading;
+
+    private int orderId;
+    private int orderPaymentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class ThankYouActivity extends AppCompatActivity implements View.OnClickL
 
         txtAddress = (TextView) findViewById(R.id.txt_address);
         txtReview = (TextView) findViewById(R.id.txt_review);
+        txtThnkyouHeading = (TextView) findViewById(R.id.txt_thankyou_heading);
         btnContinue = (Button) findViewById(R.id.btn_continue);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -36,6 +41,10 @@ public class ThankYouActivity extends AppCompatActivity implements View.OnClickL
         btnContinue.setOnClickListener(this);
         txtReview.setOnClickListener(this);
 
+        orderId = getIntent().getIntExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, 0);
+        orderPaymentId = getIntent().getIntExtra(KeyConstants.INTENT_CONSTANT_ORDER_PAYMENT_ID, 0);
+
+        txtThnkyouHeading.setText("Thank you, Your order "+orderId+" has been placed successfully");
         CustomerModel customerModel = AppPreferences.getInstance().getAppOwnerData();
         if(null != customerModel.getAddress()) {
             AddressModel addressModel = customerModel.getAddress();

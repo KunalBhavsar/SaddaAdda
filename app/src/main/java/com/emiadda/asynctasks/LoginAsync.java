@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.wsdl.customerLogin.WBNCustomerloginBinding;
 import com.emiadda.wsdl.customerLogin.WBNExtendedSoapSerializationEnvelope;
 import com.emiadda.wsdl.customerLogin.WBNparams;
@@ -15,14 +16,13 @@ import org.ksoap2.serialization.SoapObject;
 /**
  * Created by Kunal on 04/07/16.
  */
-public class LoginAsync extends AsyncTask<String, Void, String> {
+public class LoginAsync extends AsyncTask<String, Void, ServerResponse> {
     private static final String TAG = LoginAsync.class.getSimpleName();
     private static final String METHOD_NAME = "CustomerLogin";
     private static final String NAMESPACE = "http://www.mydevsystems.com";
 
     private ServerResponseSubscriber serverResponseInterface;
     private int requestCode;
-    private int responseCode;
 
     public LoginAsync(ServerResponseSubscriber serverResponseInterface, int requestCode) {
         this.serverResponseInterface = serverResponseInterface;
@@ -30,7 +30,7 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected ServerResponse doInBackground(String... params) {
 
         try {
             //Using easysoap
@@ -58,11 +58,13 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
             soapEnvelope.dotNet = false;
             soapEnvelope.bodyOut = request;
 
-            responseCode = ServerResponseSubscriber.RESPONSE_CODE_OK;
             return vfwCustomerloginBinding.CustomerLogin(new WBNparams(request, soapEnvelope));
         }
         catch (Exception ex) {
-            responseCode = ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION;
+            ServerResponse serverResponse = new ServerResponse();
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            serverResponse.setError(ex.getMessage());
+
             Log.e(TAG, "Error: " + ex.getMessage(), ex);
         }
 
@@ -70,9 +72,9 @@ public class LoginAsync extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String s) {
+    protected void onPostExecute(ServerResponse s) {
         if(serverResponseInterface != null) {
-            serverResponseInterface.responseReceived(s, requestCode, responseCode, 0, null);
+            serverResponseInterface.responseReceived(s, requestCode, 0, null);
         }
     }
 }

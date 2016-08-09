@@ -2,16 +2,19 @@ package com.emiadda;
 
 import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
 
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EAPlaceOrderRequeset;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerRequestResponseObserver;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.server.VectorProductsParams;
 import com.emiadda.server.VectorTotalParams;
 import com.emiadda.server.OrderParams;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.utils.AppUtils;
 import com.emiadda.wsdl.ProductModel;
 
 import java.util.ArrayList;
@@ -63,9 +66,9 @@ public class EAApplication extends Application implements ServerRequestResponseO
     }
 
     @Override
-    public void notifyServerResponse(String response, int requestCode, int responseCode, String activityTag, int extraRequestId) {
+    public void notifyServerResponse(ServerResponse response, int requestCode, String activityTag, int extraRequestId) {
         for (ServerResponseSubscriber serverResponseSubscriber : serverResponseInterfaces) {
-            serverResponseSubscriber.responseReceived(response, requestCode, responseCode, extraRequestId, activityTag);
+            serverResponseSubscriber.responseReceived(response, requestCode, extraRequestId, activityTag);
         }
     }
 
@@ -82,7 +85,7 @@ public class EAApplication extends Application implements ServerRequestResponseO
     public static void makeServerRequest(int requestCode, int extraRequestCode, int priority, String activityTag, String... params) {
         EAServerRequest eaServerRequest = new EAServerRequest(requestCode, extraRequestCode, priority);
         eaServerRequest.setActivityTag(activityTag);
-        if(params.length > 0) {
+        if (params.length > 0) {
             eaServerRequest.setParams(params);
         }
         ServerRequestProcessingThread.getInstance().addServerRequeset(eaServerRequest);

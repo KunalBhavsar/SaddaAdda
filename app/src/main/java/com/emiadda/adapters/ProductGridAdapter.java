@@ -2,6 +2,7 @@ package com.emiadda.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,19 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
         ProductModel productModel = filteredProductList.get(position);
         holder.bind(productModel, mItemClickListener);
         holder.txtProductName.setText(productModel.getName().replaceAll("&amp;", "&"));
-        holder.txtPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
+        if(productModel.getSpecial() != null && Double.parseDouble(productModel.getPrice()) > Double.parseDouble(productModel.getSpecial())) {
+            holder.txtSale.setVisibility(View.VISIBLE);
+            holder.txtActualPrice.setVisibility(View.VISIBLE);
+            holder.txtActualPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
+            holder.txtActualPrice.setPaintFlags(holder.txtActualPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            holder.txtCurrentPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getSpecial())));
+        }
+        else {
+            holder.txtSale.setVisibility(View.GONE);
+            holder.txtActualPrice.setVisibility(View.GONE);
+            holder.txtCurrentPrice.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
+        }
         Picasso.with(context).load(productModel.getActualImage()).placeholder(R.drawable.placeholder_product).fit().into(holder.imgProduct);
     }
 
@@ -78,7 +91,7 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtProductName, txtPrice, txtNew;
+        public TextView txtProductName, txtCurrentPrice, txtActualPrice, txtNew, txtSale;
         public ImageView imgProduct, imgFav;
 
         public ViewHolder(View v) {
@@ -86,8 +99,10 @@ public class ProductGridAdapter extends RecyclerView.Adapter<ProductGridAdapter.
             imgProduct = (ImageView) v.findViewById(R.id.image);
             imgFav = (ImageView) v.findViewById(R.id.image_fav);
             txtProductName = (TextView) v.findViewById(R.id.txt_brand);
-            txtPrice = (TextView) v.findViewById(R.id.txt_price);
+            txtCurrentPrice = (TextView) v.findViewById(R.id.txt_current_price);
+            txtActualPrice = (TextView) v.findViewById(R.id.txt_actual_price);
             txtNew = (TextView) v.findViewById(R.id.txt_new);
+            txtSale = (TextView) v.findViewById(R.id.txt_sale);
         }
 
         public void bind(final ProductModel item, final OnItemClickListener listener) {

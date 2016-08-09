@@ -5,14 +5,12 @@ import android.util.Log;
 import com.emiadda.EAApplication;
 import com.emiadda.core.EAPlaceOrderRequeset;
 import com.emiadda.core.EAServerRequest;
-import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.server.GetCategoriesWSDL;
-import com.emiadda.server.VectorProductsParams;
-import com.emiadda.server.VectorTotalParams;
-import com.emiadda.server.OrderParams;
+import com.emiadda.server.ServerResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
@@ -56,28 +54,31 @@ public class ServerRequestProcessingThread extends Thread {
             int existingServerRequestSize = serverRequestLinkedBlockingDeque.size();
 
             if (existingServerRequestSize > 0) {
-                if(serverRequestLinkedBlockingDeque.getFirst().getPriority() == serverRequest.getPriority() &&
-                        serverRequestLinkedBlockingDeque.getLast().getPriority() == serverRequest.getPriority()) {
-                    serverRequestLinkedBlockingDeque.putLast(serverRequest);
-                }
-                if (serverRequestLinkedBlockingDeque.getFirst().getPriority() < serverRequest.getPriority()) {
-                    serverRequestLinkedBlockingDeque.putFirst(serverRequest);
-                }
-                else if(serverRequestLinkedBlockingDeque.getLast().getPriority() > serverRequest.getPriority()) {
-                    serverRequestLinkedBlockingDeque.putLast(serverRequest);
-                }
-                else {
-                    tempServerRequestList = new ArrayList<>();
-                    tempServerRequestList.addAll(serverRequestLinkedBlockingDeque);
-                    serverRequestLinkedBlockingDeque.clear();
-                    for (int i = 0; i < tempServerRequestList.size(); i++) {
-                        if(tempServerRequestList.get(i).getPriority() < serverRequest.getPriority()) {
-                            tempServerRequestList.add(i, serverRequest);
-                            break;
-                        }
+                try {
+                    if (serverRequestLinkedBlockingDeque.getFirst().getPriority() == serverRequest.getPriority() &&
+                            serverRequestLinkedBlockingDeque.getLast().getPriority() == serverRequest.getPriority()) {
+                        serverRequestLinkedBlockingDeque.putLast(serverRequest);
                     }
-                    serverRequestLinkedBlockingDeque.addAll(tempServerRequestList);
-                    tempServerRequestList = null;
+                    if (serverRequestLinkedBlockingDeque.getFirst().getPriority() < serverRequest.getPriority()) {
+                        serverRequestLinkedBlockingDeque.putFirst(serverRequest);
+                    } else if (serverRequestLinkedBlockingDeque.getLast().getPriority() > serverRequest.getPriority()) {
+                        serverRequestLinkedBlockingDeque.putLast(serverRequest);
+                    } else {
+                        tempServerRequestList = new ArrayList<>();
+                        tempServerRequestList.addAll(serverRequestLinkedBlockingDeque);
+                        serverRequestLinkedBlockingDeque.clear();
+                        for (int i = 0; i < tempServerRequestList.size(); i++) {
+                            if (tempServerRequestList.get(i).getPriority() < serverRequest.getPriority()) {
+                                tempServerRequestList.add(i, serverRequest);
+                                break;
+                            }
+                        }
+                        serverRequestLinkedBlockingDeque.addAll(tempServerRequestList);
+                        tempServerRequestList = null;
+                    }
+                }
+                catch (NoSuchElementException e) {
+                    serverRequestLinkedBlockingDeque.putLast(serverRequest);
                 }
             } else {
                 serverRequestLinkedBlockingDeque.put(serverRequest);
@@ -130,95 +131,34 @@ public class ServerRequestProcessingThread extends Thread {
     }
 
     private void getCategories(EAServerRequest eaServerRequest) {
-        try {
-            String response = new GetCategoriesWSDL().getCategories(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-
-            if (response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            } else {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-        }
+        ServerResponse response = new GetCategoriesWSDL().getCategories(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+        context.notifyServerResponse(response, eaServerRequest.getRequestCode(), eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
     }
 
     private void getProductByProductId(EAServerRequest eaServerRequest) {
-        try {
-            String response = new GetCategoriesWSDL().getProductByProductID(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-
-            if (response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            } else {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-        }
+        ServerResponse response = new GetCategoriesWSDL().getProductByProductID(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+        context.notifyServerResponse(response, eaServerRequest.getRequestCode(), eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
     }
 
     private void getProductImage(EAServerRequest eaServerRequest) {
-        try {
-            String response = new GetCategoriesWSDL().getProductImage(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-
-            if (response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            } else {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-        } catch (Exception e) {
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            Log.e(TAG, e.getMessage(), e);
-        }
+        ServerResponse response = new GetCategoriesWSDL().getProductImage(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+        context.notifyServerResponse(response, eaServerRequest.getRequestCode(), eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
     }
 
     private void getProductByCategory(EAServerRequest eaServerRequest) {
-        try {
-            String response = new GetCategoriesWSDL().getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-
-            if (response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            } else {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-
-        } catch (Exception e) {
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            Log.e(TAG, e.getMessage(), e);
-        }
+        ServerResponse response = new GetCategoriesWSDL().getProductsByCategory(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+        context.notifyServerResponse(response, eaServerRequest.getRequestCode(), eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
     }
 
     private void getSpecialProducts(EAServerRequest eaServerRequest) {
-        try {
-            String response = new GetCategoriesWSDL().getSpecials(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
-
-            if (response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            } else {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_CANCEL, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-        } catch (Exception e) {
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            Log.e(TAG, e.getMessage(), e);
-        }
+        ServerResponse response = new GetCategoriesWSDL().getSpecials(eaServerRequest.getParams().size() > 0 ? eaServerRequest.getParams().get(0) : null);
+        context.notifyServerResponse(response, eaServerRequest.getRequestCode(), eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
     }
 
     private void placeOrder(EAPlaceOrderRequeset eaServerRequest) {
-        try {
-            String response = new GetCategoriesWSDL().placeOrder(eaServerRequest.getOrderparams(),
-                    eaServerRequest.getVectorproductsparams(), eaServerRequest.getVectortotalparams());
-            if (response != null && !response.isEmpty()) {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            } else {
-                context.notifyServerResponse(response, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_OK, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            }
-        }
-        catch (Exception e) {
-            context.notifyServerResponse(null, eaServerRequest.getRequestCode(), ServerResponseSubscriber.RESPONSE_CODE_EXCEPTION, eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
-            Log.e(TAG, e.getMessage(), e);
-        }
+        ServerResponse response = new GetCategoriesWSDL().placeOrder(eaServerRequest.getOrderparams(),
+                eaServerRequest.getVectorproductsparams(), eaServerRequest.getVectortotalparams());
+        context.notifyServerResponse(response, eaServerRequest.getRequestCode(), eaServerRequest.getActivityTag(), eaServerRequest.getExtraRequestCode());
     }
 }
 

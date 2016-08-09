@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,7 +41,9 @@ import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EACategory;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.utils.AppUtils;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.views.WrapHeightGridView;
 import com.emiadda.wsdl.CategoryModel;
@@ -66,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private static final int GET_CATEGORIES_REQUEST_CODE = 12;
     private static final int GET_SPECIAL_PRODUCTS = 13;
 
+    private int getCategoriesStatus;
+    private int getSPStatus;
+
     private Activity mActivityContext;
     private Context mAppContext;
 
@@ -82,8 +86,10 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private LinearLayout linSpecialProducts;
     private HashMap<String, ProductModel> specialProductHashmap;
     private boolean inForeground = true;
-    private boolean dismissLoading;
-    private RelativeLayout rltProgress;
+    private boolean dismissLoadingCategories;
+    private boolean dismissLoadingSP;
+    private RelativeLayout rltProgressCategories;
+    private RelativeLayout rltProgressSP;
 
     private Fragment cartFragment;
     private RelativeLayout btnNext;
@@ -91,8 +97,12 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     private Button btnViewAll;
     private HorizontalScrollView horizontalScrollView;
 
-    private TextView txtNoCategories;
-    private TextView txtNoSpecialProducts;
+    private ImageView imgMainCategoryRetry;
+    private TextView txtMainCategoryRetry;
+    private ImageView imgSpecialProductRetry;
+    private TextView txtSpecialProductRetry;
+    private RelativeLayout relRetryCategories;
+    private RelativeLayout relRetrySp;
 
     private View navDrawerHeaderView;
     Timer repeatTask = new Timer();
@@ -114,8 +124,12 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         btnNext = (RelativeLayout) findViewById(R.id.btnNext);
         btnPrev = (RelativeLayout) findViewById(R.id.btnPrevoius);
         btnViewAll = (Button) findViewById(R.id.btn_view_all);
-        txtNoCategories = (TextView)findViewById(R.id.txt_no_categories);
-        txtNoSpecialProducts = (TextView)findViewById(R.id.txt_no_special_products);
+        txtMainCategoryRetry = (TextView)findViewById(R.id.txt_retry_main_categories);
+        imgMainCategoryRetry = (ImageView) findViewById(R.id.img_retry_main_categories);
+        txtSpecialProductRetry = (TextView)findViewById(R.id.txt_retry_sp);
+        imgSpecialProductRetry = (ImageView)findViewById(R.id.img_retry_sp);
+        relRetryCategories = (RelativeLayout)findViewById(R.id.rel_retry_categories);
+        relRetrySp = (RelativeLayout)findViewById(R.id.rel_retry_special_product);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -126,7 +140,9 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         gridCategories = (WrapHeightGridView) findViewById(R.id.grd_categories);
         ImageView imgCart = (ImageView) findViewById(R.id.img_cart);
-        rltProgress = (RelativeLayout)findViewById(R.id.rlt_progress);
+        rltProgressCategories = (RelativeLayout)findViewById(R.id.rlt_progress_categories);
+        rltProgressSP = (RelativeLayout)findViewById(R.id.rlt_progress_special_product);
+
         navDrawerHeaderView = navigationView.getHeaderView(0);
         drawerRecyclerView = (RecyclerView) navDrawerHeaderView.findViewById(R.id.recycler_view);
 
@@ -195,13 +211,16 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             @Override
             public void onChanged() {
                 super.onChanged();
-                if(categoryAdapter.isEmpty()) {
-                    txtNoCategories.setVisibility(View.VISIBLE);
-                    gridCategories.setVisibility(View.GONE);
-                }
-                else {
-                    txtNoCategories.setVisibility(View.GONE);
-                    gridCategories.setVisibility(View.VISIBLE);
+                if(getCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_SUCCESS) {
+                    if (categoryAdapter.isEmpty()) {
+                        relRetryCategories.setVisibility(View.VISIBLE);
+                        txtMainCategoryRetry.setVisibility(View.VISIBLE);
+                        gridCategories.setVisibility(View.GONE);
+                    } else {
+                        relRetryCategories.setVisibility(View.GONE);
+                        txtMainCategoryRetry.setVisibility(View.GONE);
+                        gridCategories.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -234,10 +253,25 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
 
         refreshUserLoginStatusOnNavDrawer();
 
-        showProgress(true);
         ((EAApplication) mAppContext).attach(this);
-        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(0));
-        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
+
+        if(AppUtils.isNetworkAvailable(mAppContext)) {
+            rltProgressCategories.setVisibility(View.VISIBLE);
+            getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ONGOING;
+            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(0));
+
+            rltProgressSP.setVisibility(View.VISIBLE);
+            getSPStatus = KeyConstants.SERVER_CALL_STATUS_ONGOING;
+            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
+        }
+        else {
+            getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+            getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+
+            refreshEmptyListStatus();
+            Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 /*
@@ -259,20 +293,6 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.cart_fragment, cartFragment, KeyConstants.CART_FRAGMENT);
         fragmentTransaction.commit();
-    }
-
-    private void showProgress(final boolean visibile) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(visibile) {
-                    rltProgress.setVisibility(View.VISIBLE);
-                }
-                else {
-                    rltProgress.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
     }
 
     @Override
@@ -315,56 +335,188 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
 
 
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+    public void responseReceived(ServerResponse response, int requestCode, int extraRequestCode, String activityTag) {
         if(!TAG.equals(activityTag)) {
             return;
         }
-        if(inForeground) {
-            showProgress(false);
+        if(response == null) {
+            Log.e(TAG, "Received null response for request code "+requestCode);
+            return;
         }
-        else {
-            dismissLoading = true;
-        }
+
         if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY
                 && extraRequestCode == GET_CATEGORIES_REQUEST_CODE) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(inForeground) {
+                        rltProgressCategories.setVisibility(View.GONE);
+                    }
+                    else {
+                        dismissLoadingCategories = true;
+                    }
+                }
+            });
+
             Log.i(TAG, "Categories response : " + response);
-            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-                List<CategoryModel> categoryModelList = new Gson().fromJson(response,
+            if (response.getResponseStatus() == ServerResponse.SERVER_OK) {
+                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_SUCCESS;
+                List<CategoryModel> categoryModelList = new Gson().fromJson(response.getResponse(),
                         new TypeToken<ArrayList<CategoryModel>>() {
                         }.getType());
+                refreshEmptyListStatus();
                 processGetCategoriesResponse(categoryModelList);
                 refreshCatergoryUI();
             }
-            else {
-                showToast("Error in fetching Categories", Toast.LENGTH_SHORT);
+            else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR ||
+            response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
+                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                Log.e(TAG, "Error in fetching categories : " + response.getError());
+                refreshEmptyListStatus();
             }
         }
         else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS
                 && extraRequestCode == GET_SPECIAL_PRODUCTS) {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(inForeground) {
+                        rltProgressSP.setVisibility(View.GONE);
+                    }
+                    else {
+                        dismissLoadingSP = true;
+                    }
+                }
+            });
+
             Log.i(TAG, "Special products response : " + response);
-            if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-                if (!response.isEmpty()) {
-                    specialProductHashmap = new Gson().fromJson(response,
+            if (response.getResponseStatus() == ServerResponse.SERVER_OK) {
+                getSPStatus = KeyConstants.SERVER_CALL_STATUS_SUCCESS;
+                refreshEmptyListStatus();
+                if (response.getResponse() != null && !response.getResponse().isEmpty()) {
+                    specialProductHashmap = new Gson().fromJson(response.getResponse(),
                             new TypeToken<HashMap<String, ProductModel>>() {}.getType());
                     refreshSpecialProductUI();
                     updateImagesOfSpecialProductsUI();
                 }
             }
-            else {
-                showToast("Error in fetching Special products", Toast.LENGTH_SHORT);
+            else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR ||
+                    response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
+                getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                Log.e(TAG, "Error in fetching special products : " + response.getError());
+                refreshEmptyListStatus();
             }
         }
         else if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
             Log.i(TAG, "Get image response response : " + response);
-            if(response != null && !response.isEmpty()) {
-                ProductImageModel productImageModel = new Gson().fromJson(response,
-                        new TypeToken<ProductImageModel>() {
-                        }.getType());
-                final String imagePath = productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20");
-                specialProductHashmap.get(String.valueOf(extraRequestCode)).setActualImage(imagePath);
-                updateImagesOfSpecialProductsUI();
+            if(response.getResponseStatus() == ServerResponse.SERVER_OK) {
+                if (response.getResponse() != null && !response.getResponse().isEmpty()) {
+                    ProductImageModel productImageModel = new Gson().fromJson(response.getResponse(),
+                            new TypeToken<ProductImageModel>() {
+                            }.getType());
+                    final String imagePath = productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20");
+                    ProductModel productModel = specialProductHashmap.get(String.valueOf(extraRequestCode));
+                    if(productModel == null) {
+                        return;
+                    }
+                    productModel.setActualImage(imagePath);
+                    updateImagesOfSpecialProductsUI();
+                }
+            }
+            else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR) {
+                //TODO: retry or something
+            }
+            else if(response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
+                //TODO: give retry option
             }
         }
+    }
+
+    private void refreshEmptyListStatus() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(getCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ONGOING) {
+                    imgMainCategoryRetry.setVisibility(View.GONE);
+                    txtMainCategoryRetry.setVisibility(View.GONE);
+                    relRetryCategories.setVisibility(View.GONE);
+                }
+                else if(getCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED) {
+                    relRetryCategories.setVisibility(View.VISIBLE);
+                    imgMainCategoryRetry.setVisibility(View.VISIBLE);
+                    txtMainCategoryRetry.setVisibility(View.VISIBLE);
+                    txtMainCategoryRetry.setText("Error in fetching categories, Retry..");
+
+                    relRetryCategories.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(AppUtils.isNetworkAvailable(mAppContext)) {
+                                rltProgressCategories.setVisibility(View.VISIBLE);
+                                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ONGOING;
+                                imgMainCategoryRetry.setVisibility(View.GONE);
+                                txtMainCategoryRetry.setVisibility(View.GONE);
+
+                                rltProgressCategories.setVisibility(View.VISIBLE);
+                                EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(0));
+                            }
+                            else {
+                                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+
+                                refreshEmptyListStatus();
+                                Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+                }
+                else if(getCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_SUCCESS) {
+                    imgMainCategoryRetry.setVisibility(View.GONE);
+                    txtMainCategoryRetry.setVisibility(View.GONE);
+                    relRetryCategories.setVisibility(View.GONE);
+                    txtMainCategoryRetry.setText(mActivityContext.getString(R.string.no_result));
+                }
+
+                if(getSPStatus == KeyConstants.SERVER_CALL_STATUS_ONGOING) {
+                    imgSpecialProductRetry.setVisibility(View.GONE);
+                    txtSpecialProductRetry.setVisibility(View.GONE);
+                    relRetrySp.setVisibility(View.GONE);
+                }
+                else if(getSPStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED) {
+                    relRetrySp.setVisibility(View.VISIBLE);
+                    imgSpecialProductRetry.setVisibility(View.VISIBLE);
+                    txtSpecialProductRetry.setVisibility(View.VISIBLE);
+                    txtSpecialProductRetry.setText("Error in fetching new arrivals, Retry..");
+
+                    relRetrySp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(AppUtils.isNetworkAvailable(mAppContext)) {
+                                rltProgressSP.setVisibility(View.VISIBLE);
+                                getSPStatus = KeyConstants.SERVER_CALL_STATUS_ONGOING;
+                                imgSpecialProductRetry.setVisibility(View.GONE);
+                                txtSpecialProductRetry.setVisibility(View.GONE);
+                                relRetrySp.setVisibility(View.GONE);
+                                EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
+                            }
+                            else {
+                                getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+
+                                refreshEmptyListStatus();
+                                Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+                }
+                else if(getSPStatus == KeyConstants.SERVER_CALL_STATUS_SUCCESS) {
+                    relRetrySp.setVisibility(View.GONE);
+                    imgSpecialProductRetry.setVisibility(View.GONE);
+                    txtSpecialProductRetry.setVisibility(View.GONE);
+                    txtSpecialProductRetry.setText(mActivityContext.getString(R.string.no_result));
+                }
+            }
+        });
     }
 
     private void processGetCategoriesResponse(List<CategoryModel> categoryModelList) {
@@ -449,13 +601,16 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                         }
                     }
                     drawerAdapter.resetCategories(masterCategoryList);
-                    if(masterCategoryList.isEmpty()) {
-                        txtNoCategories.setVisibility(View.VISIBLE);
-                        gridCategories.setVisibility(View.GONE);
-                    }
-                    else {
-                        txtNoCategories.setVisibility(View.GONE);
-                        gridCategories.setVisibility(View.VISIBLE);
+                    if(getCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_SUCCESS) {
+                        if (masterCategoryList.isEmpty()) {
+                            relRetryCategories.setVisibility(View.VISIBLE);
+                            txtMainCategoryRetry.setVisibility(View.VISIBLE);
+                            gridCategories.setVisibility(View.GONE);
+                        } else {
+                            relRetryCategories.setVisibility(View.GONE);
+                            txtMainCategoryRetry.setVisibility(View.GONE);
+                            gridCategories.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             });
@@ -493,33 +648,36 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                         linSpecialProducts.addView(view);
                     }
 
-                    if(specialProductHashmap.isEmpty()) {
-                        txtNoSpecialProducts.setVisibility(View.VISIBLE);
-                        btnNext.setVisibility(View.GONE);
-                        btnPrev.setVisibility(View.GONE);
-                        linSpecialProducts.setVisibility(View.GONE);
-                        btnViewAll.setVisibility(View.GONE);
-                    }
-                    else {
-                        txtNoSpecialProducts.setVisibility(View.GONE);
-                        btnNext.setVisibility(View.GONE);
-                        btnPrev.setVisibility(View.GONE);
-                        linSpecialProducts.setVisibility(View.VISIBLE);
-                        btnViewAll.setVisibility(View.VISIBLE);
-                        //timerDelayRunForScroll(500);
-                        count = linSpecialProducts.getChildCount();
-                        repeatTask.scheduleAtFixedRate(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if(!canScroll(horizontalScrollView)) {
-                                    horizontalScrollView.fullScroll(View.FOCUS_LEFT);
-                                } else {
-                                    int widthOfOneElement = linSpecialProducts.getChildAt(0).getMeasuredWidth();
-                                    horizontalScrollView.scrollTo((int)horizontalScrollView.getScrollX() + widthOfOneElement, (int)horizontalScrollView.getScrollY());
-                                }
+                    if(getSPStatus == KeyConstants.SERVER_CALL_STATUS_SUCCESS) {
+                        if (specialProductHashmap.isEmpty()) {
+                            relRetrySp.setVisibility(View.VISIBLE);
+                            txtSpecialProductRetry.setVisibility(View.VISIBLE);
+                            btnNext.setVisibility(View.GONE);
+                            btnPrev.setVisibility(View.GONE);
+                            linSpecialProducts.setVisibility(View.GONE);
+                            btnViewAll.setVisibility(View.GONE);
+                        } else {
+                            relRetrySp.setVisibility(View.GONE);
+                            txtSpecialProductRetry.setVisibility(View.GONE);
+                            btnNext.setVisibility(View.GONE);
+                            btnPrev.setVisibility(View.GONE);
+                            linSpecialProducts.setVisibility(View.VISIBLE);
+                            btnViewAll.setVisibility(View.VISIBLE);
+                            //timerDelayRunForScroll(500);
+                            count = linSpecialProducts.getChildCount();
+                            repeatTask.scheduleAtFixedRate(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if (!canScroll(horizontalScrollView)) {
+                                        horizontalScrollView.fullScroll(View.FOCUS_LEFT);
+                                    } else {
+                                        int widthOfOneElement = linSpecialProducts.getChildAt(0).getMeasuredWidth();
+                                        horizontalScrollView.scrollTo((int) horizontalScrollView.getScrollX() + widthOfOneElement, (int) horizontalScrollView.getScrollY());
+                                    }
 
-                            }
-                        }, 0, repeatInterval);
+                                }
+                            }, 0, repeatInterval);
+                        }
                     }
                 }
             });
@@ -585,14 +743,19 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     protected void onResume() {
         super.onResume();
         inForeground = true;
-        if(dismissLoading) {
-            showProgress(false);
-            dismissLoading = false;
+        if(dismissLoadingCategories) {
+            rltProgressCategories.setVisibility(View.GONE);
+            dismissLoadingCategories = false;
+        }
+        if(dismissLoadingSP) {
+            rltProgressSP.setVisibility(View.GONE);
+            dismissLoadingSP = false;
         }
         //Reset is downloading status
         for (Map.Entry<String, ProductModel> productModelEntry : specialProductHashmap.entrySet()) {
             productModelEntry.getValue().setLoadingImage(false);
         }
+        refreshEmptyListStatus();
         refreshCatergoryUI();
         refreshSpecialProductUI();
         updateImagesOfSpecialProductsUI();

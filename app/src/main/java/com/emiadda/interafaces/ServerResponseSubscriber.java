@@ -1,12 +1,10 @@
 package com.emiadda.interafaces;
 
+import com.emiadda.server.ServerResponse;
+
 /**
  * Created by Kunal on 04/07/16.
  */
 public interface ServerResponseSubscriber {
-    int RESPONSE_CODE_OK = 1;
-    int RESPONSE_CODE_CANCEL = 3;
-    int RESPONSE_CODE_EXCEPTION = 2;
-
-    void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag);
+    void responseReceived(ServerResponse response, int requestCode, int extraRequestCode, String activityTag);
 }

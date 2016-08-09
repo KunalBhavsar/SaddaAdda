@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,11 +13,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,24 +35,31 @@ import com.emiadda.R;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EAServerRequest;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.utils.AppPreferences;
+import com.emiadda.utils.AppUtils;
 import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * Created by Kunal on 12/07/16.
  */
-public class ProductDetailActivity extends AppCompatActivity implements ServerResponseSubscriber, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+public class ProductDetailActivity extends AppCompatActivity
+        implements ServerResponseSubscriber, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
     private static final String TAG = ProductDetailActivity.class.getSimpleName();
     private static final int PRODUCT_DETIALS_REQUEST_CODE = 1;
     private static final String SAVED_INSTANCE_CURRENT_QUANTITY = "current_quantity";
     private static final String SAVED_INSTANCE_FROM_CART = "from_cart";
     private static final int REQUEST_CODE_LOGIN = 1;
+
+    String mimeType = "text/html";
+    String encoding = "utf-8";
 
     private Context mAppContext;
     private Activity mActivityContext;
@@ -56,17 +68,15 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
     private SliderLayout mDemoSlider;
     private ProductModel productModel;
 
-    private TextView txtBrandName;
     private TextView txtAmount;
     private Button btnIncrQuatity;
     private Button btnDecrQuatity;
     private TextView txtCurrentQuatity;
     private Button btnBuyNow;
     private Button btnAddToCart;
-    private TextView txtDescription;
-    private TextView txtManufacturer;
-    private TextView txtStockStatus;
-    private TextView txtQuantityAvailable;
+    private WebView txtDescription;
+    private LinearLayout lnrManufacturer, lnrProductCode, lnrRewardPoints, lnrStockStatus, lnrMrp, lnrOurPrice, lnrQuantityAvailable;
+    private TextView txtManufacturer, txtProductCode, txtRewardPoints, txtStockStatus, txtMrp, txtOurPrice, txtQuantityAvailable, txtInSale;
 
     private int currentQuantity = 1;
     private int availableQuantity;
@@ -112,19 +122,35 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
         mActivityContext = this;
         mAppContext = getApplicationContext();
 
-        txtBrandName = (TextView) findViewById(R.id.txt_brand_name);
         txtAmount = (TextView) findViewById(R.id.txt_amount);
         btnIncrQuatity = (Button) findViewById(R.id.btn_incr_quantity);
         btnDecrQuatity = (Button) findViewById(R.id.btn_decr_quantity);
         txtCurrentQuatity = (TextView) findViewById(R.id.txt_quantity);
         btnBuyNow = (Button) findViewById(R.id.btn_buy_now);
         btnAddToCart = (Button) findViewById(R.id.btn_add_to_cart);
-        txtDescription = (TextView) findViewById(R.id.txt_description);
+        txtDescription = (WebView) findViewById(R.id.txt_description);
         txtManufacturer = (TextView) findViewById(R.id.txt_manufacturer);
         txtStockStatus = (TextView) findViewById(R.id.txt_stock_status);
         txtQuantityAvailable = (TextView) findViewById(R.id.txt_quantity_available);
         rltProgress = (RelativeLayout) findViewById(R.id.rlt_progress);
         mDemoSlider = (SliderLayout) findViewById(R.id.slider);
+
+        lnrManufacturer = (LinearLayout)findViewById(R.id.lnr_manufacturer);
+        lnrProductCode = (LinearLayout)findViewById(R.id.lnr_product_code);
+        lnrRewardPoints = (LinearLayout)findViewById(R.id.lnr_reward_points);
+        lnrStockStatus = (LinearLayout)findViewById(R.id.lnr_stock_status);
+        lnrMrp = (LinearLayout)findViewById(R.id.lnr_mrp);
+        lnrOurPrice = (LinearLayout)findViewById(R.id.lnr_our_price);
+        lnrQuantityAvailable = (LinearLayout)findViewById(R.id.lnr_quantity_available);
+
+        txtManufacturer = (TextView)findViewById(R.id.txt_manufacturer);
+        txtProductCode = (TextView)findViewById(R.id.txt_product_code);
+        txtRewardPoints = (TextView)findViewById(R.id.txt_reward_points);
+        txtStockStatus = (TextView)findViewById(R.id.txt_stock_status);
+        txtMrp = (TextView)findViewById(R.id.txt_mrp);
+        txtOurPrice = (TextView)findViewById(R.id.txt_our_price);
+        txtQuantityAvailable = (TextView)findViewById(R.id.txt_quantity_available);
+        txtInSale = (TextView)findViewById(R.id.txt_sale);
 
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
@@ -141,11 +167,17 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
         productId = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID);
         selectedProductName = getIntent().getStringExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME);
 
-        showProgress(true);
-        ((EAApplication) mAppContext).attach(this);
+        if(AppUtils.isNetworkAvailable(mAppContext)) {
+            showProgress(true);
+            ((EAApplication) mAppContext).attach(this);
 
-        EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID, PRODUCT_DETIALS_REQUEST_CODE,
-                EAServerRequest.PRIORITY_HIGH, TAG, productId);
+            EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID, PRODUCT_DETIALS_REQUEST_CODE,
+                    EAServerRequest.PRIORITY_HIGH, TAG, productId);
+        }
+        else {
+            Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void setUpCartFragment() {
@@ -205,11 +237,35 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                         mDemoSlider.addSlider(textSliderView);
                     }
 
-                    txtBrandName.setText(productModel.getName());
-                    double price = Double.parseDouble(productModel.getPrice());
-                    txtAmount.setText(KeyConstants.rs + formater.format(price));
-                    txtDescription.setText(productModel.getDescription());
-                    txtManufacturer.setText(productModel.getManufacturer());
+                    String firstConversion = Html.fromHtml(productModel.getDescription()).toString();
+                    String structure = "<html>\n" +
+                            "    <head>\n" +
+                            "        <meta http-equiv=\"content-type\" content=\"text/html;\" charset=\"UTF-8\">\n" +
+                            "            <style>\n" +
+                            "                /** Specify a font named \"MyFont\",\n" +
+                            "                and specify the URL where it can be found: */\n" +
+                            "                @font-face {\n" +
+                            "                    font-family: \"MyFont\";\n" +
+                            "                    src: url('file:///android_asset/fonts/Montserrat-Regular.otf');\n" +
+                            "                }\n" +
+                            "                h3 { font-family:\"MyFont\";" +
+                            "               color: \"#545151\";}\n" +
+                            "            </style>\n" +
+                            "    </head>\n" +
+                            "    <body>\n" +
+                            firstConversion +
+                            "    </body>\n" +
+                            "</html>";
+                    txtDescription.loadData(structure, "text/html", "UTF-8");
+
+                    if(productModel.getName() != null || !productModel.getName().isEmpty()) {
+                        lnrManufacturer.setVisibility(View.VISIBLE);
+                        txtManufacturer.setText(productModel.getName());
+                    }
+                    else {
+                        lnrManufacturer.setVisibility(View.GONE);
+                    }
+
                     txtStockStatus.setText(productModel.getStock_status());
                     txtQuantityAvailable.setText(productModel.getQuantity());
 
@@ -218,6 +274,38 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
                         txtCurrentQuatity.setText(String.valueOf(availableQuantity));
                     } else {
                         txtCurrentQuatity.setText(String.valueOf(currentQuantity));
+                    }
+
+                    if(productModel.getModel() == null && !productModel.getModel().isEmpty()) {
+                        lnrProductCode.setVisibility(View.GONE);
+                    }
+                    else {
+                        txtProductCode.setText(productModel.getModel());
+                    }
+
+                    if(productModel.getReward() == null) {
+                        lnrRewardPoints.setVisibility(View.GONE);
+                    }
+                    else {
+                        txtRewardPoints.setText(productModel.getReward());
+                    }
+
+                    if(productModel.getSpecial() != null && Double.parseDouble(productModel.getPrice()) > Double.parseDouble(productModel.getSpecial())) {
+                        txtInSale.setVisibility(View.VISIBLE);
+                        lnrMrp.setVisibility(View.VISIBLE);
+                        txtMrp.setText("Rs." + formater.format(Double.parseDouble(productModel.getPrice())));
+                        txtMrp.setPaintFlags(txtMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+                        double price = Double.parseDouble(productModel.getSpecial());
+                        txtOurPrice.setText("Rs." + formater.format(price));
+                        txtAmount.setText(KeyConstants.rs + formater.format(price));
+                    }
+                    else {
+                        txtInSale.setVisibility(View.GONE);
+                        lnrMrp.setVisibility(View.GONE);
+                        double price = Double.parseDouble(productModel.getPrice());
+                        txtOurPrice.setText("Rs." + formater.format(price));
+                        txtAmount.setText(KeyConstants.rs + formater.format(price));
                     }
 
                     btnIncrQuatity.setOnClickListener(new View.OnClickListener() {
@@ -334,8 +422,22 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
         }
     }
 
+    private String getTableTagFromString(String myString) {
+        int start = myString.indexOf("<table");
+        if( start < 0 )
+            Log.d(this.toString(), "Table start tag not found");
+        else {
+            int end = myString.indexOf("</table>", start) + 8;
+            if( end < 0 )
+                Log.d(this.toString(), "Table end tag not found");
+            else
+                myString = "<html><body>" + myString.substring(start, end) + "</body></html>";
+        }
+        return myString;
+    }
+
     @Override
-    public void responseReceived(String response, int requestCode, int responseCode, int extraRequestCode, String activityTag) {
+    public void responseReceived(ServerResponse response, int requestCode, int extraRequestCode, String activityTag) {
         if (!TAG.equals(activityTag)) {
             return;
         }
@@ -346,34 +448,41 @@ public class ProductDetailActivity extends AppCompatActivity implements ServerRe
             dismissProgress = true;
         }
 
-        if (responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-            if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID &&
-                    extraRequestCode == PRODUCT_DETIALS_REQUEST_CODE) {
-                Log.i(TAG, "Product details received : " + response);
-                if (!response.isEmpty()) {
-                    try {
-                        productModel = new Gson().fromJson(response, new TypeToken<ProductModel>() {
-                        }.getType());
-                        if (productModel != null) {
-                            setProductDetails();
+        if(response == null) {
+            Log.e(TAG, "Received null response for request code "+requestCode);
+            return;
+        }
+
+        if (requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_BY_PRODUCT_ID &&
+                extraRequestCode == PRODUCT_DETIALS_REQUEST_CODE) {
+
+            if (response.getResponseStatus() == ServerResponse.SERVER_OK) {
+                    Log.i(TAG, "Product details received : " + response);
+                if(response.getResponse() != null && !response.getResponse().isEmpty()) {
+                        try {
+                            productModel = new Gson().fromJson(response.getResponse(), new TypeToken<ProductModel>() {}.getType());
+                            if (productModel != null) {
+                                setProductDetails();
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage(), e);
                         }
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage(), e);
                     }
+            }
+            else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR ||
+                    response.getResponseStatus() == ServerResponse.NETWORK_ERROR){
+                if (inForeground) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mActivityContext, selectedProductName + " data not available",
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
                 }
+                Log.i(TAG, "Error in getting product details for id " + productId + " error is " + response);
             }
-        } else {
-            if (inForeground) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mActivityContext, selectedProductName + " data not available",
-                                Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-            }
-            Log.i(TAG, "Error in getting product details for id " + productId + " error is " + response);
         }
     }
 

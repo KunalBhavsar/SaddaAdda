@@ -16,6 +16,7 @@ import com.emiadda.EAApplication;
 import com.emiadda.R;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.interafaces.ServerResponseSubscriber;
+import com.emiadda.server.ServerResponse;
 import com.emiadda.ui.ProductDetailActivity;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * Created by Shraddha on 16/3/16.
  */
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> implements ServerResponseSubscriber {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     private static final String TAG = CartAdapter.class.getSimpleName();
     private Context context;
@@ -42,12 +43,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
     public CartAdapter(Activity context) {
         this.context = context;
         cartList = new ArrayList<>();
-        ((EAApplication)context.getApplicationContext()).attach(this);
     }
 
     public void resetProductList(List<ProductModel> productModelList) {
         cartList.clear();
-        if(productModelList != null) {
+        if (productModelList != null) {
             cartList.addAll(productModelList);
             notifyDataSetChanged();
         }
@@ -78,43 +78,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
 
     @Override
     public int getItemCount() {
-        if(cartList == null) {
+        if (cartList == null) {
             return 0;
         }
         return cartList.size();
     }
 
-    @Override
-    public void responseReceived(final String response, final int requestCode, final int responseCode, final int extraRequestCode, String activityTag) {
-        if(!TAG.equals(activityTag)) {
-            return;
-        }
-
-        ((Activity)context).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "Received image download response "+response);
-                if(requestCode == ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCT_IMAGE) {
-                    if(responseCode == ServerResponseSubscriber.RESPONSE_CODE_OK) {
-                        for (ProductModel product : cartList) {
-                            if (product.getProduct_id().equals(String.valueOf(extraRequestCode))) {
-                                try {
-                                    ProductImageModel productImageModel = new Gson().fromJson(response, new TypeToken<ProductImageModel>() {
-                                    }.getType());
-                                    if (productImageModel != null) {
-                                        product.setImage(productImageModel.getImage().replaceAll("&amp;", "&").replaceAll(" ", "%20"));
-                                        notifyDataSetChanged();
-                                    }
-                                } catch (Exception e) {
-                                    Log.e(TAG, e.getMessage(), e);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView txtBrandName, txtSize, txtQunt, txtAmount;
         public ImageView imgCat;
@@ -156,15 +125,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> im
                     productModel = new ProductModel();
                     productModel.setProduct_id(String.valueOf(v.getTag()));
                     int itemIndex = cartList.indexOf(productModel);
-                    if(itemIndex >= 0) {
+                    if (itemIndex >= 0) {
                         ProductModel cartItemSelected = cartList.get(itemIndex);
                         intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ID, cartItemSelected.getProduct_id());
                         intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_NAME, cartItemSelected.getName());
                         intent.putExtra(KeyConstants.INTENT_CONSTANT_PRODUCT_ITEM_SELECTED_COUNT, cartItemSelected.getQuantity());
                         context.startActivity(intent);
-                    }
-                    else {
-                        Log.i(TAG, "Wrong item index selected : "+itemIndex + " for product id : "+productModel.getProduct_id());
+                    } else {
+                        Log.i(TAG, "Wrong item index selected : " + itemIndex + " for product id : " + productModel.getProduct_id());
                     }
                     break;
             }

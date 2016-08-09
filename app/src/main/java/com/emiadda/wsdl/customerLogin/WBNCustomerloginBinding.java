@@ -15,15 +15,24 @@ package com.emiadda.wsdl.customerLogin;
 
 
 
+import android.util.Log;
+
+import com.emiadda.server.ServerResponse;
+
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.serialization.*;
 import org.ksoap2.transport.*;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 
 public class WBNCustomerloginBinding
 {
+    private static final String TAG = WBNCustomerloginBinding.class.getSimpleName();
+
     interface WBNIWcfMethod
     {
         WBNExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws java.lang.Exception;
@@ -85,7 +94,7 @@ public class WBNCustomerloginBinding
         return envelope;
     }
     
-    protected java.util.List sendRequest(String methodName,WBNExtendedSoapSerializationEnvelope envelope,org.ksoap2.transport.Transport transport  )throws java.lang.Exception
+    protected java.util.List sendRequest(String methodName,WBNExtendedSoapSerializationEnvelope envelope,org.ksoap2.transport.Transport transport  )throws IOException, XmlPullParserException
     {
         return transport.call(methodName, envelope, httpHeaders);
     }
@@ -128,55 +137,55 @@ public class WBNCustomerloginBinding
     }
 
         
-    public String CustomerLogin(final WBNparams _params ) throws java.lang.Exception
+    public ServerResponse CustomerLogin(final WBNparams _params )
     {
-        return (String)execute(new WBNIWcfMethod()
-        {
-            @Override
-            public WBNExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              WBNExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("","params",new WBNparams().getClass());
-                SoapObject __soapReq = new SoapObject("http://www.mydevsystems.com", "CustomerLogin");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="";
-                __info.name="params";
-                __info.type=WBNparams.class;
-                __info.setValue(_params!=null?_params:SoapPrimitive.NullNilElement);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public java.lang.Object ProcessResult(WBNExtendedSoapSerializationEnvelope __envelope,java.lang.Object __result)throws java.lang.Exception {
-                SoapObject __soap=(SoapObject)__result;
-                java.lang.Object obj = __soap.getProperty("result");
-                if (obj != null && obj.getClass().equals(SoapPrimitive.class))
-                {
-                    SoapPrimitive j =(SoapPrimitive) obj;
-                    return j.toString();
-                }
-                else if (obj!= null && obj instanceof String){
-                    return (String)obj;
-                }
-                return null;
-            }
-        },"http://www.mydevsystems.com#CustomerLogin");
-    }
-    
-    public android.os.AsyncTask< Void, Void, WBNOperationResult< String>> CustomerLoginAsync(final WBNparams _params)
-    {
-        return executeAsync(new WBNFunctions.IFunc< String>() {
-            public String Func() throws java.lang.Exception {
-                return CustomerLogin( _params);
-            }
-        });
-    }
+        try {
+            return (ServerResponse) execute(new WBNIWcfMethod() {
+                @Override
+                public WBNExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                    WBNExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                    __envelope.addMapping("", "params", new WBNparams().getClass());
+                    SoapObject __soapReq = new SoapObject("http://www.mydevsystems.com", "CustomerLogin");
+                    __envelope.setOutputSoapObject(__soapReq);
 
+                    PropertyInfo __info = null;
+                    __info = new PropertyInfo();
+                    __info.namespace = "";
+                    __info.name = "params";
+                    __info.type = WBNparams.class;
+                    __info.setValue(_params != null ? _params : SoapPrimitive.NullNilElement);
+                    __soapReq.addProperty(__info);
+                    return __envelope;
+                }
+
+                @Override
+                public ServerResponse ProcessResult(WBNExtendedSoapSerializationEnvelope __envelope, java.lang.Object __result) throws Exception {
+                    ServerResponse serverResponse = new ServerResponse();
+                    SoapObject __soap = (SoapObject) __result;
+                    java.lang.Object obj = __soap.getProperty("result");
+                    if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
+                        SoapPrimitive j = (SoapPrimitive) obj;
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        serverResponse.setResponse(j.toString());
+                        return serverResponse;
+                    } else if (obj != null && obj instanceof String) {
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        serverResponse.setResponse((String) obj);
+                        return serverResponse;
+                    }
+                    return null;
+                }
+            }, "http://www.mydevsystems.com#CustomerLogin");
+        }
+        catch (Exception e) {
+            ServerResponse serverResponse = new ServerResponse();
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            return serverResponse;
+        }
+    }
     
-    protected java.lang.Object execute(WBNIWcfMethod wcfMethod,String methodName) throws java.lang.Exception
+    protected java.lang.Object execute(WBNIWcfMethod wcfMethod,String methodName) throws SocketTimeoutException, java.lang.Exception
     {
         org.ksoap2.transport.Transport __httpTransport=createTransport();
         __httpTransport.debug=enableLogging;

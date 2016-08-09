@@ -24,19 +24,9 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
-import org.w3c.dom.Document;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.net.SocketTimeoutException;
 import java.util.List;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import static android.content.ContentValues.TAG;
 
@@ -82,21 +72,19 @@ public class GetCategoriesWSDL {
 
     public void getCategoriesAsync(final String params, final List<HeaderProperty> headers) throws Exception {
 
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, ServerResponse>() {
             @Override
             protected void onPreExecute() {
                 eventHandler.Wsdl2CodeStartedRequest();
             }
 
-            ;
-
             @Override
-            protected String doInBackground(Void... paramss) {
+            protected ServerResponse doInBackground(Void... paramss) {
                 return getCategories(params, headers);
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            protected void onPostExecute(ServerResponse result) {
                 eventHandler.Wsdl2CodeEndedRequest();
                 if (result != null) {
                     eventHandler.Wsdl2CodeFinished("getCategories", result);
@@ -105,11 +93,14 @@ public class GetCategoriesWSDL {
         }.execute();
     }
 
-    public String getCategories(String params) {
+    public ServerResponse getCategories(String params) {
         return getCategories(params, null);
     }
 
-    public String getCategories(String params, List<HeaderProperty> headers) {
+    public ServerResponse getCategories(String params, List<HeaderProperty> headers) {
+
+        ServerResponse serverResponse = new ServerResponse();
+
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
@@ -129,6 +120,9 @@ public class GetCategoriesWSDL {
                 Exception ex = new Exception(fault.faultstring);
                 if (eventHandler != null)
                     eventHandler.Wsdl2CodeFinishedWithException(ex);
+                serverResponse.setError(ex.getMessage());
+                serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+                return serverResponse;
             } else {
                 SoapObject result = (SoapObject) retObj;
                 if (result.getPropertyCount() > 0) {
@@ -136,19 +130,37 @@ public class GetCategoriesWSDL {
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
                         SoapPrimitive j = (SoapPrimitive) obj;
                         String resultVariable = j.toString();
-                        return resultVariable;
-                    } else if (obj != null && obj instanceof String) {
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
+                    }
+                    else if (obj != null && obj instanceof String) {
                         String resultVariable = (String) obj;
-                        return resultVariable;
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (SocketTimeoutException e) {
             if (eventHandler != null)
                 eventHandler.Wsdl2CodeFinishedWithException(e);
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.NETWORK_ERROR);
+            return serverResponse;
         }
-        return "";
+        catch (Exception e) {
+            if (eventHandler != null)
+                eventHandler.Wsdl2CodeFinishedWithException(e);
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            return serverResponse;
+        }
+        return null;
     }
 
     public void getProductsByCategoryAsync(String params) throws Exception {
@@ -159,34 +171,35 @@ public class GetCategoriesWSDL {
 
     public void getProductsByCategoryAsync(final String params, final List<HeaderProperty> headers) throws Exception {
 
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, ServerResponse>() {
             @Override
             protected void onPreExecute() {
                 eventHandler.Wsdl2CodeStartedRequest();
             }
 
-            ;
-
             @Override
-            protected String doInBackground(Void... paramss) {
+            protected ServerResponse doInBackground(Void... paramss) {
                 return getProductsByCategory(params, headers);
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            protected void onPostExecute(ServerResponse result) {
                 eventHandler.Wsdl2CodeEndedRequest();
                 if (result != null) {
-                    eventHandler.Wsdl2CodeFinished("getProductsByCategory", result);
+                    eventHandler.Wsdl2CodeFinished("getProductsByCategory", result.getResponse());
                 }
             }
         }.execute();
     }
 
-    public String getProductsByCategory(String params) {
+    public ServerResponse getProductsByCategory(String params) {
         return getProductsByCategory(params, null);
     }
 
-    public String getProductsByCategory(String params, List<HeaderProperty> headers) {
+    public ServerResponse getProductsByCategory(String params, List<HeaderProperty> headers) {
+
+        ServerResponse serverResponse = new ServerResponse();
+
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
@@ -206,6 +219,10 @@ public class GetCategoriesWSDL {
                 Exception ex = new Exception(fault.faultstring);
                 if (eventHandler != null)
                     eventHandler.Wsdl2CodeFinishedWithException(ex);
+
+                serverResponse.setError(ex.getMessage());
+                serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+                return serverResponse;
             } else {
                 SoapObject result = (SoapObject) retObj;
                 if (result.getPropertyCount() > 0) {
@@ -213,19 +230,38 @@ public class GetCategoriesWSDL {
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
                         SoapPrimitive j = (SoapPrimitive) obj;
                         String resultVariable = j.toString();
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     } else if (obj != null && obj instanceof String) {
                         String resultVariable = (String) obj;
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (SocketTimeoutException e) {
             if (eventHandler != null)
                 eventHandler.Wsdl2CodeFinishedWithException(e);
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.NETWORK_ERROR);
+            return serverResponse;
         }
-        return "";
+        catch (Exception e) {
+            if (eventHandler != null)
+                eventHandler.Wsdl2CodeFinishedWithException(e);
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            return serverResponse;
+        }
+        return null;
+
     }
 
     public void getProductByProductIDAsync(String params) throws Exception {
@@ -236,7 +272,7 @@ public class GetCategoriesWSDL {
 
     public void getProductByProductIDAsync(final String params, final List<HeaderProperty> headers) throws Exception {
 
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, ServerResponse>() {
             @Override
             protected void onPreExecute() {
                 eventHandler.Wsdl2CodeStartedRequest();
@@ -245,25 +281,28 @@ public class GetCategoriesWSDL {
             ;
 
             @Override
-            protected String doInBackground(Void... paramss) {
+            protected ServerResponse doInBackground(Void... paramss) {
                 return getProductByProductID(params, headers);
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            protected void onPostExecute(ServerResponse result) {
                 eventHandler.Wsdl2CodeEndedRequest();
                 if (result != null) {
-                    eventHandler.Wsdl2CodeFinished("getProductByProductID", result);
+                    eventHandler.Wsdl2CodeFinished("getProductByProductID", result.getResponse());
                 }
             }
         }.execute();
     }
 
-    public String getProductByProductID(String params) {
+    public ServerResponse getProductByProductID(String params) {
         return getProductByProductID(params, null);
     }
 
-    public String getProductByProductID(String params, List<HeaderProperty> headers) {
+    public ServerResponse getProductByProductID(String params, List<HeaderProperty> headers) {
+
+        ServerResponse serverResponse = new ServerResponse();
+
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
@@ -283,6 +322,11 @@ public class GetCategoriesWSDL {
                 Exception ex = new Exception(fault.faultstring);
                 if (eventHandler != null)
                     eventHandler.Wsdl2CodeFinishedWithException(ex);
+
+                serverResponse.setError(ex.getMessage());
+                serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+                return serverResponse;
+
             } else {
                 SoapObject result = (SoapObject) retObj;
                 if (result.getPropertyCount() > 0) {
@@ -290,19 +334,36 @@ public class GetCategoriesWSDL {
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
                         SoapPrimitive j = (SoapPrimitive) obj;
                         String resultVariable = j.toString();
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     } else if (obj != null && obj instanceof String) {
                         String resultVariable = (String) obj;
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (SocketTimeoutException e) {
             if (eventHandler != null)
                 eventHandler.Wsdl2CodeFinishedWithException(e);
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.NETWORK_ERROR);
+            return serverResponse;
         }
-        return "";
+        catch (Exception e) {
+            if (eventHandler != null)
+                eventHandler.Wsdl2CodeFinishedWithException(e);
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            return serverResponse;
+        }
+        return null;
     }
 
     public void getProductImageAsync(String params) throws Exception {
@@ -313,7 +374,7 @@ public class GetCategoriesWSDL {
 
     public void getProductImageAsync(final String params, final List<HeaderProperty> headers) throws Exception {
 
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, ServerResponse>() {
             @Override
             protected void onPreExecute() {
                 eventHandler.Wsdl2CodeStartedRequest();
@@ -322,25 +383,28 @@ public class GetCategoriesWSDL {
             ;
 
             @Override
-            protected String doInBackground(Void... paramss) {
+            protected ServerResponse doInBackground(Void... paramss) {
                 return getProductImage(params, headers);
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            protected void onPostExecute(ServerResponse result) {
                 eventHandler.Wsdl2CodeEndedRequest();
                 if (result != null) {
-                    eventHandler.Wsdl2CodeFinished("getProductImage", result);
+                    eventHandler.Wsdl2CodeFinished("getProductImage", result.getResponse());
                 }
             }
         }.execute();
     }
 
-    public String getProductImage(String params) {
+    public ServerResponse getProductImage(String params) {
         return getProductImage(params, null);
     }
 
-    public String getProductImage(String params, List<HeaderProperty> headers) {
+    public ServerResponse getProductImage(String params, List<HeaderProperty> headers) {
+
+        ServerResponse serverResponse = new ServerResponse();
+
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
@@ -360,6 +424,10 @@ public class GetCategoriesWSDL {
                 Exception ex = new Exception(fault.faultstring);
                 if (eventHandler != null)
                     eventHandler.Wsdl2CodeFinishedWithException(ex);
+
+                serverResponse.setError(ex.getMessage());
+                serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+                return serverResponse;
             } else {
                 SoapObject result = (SoapObject) retObj;
                 if (result.getPropertyCount() > 0) {
@@ -367,19 +435,37 @@ public class GetCategoriesWSDL {
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
                         SoapPrimitive j = (SoapPrimitive) obj;
                         String resultVariable = j.toString();
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     } else if (obj != null && obj instanceof String) {
                         String resultVariable = (String) obj;
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (SocketTimeoutException e) {
             if (eventHandler != null)
                 eventHandler.Wsdl2CodeFinishedWithException(e);
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.NETWORK_ERROR);
+            return serverResponse;
         }
-        return "";
+        catch (Exception e) {
+            if (eventHandler != null)
+                eventHandler.Wsdl2CodeFinishedWithException(e);
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            return serverResponse;
+        }
+        return null;
     }
 
     public void getSpecialsAsync(String params) throws Exception {
@@ -390,7 +476,7 @@ public class GetCategoriesWSDL {
 
     public void getSpecialsAsync(final String params, final List<HeaderProperty> headers) throws Exception {
 
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, ServerResponse>() {
             @Override
             protected void onPreExecute() {
                 eventHandler.Wsdl2CodeStartedRequest();
@@ -399,12 +485,12 @@ public class GetCategoriesWSDL {
             ;
 
             @Override
-            protected String doInBackground(Void... paramss) {
+            protected ServerResponse doInBackground(Void... paramss) {
                 return getSpecials(params, headers);
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            protected void onPostExecute(ServerResponse result) {
                 eventHandler.Wsdl2CodeEndedRequest();
                 if (result != null) {
                     eventHandler.Wsdl2CodeFinished("getSpecials", result);
@@ -413,11 +499,14 @@ public class GetCategoriesWSDL {
         }.execute();
     }
 
-    public String getSpecials(String params) {
+    public ServerResponse getSpecials(String params) {
         return getSpecials(params, null);
     }
 
-    public String getSpecials(String params, List<HeaderProperty> headers) {
+    public ServerResponse getSpecials(String params, List<HeaderProperty> headers) {
+
+        ServerResponse serverResponse = new ServerResponse();
+
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
@@ -438,6 +527,11 @@ public class GetCategoriesWSDL {
                 Exception ex = new Exception(fault.faultstring);
                 if (eventHandler != null)
                     eventHandler.Wsdl2CodeFinishedWithException(ex);
+
+                serverResponse.setError(ex.getMessage());
+                serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+                return serverResponse;
+
             } else {
                 SoapObject result = (SoapObject) retObj;
                 if (result.getPropertyCount() > 0) {
@@ -445,19 +539,37 @@ public class GetCategoriesWSDL {
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
                         SoapPrimitive j = (SoapPrimitive) obj;
                         String resultVariable = j.toString();
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     } else if (obj != null && obj instanceof String) {
                         String resultVariable = (String) obj;
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (SocketTimeoutException e) {
             if (eventHandler != null)
                 eventHandler.Wsdl2CodeFinishedWithException(e);
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.NETWORK_ERROR);
+            return serverResponse;
         }
-        return "";
+        catch (Exception e) {
+            if (eventHandler != null)
+                eventHandler.Wsdl2CodeFinishedWithException(e);
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            return serverResponse;
+        }
+        return null;
     }
 
     public void placeOrderAsync(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array) throws Exception {
@@ -468,7 +580,7 @@ public class GetCategoriesWSDL {
 
     public void placeOrderAsync(final OrderParams params, final VectorProductsParams products_array, final VectorTotalParams total_array, final List<HeaderProperty> headers) throws Exception {
 
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, ServerResponse>() {
             @Override
             protected void onPreExecute() {
                 eventHandler.Wsdl2CodeStartedRequest();
@@ -477,25 +589,28 @@ public class GetCategoriesWSDL {
             ;
 
             @Override
-            protected String doInBackground(Void... paramss) {
+            protected ServerResponse doInBackground(Void... paramss) {
                 return placeOrder(params, products_array, total_array, headers);
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            protected void onPostExecute(ServerResponse result) {
                 eventHandler.Wsdl2CodeEndedRequest();
                 if (result != null) {
-                    eventHandler.Wsdl2CodeFinished("placeOrder", result);
+                    eventHandler.Wsdl2CodeFinished("placeOrder", result.getResponse());
                 }
             }
         }.execute();
     }
 
-    public String placeOrder(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array) {
+    public ServerResponse placeOrder(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array) {
         return placeOrder(params, products_array, total_array, null);
     }
 
-    public String placeOrder(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array, List<HeaderProperty> headers) {
+    public ServerResponse placeOrder(OrderParams params, VectorProductsParams products_array, VectorTotalParams total_array, List<HeaderProperty> headers) {
+
+        ServerResponse serverResponse = new ServerResponse();
+
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
@@ -542,6 +657,11 @@ public class GetCategoriesWSDL {
                 Exception ex = new Exception(fault.faultstring);
                 if (eventHandler != null)
                     eventHandler.Wsdl2CodeFinishedWithException(ex);
+
+                serverResponse.setError(ex.getMessage());
+                serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+                return serverResponse;
+
             } else {
                 SoapObject result = (SoapObject) retObj;
                 if (result.getPropertyCount() > 0) {
@@ -549,31 +669,36 @@ public class GetCategoriesWSDL {
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
                         SoapPrimitive j = (SoapPrimitive) obj;
                         String resultVariable = j.toString();
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     } else if (obj != null && obj instanceof String) {
                         String resultVariable = (String) obj;
-                        return resultVariable;
+
+                        serverResponse.setResponse(resultVariable);
+                        serverResponse.setResponseStatus(ServerResponse.SERVER_OK);
+                        return serverResponse;
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (SocketTimeoutException e) {
             if (eventHandler != null)
                 eventHandler.Wsdl2CodeFinishedWithException(e);
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.NETWORK_ERROR);
+            return serverResponse;
         }
-        return "";
-    }
-
-    public static void printXML(Document document, OutputStream output) throws IOException, TransformerException {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = tf.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-        transformer.transform(new DOMSource(document),
-                new StreamResult(new OutputStreamWriter(output, "UTF-8")));
+        catch (Exception e) {
+            if (eventHandler != null)
+                eventHandler.Wsdl2CodeFinishedWithException(e);
+            Log.e(TAG, e.getMessage(), e);
+            serverResponse.setError(e.getMessage());
+            serverResponse.setResponseStatus(ServerResponse.SERVER_ERROR);
+            return serverResponse;
+        }
+        return null;
     }
 }
