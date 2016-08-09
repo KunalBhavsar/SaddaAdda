@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rel_search"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_40dp"
+    android:background="@color/toolbar_color"
+    android:padding="@dimen/_5dp"
+    android:visibility="visible">
+
+    <EditText
+        android:id="@+id/edt_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/_5dp"
+        android:layout_marginRight="@dimen/_5dp"
+        android:layout_toLeftOf="@+id/btn_search"
+        android:layout_toStartOf="@+id/btn_search"
+        android:background="@color/white"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="@dimen/_10dp"
+        android:gravity="center_vertical"
+        android:hint="@string/search_hint"
+        android:lines="1"
+        android:paddingEnd="@dimen/_5dp"
+        android:paddingLeft="@dimen/_5dp"
+        android:paddingRight="@dimen/_5dp"
+        android:paddingStart="@dimen/_5dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray_dark"
+        android:textSize="14sp"/>
+
+    <!--<ImageButton
+        android:id="@+id/btn_search"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/blue_login_btn"
+        android:src="@drawable/ic_search" />-->
+</RelativeLayout>
