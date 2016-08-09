@@ -12,7 +12,9 @@
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue_login_btn"
+        android:background="@color/toolbar_color"
+        app:titleTextColor="@color/white"
+        app:title="@string/app_name"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <fragment
@@ -50,10 +52,10 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <View
+           <!-- <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="@color/blue_login_btn" />
+                android:background="@color/blue_login_btn" />-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -88,7 +90,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/blue_login_btn"
+                android:background="@color/toolbar_color"
                 android:padding="@dimen/_10dp">
 
                 <com.emiadda.utils.CustomTextView
@@ -239,7 +241,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10dp"
-                android:background="@color/blue_login_btn"
+                android:background="@color/toolbar_color"
                 android:paddingBottom="@dimen/_10dp"
                 android:paddingEnd="@dimen/_15dp"
                 android:paddingLeft="@dimen/_15dp"
@@ -489,10 +491,10 @@
                     app:font="@string/font_monteserrat_regular" />
             </LinearLayout>
 
-            <View
+            <!--<View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/blue_login_btn" />
+                android:background="@color/blue_login_btn" />-->
 
         </LinearLayout>
 

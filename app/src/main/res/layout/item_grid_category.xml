@@ -19,6 +19,7 @@
             android:scaleType="fitXY"
              />
 
+
         <!--android:src="@drawable/western"
         app:civ_border="true"
         app:civ_borderColor="@color/normal_gray"
@@ -36,7 +37,7 @@
             android:padding="@dimen/_5dp"
             android:text="MEN"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/blue_login_btn"
+            android:textColor="@color/black"
             android:textSize="12sp" />
     </RelativeLayout>
 </RelativeLayout>

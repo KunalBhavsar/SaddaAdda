@@ -12,8 +12,8 @@
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue_login_btn"
-        android:titleTextColor="@color/white"
+        android:background="@color/toolbar_color"
+        app:titleTextColor="@color/white"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="@string/app_name">
 

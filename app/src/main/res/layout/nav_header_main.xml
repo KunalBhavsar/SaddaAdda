@@ -11,7 +11,7 @@
         android:id="@+id/rlt_user_profile"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_140dp"
-        android:background="@color/blue_login_btn"
+        android:background="@color/toolbar_color"
         android:visibility="gone">
 
         <com.emiadda.views.CircularImageView
@@ -20,7 +20,7 @@
             android:layout_height="@dimen/_70dp"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/_5dp"
-            android:background="@color/blue_login_btn"
+            android:background="@color/toolbar_color"
             android:scaleType="fitXY"
             android:src="@drawable/profilepic"
             app:civ_border="true"
@@ -33,7 +33,7 @@
             android:layout_height="1dp"
             android:layout_centerVertical="true"
             android:layout_marginTop="2dp"
-            android:background="@color/blue_login_btn" />
+            android:background="@color/toolbar_color" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/blue_login_btn"
+        android:background="@color/toolbar_color"
         android:gravity="center"
         android:padding="@dimen/_5dp"
         android:text="SIGN IN"

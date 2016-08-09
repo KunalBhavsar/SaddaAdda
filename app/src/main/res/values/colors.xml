@@ -6,7 +6,8 @@
 
     <color name="gray_transparent">#80484848</color>
     <color name="red_login">#DC1E28</color>
-    <color name="blue_login_btn">#5baee0</color>
+    <!--<color name="blue_login_btn">#5baee0</color>-->
+    <color name="blue_login_btn">#de5a3c</color>
     <color name="blue_light">#95c9e9</color>
     <color name="light_gray">#E3E3E3</color>
     <color name="sub_gray">#F8F4FF</color>
@@ -20,4 +21,5 @@
     <color name="gray_dark">#545151</color>
     <color name="green">#1ccf08</color>
     <color name="blackglass">#e6252a2d</color>
+    <color name="toolbar_color">#de5a3c</color>
 </resources>
