@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.core.EAPlaceOrderRequeset;
 import com.emiadda.core.EAServerRequest;
@@ -17,6 +18,7 @@ import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.AppUtils;
 import com.emiadda.wsdl.ProductModel;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class EAApplication extends Application implements ServerRequestResponseO
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         mAppContext = this;
         AppPreferences.init(this);
         ServerRequestProcessingThread.init(this);
