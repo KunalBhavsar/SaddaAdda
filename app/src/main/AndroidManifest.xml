@@ -59,25 +59,30 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
         <activity
             android:name=".ui.RegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".ui.ThankYouActivity"
+        <activity
+            android:name=".ui.ThankYouActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="06c28aec8a629387cc45cf0b20293b08d60cb8e1"/>
+
+        <activity android:name=".ui.MyAccountActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="stateHidden">
         </activity>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="06c28aec8a629387cc45cf0b20293b08d60cb8e1" />
     </application>
 
 </manifest>

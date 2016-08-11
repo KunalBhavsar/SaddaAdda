@@ -112,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
     Timer repeatTask = new Timer();
     int repeatInterval = 2000;
     int count;
-    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

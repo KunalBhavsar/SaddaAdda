@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.emiadda.R;
 import com.emiadda.core.EACategory;
 import com.emiadda.ui.MainActivity;
+import com.emiadda.ui.MyAccountActivity;
 import com.emiadda.ui.SubCategoryActivity;
 import com.emiadda.utils.KeyConstants;
 
@@ -152,6 +153,14 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             txtMyAccount = (TextView) itemView.findViewById(R.id.txt_account);
             txtTrackOrder = (TextView) itemView.findViewById(R.id.txt_track_my_order);
             txtPolicies = (TextView) itemView.findViewById(R.id.txt_policies);
+
+            txtMyAccount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, MyAccountActivity.class);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:visibility="gone">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:visibility="visible">
 
     <com.emiadda.utils.CustomTextView
-        app:font="@string/font_monteserrat_regular"
         android:id="@+id/txt_my_wish_list"
         style="@style/DrawerText"
         android:layout_width="match_parent"
@@ -15,50 +14,53 @@
         android:drawableLeft="@drawable/wishlist"
         android:text="@string/my_wish_list"
         android:textColor="@color/black"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:font="@string/font_monteserrat_regular"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray_product_bg"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <com.emiadda.utils.CustomTextView
-        app:font="@string/font_monteserrat_regular"
         android:id="@+id/txt_account"
         style="@style/DrawerText"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp"
         android:drawableLeft="@drawable/account"
-        android:text="@string/my_account" />
+        android:text="@string/my_account"
+        app:font="@string/font_monteserrat_regular"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray_product_bg" />
+        android:background="@color/gray_product_bg"/>
 
     <com.emiadda.utils.CustomTextView
-        app:font="@string/font_monteserrat_regular"
         android:id="@+id/txt_track_my_order"
         style="@style/DrawerText"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp"
         android:drawableLeft="@drawable/tarck"
-        android:text="@string/track_order" />
+        android:text="@string/track_order"
+        android:visibility="gone"
+        app:font="@string/font_monteserrat_regular"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray_product_bg" />
+        android:background="@color/gray_product_bg"
+        android:visibility="gone"/>
 
     <com.emiadda.utils.CustomTextView
-        app:font="@string/font_monteserrat_regular"
         android:id="@+id/txt_policies"
         style="@style/DrawerText"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp"
         android:drawableLeft="@drawable/polic"
         android:text="@string/policies"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:font="@string/font_monteserrat_regular"/>
 
 </LinearLayout>
