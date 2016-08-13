@@ -84,7 +84,7 @@
                     android:id="@+id/lnr1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txt_lable"
+                    android:layout_below="@+id/txt_lable_personal_detail"
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:orientation="horizontal">
@@ -148,9 +148,12 @@
                     android:id="@+id/edt_date_of_birth"
                     style="@style/ProfileEditTextStyle"
                     android:layout_width="match_parent"
+                    android:enabled="true"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/edt_email"
-                    android:enabled="true"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
@@ -160,6 +163,10 @@
 
                 <EditText
                     android:id="@+id/edt_gender"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:enabled="true"
+                    android:focusableInTouchMode="false"
                     style="@style/ProfileEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

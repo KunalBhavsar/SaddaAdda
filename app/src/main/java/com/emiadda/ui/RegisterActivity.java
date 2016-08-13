@@ -1,15 +1,18 @@
 package com.emiadda.ui;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.EditText;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     private IWsdl2CodeEvents eventHandler;
     private Toolbar toolbar;
     private int year, month, day;
+    private String dob;
     private Calendar calendar;
 
     @Override
@@ -67,6 +71,11 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
         edtUsername = (EditText) findViewById(R.id.edt_username);
         edtPassword = (EditText) findViewById(R.id.edt_password);
+        btnContinue = (Button) findViewById(R.id.btn_edit);
+        rltProgress = (RelativeLayout) findViewById(R.id.rlt_progress);
+        btnContinue.setOnClickListener(this);
+        edtGender.setOnClickListener(this);
+        edtDOB.setOnClickListener(this);
 
         eventHandler = this;
         mAppContext = this;
@@ -83,6 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -156,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
                 alertDialog.show();
                 break;
 
-            case R.id.edt_dob:
+            case R.id.edt_date_of_birth:
                 showDialog(999);
                 break;
 
@@ -172,25 +182,25 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         SoapObject soapObject = new SoapObject();
         soapObject.addProperty(getPropertyInfo("firstname", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("lastname", edtLastName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("email", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("telephone", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("input-gender", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("dob", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("franchise", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("email", edtEmail.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("telephone", edtMobileNumber.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("input-gender", edtGender.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("dob", edtDOB.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("franchise", "", PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("volunteer", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("volunteer_code", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("vol", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("customer_group_id", String.valueOf(1), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("address_1", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("address_2", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("address_1", edtAddress.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("address_2", edtLandMark.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("zone_do_id", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("city_id", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("postcode", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("password", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("confirm", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("newsletter", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("agree", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("service", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("postcode", edtPasscode.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("password", edtPasscode.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("confirm", edtPasscode.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("newsletter", String.valueOf(1), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("agree", String.valueOf(1), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("service", String.valueOf(1), PropertyInfo.STRING_CLASS));
     }
 
     private PropertyInfo getPropertyInfo(String name, String value, Class type) {
@@ -203,9 +213,27 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
     public boolean isValidationSuccessful() {
         boolean validationSuccessful = true;
-
+        //TODO: add validation checks
         return validationSuccessful;
     }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        // TODO Auto-generated method stub
+        if (id == 999) {
+            return new DatePickerDialog(this, myDateListener, year, month, day);
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+            //showDate(arg1, arg2+1, arg3);
+            dob = arg1 + "-" + (arg2 + 1) + "-" + arg3;
+            edtDOB.setText(dob);
+        }
+    };
 }
 
 
@@ -225,6 +253,4 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
  > Branch Office - Zone do
  > Area - city / district
  > Agency - volunteer
-
-
  */
