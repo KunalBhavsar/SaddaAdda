@@ -58,13 +58,13 @@ public class Server {
         this.url = url;
     }
 
-    public void registerCustomerAsync(String params) throws Exception {
+    public void registerCustomerAsync(UpdateCustomerParams params) throws Exception {
         if (this.eventHandler == null)
             throw new Exception("Async Methods Requires IWsdl2CodeEvents");
         registerCustomerAsync(params, null);
     }
 
-    public void registerCustomerAsync(final String params, final List<HeaderProperty> headers) throws Exception {
+    public void registerCustomerAsync(final UpdateCustomerParams params, final List<HeaderProperty> headers) throws Exception {
 
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -89,11 +89,11 @@ public class Server {
         }.execute();
     }
 
-    public String registerCustomer(String params) {
+    public String registerCustomer(UpdateCustomerParams params) {
         return registerCustomer(params, null);
     }
 
-    public String registerCustomer(String params, List<HeaderProperty> headers) {
+    public String registerCustomer(UpdateCustomerParams params, List<HeaderProperty> headers) {
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
