@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.server.IWsdl2CodeEvents;
+import com.emiadda.server.Server;
 import com.emiadda.utils.AppUtils;
 
 import org.ksoap2.serialization.PropertyInfo;
@@ -70,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
         if (AppUtils.isNetworkAvailable(mAppContext)) {
             rltProgress.setVisibility(View.VISIBLE);
+            new Server(eventHandler).fetchZoneDO("");
 
         } else {
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
@@ -200,3 +202,24 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         return validationSuccessful;
     }
 }
+
+
+/**
+
+ > For Registration Service -
+ > 1. franchise (should be empty)
+ > 2. customer_group_id (should be 1)
+ > 3. vol and volunteer_code (will contain the volunteer id of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ > 4. volunteer (will contain the volunteer name of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ > 5. city_id (will contain the selected district id)(List of district can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ > 6. zone_do_id ( will contain the list of zone do that can be get by fetchZoneDO method)
+ > 7. newsletter (1- yes,0 - no)
+ > 8. agree (1 - yes)(to agree with terms)
+ >
+ > **To be Noted :
+ > Branch Office - Zone do
+ > Area - city / district
+ > Agency - volunteer
+
+
+ */
