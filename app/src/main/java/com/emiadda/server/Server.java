@@ -135,13 +135,13 @@ public class Server {
         return "";
     }
 
-    public void updateCustomerInfoAsync(String params) throws Exception {
+    public void updateCustomerInfoAsync(UpdateCustomerParams params) throws Exception {
         if (this.eventHandler == null)
             throw new Exception("Async Methods Requires IWsdl2CodeEvents");
         updateCustomerInfoAsync(params, null);
     }
 
-    public void updateCustomerInfoAsync(final String params, final List<HeaderProperty> headers) throws Exception {
+    public void updateCustomerInfoAsync(final UpdateCustomerParams params, final List<HeaderProperty> headers) throws Exception {
 
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -166,11 +166,11 @@ public class Server {
         }.execute();
     }
 
-    public String updateCustomerInfo(String params) {
+    public String updateCustomerInfo(UpdateCustomerParams params) {
         return updateCustomerInfo(params, null);
     }
 
-    public String updateCustomerInfo(String params, List<HeaderProperty> headers) {
+    public String updateCustomerInfo(UpdateCustomerParams params, List<HeaderProperty> headers) {
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
