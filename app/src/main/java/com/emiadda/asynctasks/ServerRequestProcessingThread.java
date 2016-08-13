@@ -26,6 +26,8 @@ public class ServerRequestProcessingThread extends Thread {
     public static final int REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY = 4;
     public static final int REQUEST_CODE_GET_SPECIAL_PRODUCTS = 5;
     public static final int REQUEST_CODE_PLACE_ORDER = 6;
+    public static final int REQUEST_GET_PROFILE = 7;
+    public static final int REQUEST_UPDATE_PROFILE = 8;
 
     private static ServerRequestProcessingThread thread;
     private EAApplication context;

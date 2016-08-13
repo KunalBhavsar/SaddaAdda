@@ -21,6 +21,8 @@ public class CustomerModel implements Serializable {
     String registration_code;
     String customer_type;
     String credit_limit;
+    String gender;
+    String dob;
     AddressModel address;
 
     public String getFax() {
@@ -125,5 +127,21 @@ public class CustomerModel implements Serializable {
 
     public void setCredit_limit(String credit_limit) {
         this.credit_limit = credit_limit;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 }

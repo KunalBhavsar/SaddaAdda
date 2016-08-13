@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emiadda.R;
 import com.emiadda.core.EACategory;
 import com.emiadda.ui.MainActivity;
 import com.emiadda.ui.MyAccountActivity;
 import com.emiadda.ui.SubCategoryActivity;
+import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
 
 import java.util.ArrayList;
@@ -157,8 +159,13 @@ public class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             txtMyAccount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, MyAccountActivity.class);
-                    context.startActivity(intent);
+
+                    if(AppPreferences.getInstance().isUserLoggedIn()) {
+                        Intent intent = new Intent(context, MyAccountActivity.class);
+                        context.startActivity(intent);
+                    } else {
+                        Toast.makeText(context, "Please log in to view account details", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }

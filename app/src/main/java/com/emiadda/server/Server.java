@@ -28,8 +28,8 @@ import java.util.List;
 public class Server {
 
     public String NAMESPACE = "urn:server";
-    public String url = "";
-    public int timeOut = 180;
+    public String url = "http://www.mydevsystems.com/dev/emiaddanew/jnusoap/emiadda/Customer.php";
+    public int timeOut = 10000;
     public IWsdl2CodeEvents eventHandler;
 
     public Server() {
@@ -379,8 +379,6 @@ public class Server {
             protected void onPreExecute() {
                 eventHandler.Wsdl2CodeStartedRequest();
             }
-
-            ;
 
             @Override
             protected String doInBackground(Void... params) {
