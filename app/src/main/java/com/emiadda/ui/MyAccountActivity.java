@@ -68,7 +68,6 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         edtGender = (EditText) findViewById(R.id.edt_gender);
         edtDob = (EditText) findViewById(R.id.edt_dob);
         edtAddress = (EditText) findViewById(R.id.edt_address);
-        ;
         rltProgress = (RelativeLayout) findViewById(R.id.rlt_progress);
         btnEdit = (Button) findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
@@ -267,7 +266,8 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
             //showDate(arg1, arg2+1, arg3);
-            edtDob.setText(arg3 + "/" + (arg2 + 1) + "/" + arg1);
+            dob = arg1 + "-" + (arg2 + 1) + "-" + arg3;
+            edtDob.setText(dob);
         }
     };
 

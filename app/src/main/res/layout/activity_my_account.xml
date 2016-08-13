@@ -236,14 +236,6 @@
                     android:maxLength="12"
                 />
 
-                <EditText
-                    android:id="@+id/edt_address"
-                    style="@style/ProfileEditTextStyle"
-                    android:layout_width="@dimen/_120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/txt_address"
-                    android:layout_alignLeft="@id/edt_dob"
-                />
 
                 <EditText
                     android:id="@+id/edt_gender"
@@ -266,12 +258,22 @@
                     android:layout_alignLeft="@id/edt_dob"
                 />
 
+                <EditText
+                    android:id="@+id/edt_address"
+                    style="@style/ProfileEditTextStyle"
+                    android:layout_width="wrap_content"
+                    android:singleLine="false"
+                    android:textSize="14sp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/txt_address"
+                    android:layout_alignLeft="@id/edt_dob"
+                />
 
                 <Button
                     android:id="@+id/btn_edit"
                     android:layout_width="@dimen/_140dp"
                     android:layout_height="@dimen/_35dp"
-                    android:layout_below="@+id/txt_address"
+                    android:layout_below="@+id/edt_address"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/_10dp"
                     android:layout_marginLeft="@dimen/_30dp"
