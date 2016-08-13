@@ -184,7 +184,6 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         soapObject.addProperty(getPropertyInfo("newsletter", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("agree", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("service", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-
     }
 
     private PropertyInfo getPropertyInfo(String name, String value, Class type) {
