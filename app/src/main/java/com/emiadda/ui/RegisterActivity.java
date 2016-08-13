@@ -175,7 +175,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
                 showDialog(999);
                 break;
 
-            case R.id.btn_continue:
+            case R.id.btn_edit:
                 if(isValidationSuccessful()){
                     createRegRequest();
                 }
@@ -230,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         mobileNumber = edtMobileNumber.getText().toString().trim();
         dateOfBirth = edtDOB.getText().toString().trim();
         address = edtAddress.getText().toString().trim();
-        lastName = edtLastName.getText().toString().trim();
+        landMark = edtLandMark.getText().toString().trim();
         email = edtEmail.getText().toString().trim();
         passcode = edtPasscode.getText().toString().trim();
         passcode = edtPassword.getText().toString().trim();
@@ -246,12 +246,12 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
             showToast("Please enter last name");
             return false;
         }
-        else  if(mobileNumber.equals("")) {
-            showToast("Please enter mobile number");
+        else  if(mobileNumber.equals("") || mobileNumber.length() < 10) {
+            showToast("Please enter valid mobile number");
             return false;
         }
-        else  if(email.equals("")) {
-            showToast("Please enter email");
+        else  if(email.equals("") || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showToast("Please enter valid email");
             return false;
         }
         else  if(dateOfBirth.equals("")) {
@@ -266,7 +266,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
             showToast("Please enter address");
             return false;
         }
-        else  if(lastName.equals("")) {
+        else  if(landMark.equals("")) {
             showToast("Please enter landmark");
             return false;
         }

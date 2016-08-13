@@ -109,6 +109,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:enabled="true"
+                        android:id="@+id/edt_last_name"
                         android:layout_weight="1"
                         android:background="@drawable/register_edittext"
                         android:hint="Last Name"
