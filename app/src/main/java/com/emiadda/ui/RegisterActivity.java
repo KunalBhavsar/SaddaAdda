@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.emiadda.R;
 import com.emiadda.server.IWsdl2CodeEvents;
 import com.emiadda.server.Server;
+import com.emiadda.server.UpdateCustomerParams;
 import com.emiadda.utils.AppUtils;
 
 import org.ksoap2.serialization.PropertyInfo;
@@ -201,6 +202,13 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         soapObject.addProperty(getPropertyInfo("newsletter", String.valueOf(1), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("agree", String.valueOf(1), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("service", String.valueOf(1), PropertyInfo.STRING_CLASS));
+
+        UpdateCustomerParams updateCustomerParams = new UpdateCustomerParams(soapObject);
+        try {
+            new Server(eventHandler).registerCustomerAsync(updateCustomerParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private PropertyInfo getPropertyInfo(String name, String value, Class type) {
