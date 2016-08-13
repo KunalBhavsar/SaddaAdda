@@ -1,6 +1,10 @@
 package com.emiadda.ui;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -17,25 +22,28 @@ import com.emiadda.server.IWsdl2CodeEvents;
 import com.emiadda.server.Server;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.AppUtils;
-import com.emiadda.utils.KeyConstants;
 import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEvents, View.OnClickListener {
 
-    private static final int GET_PROFILE_REQUEST_CODE = 51;
     private static final String TAG = MyAccountActivity.class.getSimpleName();
 
-    private EditText edtFirstName, edtLastName, edtEmail, edtMobile;
+    private EditText edtFirstName, edtLastName, edtEmail, edtMobile, edtGender, edtDob;
     private Button btnEdit;
     private RelativeLayout rltProgress;
     private Context mAppContext;
-    private int serverReqStatus;
     private IWsdl2CodeEvents eventHandler;
     private Toolbar toolbar;
     private boolean editMode;
+    private int year, month, day;
+    private Calendar calendar;
+    private CustomerModel customerModel;
+    private String dob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +59,20 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         edtLastName = (EditText) findViewById(R.id.edt_last_name);
         edtMobile = (EditText) findViewById(R.id.edt_mobile);
         edtEmail = (EditText) findViewById(R.id.edt_email);
+        edtGender = (EditText) findViewById(R.id.edt_gender);
+        edtDob = (EditText) findViewById(R.id.edt_dob);
         rltProgress = (RelativeLayout) findViewById(R.id.rlt_progress);
         btnEdit = (Button) findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
+        edtGender.setOnClickListener(this);
+        edtDob.setOnClickListener(this);
 
         eventHandler = this;
         mAppContext = this;
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
 
         if(AppUtils.isNetworkAvailable(mAppContext)) {
 
@@ -65,8 +81,8 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
             }
 
             rltProgress.setVisibility(View.VISIBLE);
-            serverReqStatus = KeyConstants.SERVER_CALL_STATUS_ONGOING;
-            String custID = AppPreferences.getInstance().getAppOwnerData().getCustomer_id();
+            customerModel = AppPreferences.getInstance().getAppOwnerData();
+            String custID = customerModel.getCustomer_id();
             try {
                 new Server(eventHandler).fetchCustomerInfoAsync(custID);
             } catch (Exception e) {
@@ -87,12 +103,11 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
             @Override
             public void run() {
                 rltProgress.setVisibility(View.GONE);
-                if(data != null) {
-                    if(!data.toString().equals("")) {
+                if(data != null && !data.toString().equals("")) {
                         try {
                             JSONObject jsonObject = new JSONObject(data.toString());
                             JSONObject custJson =  jsonObject.getJSONObject("customer_info");
-                            CustomerModel customerModel = new Gson().fromJson(custJson.toString(), CustomerModel.class);
+                            customerModel = new Gson().fromJson(custJson.toString(), CustomerModel.class);
                             setProfileUI(customerModel);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -100,7 +115,6 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
 
                     }
                 }
-            }
         });
         Log.i(TAG, data.toString());
 
@@ -111,7 +125,9 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         edtLastName.setText(customerModel.getLastname());
         edtEmail.setText(customerModel.getEmail());
         edtMobile.setText(customerModel.getTelephone());
-
+        edtGender.setText(customerModel.getGender());
+        dob = customerModel.getDob();
+        edtDob.setText(dob);
     }
 
     @Override
@@ -156,8 +172,44 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
 
                 }
                 break;
+
+            case R.id.edt_gender:
+                final CharSequence[] languages = {"Male", "Female" };
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mAppContext);
+                dialogBuilder.setTitle("Select gender");
+                dialogBuilder.setItems(languages,new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                       edtGender.setText(languages[i]);
+                    }
+                });
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+                break;
+
+            case R.id.edt_dob:
+                showDialog(999);
+                break;
         }
     }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        // TODO Auto-generated method stub
+        if (id == 999) {
+            return new DatePickerDialog(this, myDateListener, year, month, day);
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+            //showDate(arg1, arg2+1, arg3);
+            edtDob.setText(arg3 + "/" + (arg2+1) + "/" + arg1);
+        }
+    };
+
 
     public boolean isEditMode() {
         return editMode;
@@ -172,6 +224,16 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         edtFirstName.setEnabled(editMode);
         edtLastName.setEnabled(editMode);
         edtMobile.setEnabled(editMode);
+        edtGender.setEnabled(editMode);
+        edtDob.setEnabled(editMode);
+    }
 
+    private void setCustomerModel() {
+        customerModel.setFirstname(edtFirstName.getText().toString().trim());
+        customerModel.setLastname(edtLastName.getText().toString().trim());
+        customerModel.setGender(edtGender.getText().toString().trim());
+        customerModel.setEmail(edtEmail.getText().toString().trim());
+        customerModel.setDob(edtDob.getText().toString().trim());
+        customerModel.setTelephone(edtMobile.getText().toString().trim());
     }
 }

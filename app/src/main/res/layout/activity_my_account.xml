@@ -68,11 +68,18 @@
                 android:layout_margin="@dimen/_5dp"
                 android:orientation="vertical">
 
+                <com.emiadda.views.CircularImageView
+                    android:id="@+id/img_app_owner"
+                    android:layout_width="@dimen/_70dp"
+                    android:layout_height="@dimen/_70dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/_5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/profilepic"
+                    app:civ_border="true"
+                    app:civ_borderColor="@color/white"
+                    app:civ_borderWidth="2dp" />
 
-                <com.emiadda.views.CircularImageView android:layout_width="@dimen/_80dp"
-                                                     android:src="@drawable/user"
-                                                     android:layout_alignParentRight="true"
-                                                     android:layout_height="@dimen/_80dp"/>
 
                 <com.emiadda.utils.CustomTextView
                     android:id="@+id/txt_first_name"
@@ -174,47 +181,51 @@
                 <EditText
                     android:id="@+id/edt_dob"
                     style="@style/ProfileEditTextStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/_120dp"
                     android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:layout_alignBaseline="@id/txt_dob"
-                    android:layout_marginLeft="@dimen/_10dp"
                     android:layout_alignLeft="@id/edt_dob"
+                    android:layout_marginLeft="@dimen/_10dp"
                     android:layout_toEndOf="@+id/txt_last_name"
                     android:layout_toRightOf="@+id/txt_last_name"
                     android:text="25/07/2005"/>
 
                 <EditText
                     android:id="@+id/edt_first_name"
-                    android:layout_alignLeft="@id/edt_dob"
                     style="@style/ProfileEditTextStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/_120dp"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/txt_first_name"
+                    android:layout_alignLeft="@id/edt_dob"
                 />
 
                 <EditText
                     android:id="@+id/edt_last_name"
                     style="@style/ProfileEditTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_alignLeft="@id/edt_dob"
+                    android:layout_width="@dimen/_120dp"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/txt_last_name"
-                    />
+                    android:layout_alignLeft="@id/edt_dob"
+                />
 
                 <EditText
                     android:id="@+id/edt_mobile"
                     style="@style/ProfileEditTextStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/_120dp"
+                    android:maxLength="12"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/edt_dob"
                     android:layout_alignBaseline="@id/txt_mobile"
+                    android:layout_alignLeft="@id/edt_dob"
                     android:inputType="phone"
                     android:text="5985489589"/>
 
                 <EditText
                     android:id="@+id/edt_address"
                     style="@style/ProfileEditTextStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/_120dp"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/txt_address"
                     android:layout_alignLeft="@id/edt_dob"
@@ -223,35 +234,38 @@
                 <EditText
                     android:id="@+id/edt_gender"
                     style="@style/ProfileEditTextStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/_120dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/edt_dob"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:layout_alignBaseline="@id/txt_gender"
+                    android:layout_alignLeft="@id/edt_dob"
                     android:text="Male"/>
 
                 <EditText
                     android:id="@+id/edt_email"
                     style="@style/ProfileEditTextStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/_120dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/edt_dob"
                     android:layout_alignBaseline="@id/txt_email"
+                    android:layout_alignLeft="@id/edt_dob"
                     android:text="abr@gmail.com"/>
 
 
                 <Button
                     android:id="@+id/btn_edit"
                     android:layout_width="@dimen/_140dp"
-                    android:layout_below="@+id/txt_address"
                     android:layout_height="@dimen/_35dp"
+                    android:layout_below="@+id/txt_address"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/_15dp"
                     android:layout_marginBottom="@dimen/_10dp"
                     android:layout_marginLeft="@dimen/_30dp"
                     android:layout_marginRight="@dimen/_30dp"
+                    android:layout_marginTop="@dimen/_15dp"
                     android:background="@color/green"
                     android:text="EDIT"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"/>
 
             </RelativeLayout>
 
