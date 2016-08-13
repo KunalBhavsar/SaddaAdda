@@ -8,7 +8,7 @@
     tools:context="com.emiadda.ui.PlaceOrderActivity">
 
 
-    <!-- <android.support.v7.widget.Toolbar
+     <android.support.v7.widget.Toolbar
          android:id="@+id/my_awesome_toolbar"
          android:layout_width="match_parent"
          android:layout_height="?attr/actionBarSize"
@@ -24,7 +24,7 @@
              android:layout_gravity="center"
              android:src="@drawable/logo"
              android:visibility="gone" />
-     </android.support.v7.widget.Toolbar>-->
+     </android.support.v7.widget.Toolbar>
 
     <View
         android:id="@+id/temp_view"

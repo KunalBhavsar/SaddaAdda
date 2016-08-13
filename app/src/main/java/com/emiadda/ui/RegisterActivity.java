@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -31,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     private static final String FETCH_ZONE = "fetchZoneDO";
     private static final String FETCH_DISTRICT = "fetchDistrictAndVolunteer";
 
-    private EditText edtFirstName, edtLastaName, edtMobileNumber, edtEmail, edtDOB, edtGender;
+    private EditText edtFirstName, edtLastName, edtMobileNumber, edtEmail, edtDOB, edtGender;
     private EditText edtAddress, edtLandMark, edtSubZone, edtArea, edtPasscode;
     private EditText edtUsername, edtPassword;
 
@@ -54,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         edtFirstName = (EditText) findViewById(R.id.edt_first_name);
-        edtLastaName = (EditText) findViewById(R.id.edt_last_name);
+        edtLastName = (EditText) findViewById(R.id.edt_last_name);
         edtMobileNumber = (EditText) findViewById(R.id.edt_mobile_number);
         edtEmail = (EditText) findViewById(R.id.edt_email);
         edtDOB = (EditText) findViewById(R.id.edt_date_of_birth);
@@ -84,7 +83,6 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
         }
     }
-}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
