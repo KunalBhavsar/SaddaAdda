@@ -324,6 +324,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
         UpdateCustomerParams updateCustomerParams = new UpdateCustomerParams(soapObject);
         try {
+            rltProgress.setVisibility(View.VISIBLE);
             new Server(eventHandler).registerCustomerAsync(updateCustomerParams);
         } catch (Exception e) {
             e.printStackTrace();
