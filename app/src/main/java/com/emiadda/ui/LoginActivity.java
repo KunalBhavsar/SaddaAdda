@@ -69,6 +69,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        AppUtils.hideKeyboard(mActivityContext);
         switch (v.getId()) {
             case R.id.btn_submit:
                 if (validationCheck(v)) {
