@@ -1,20 +1,57 @@
 package com.emiadda.ui;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.emiadda.R;
+import com.emiadda.server.IWsdl2CodeEvents;
+import com.emiadda.server.Server;
+import com.emiadda.utils.AppUtils;
 
-public class RegisterActivity extends AppCompatActivity {
-    EditText edtFirstName, edtLastaName, edtMobileNumber, edtEmail, edtDOB, edtGender;
-    EditText edtAddress, edtLandMark, edtSubZone, edtArea, edtPasscode;
-    EditText edtUsername, edtPassword;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+
+import java.util.Calendar;
+
+public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEvents, View.OnClickListener{
+
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String REG_CUST = "registerCustomer";
+    private static final String FETCH_ZONE = "fetchZoneDO";
+    private static final String FETCH_DISTRICT = "fetchDistrictAndVolunteer";
+
+    private EditText edtFirstName, edtLastaName, edtMobileNumber, edtEmail, edtDOB, edtGender;
+    private EditText edtAddress, edtLandMark, edtSubZone, edtArea, edtPasscode;
+    private EditText edtUsername, edtPassword;
+
+    private Button btnContinue;
+    private RelativeLayout rltProgress;
+    private Context mAppContext;
+    private IWsdl2CodeEvents eventHandler;
+    private Toolbar toolbar;
+    private int year, month, day;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         edtFirstName = (EditText) findViewById(R.id.edt_first_name);
         edtLastaName = (EditText) findViewById(R.id.edt_last_name);
@@ -31,5 +68,165 @@ public class RegisterActivity extends AppCompatActivity {
 
         edtUsername = (EditText) findViewById(R.id.edt_username);
         edtPassword = (EditText) findViewById(R.id.edt_password);
+
+        eventHandler = this;
+        mAppContext = this;
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        if (AppUtils.isNetworkAvailable(mAppContext)) {
+            rltProgress.setVisibility(View.VISIBLE);
+            new Server(eventHandler).fetchZoneDO("");
+
+        } else {
+            Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
+        }
     }
 }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void Wsdl2CodeStartedRequest() {
+
+    }
+
+    @Override
+    public void Wsdl2CodeFinished(final String methodName, Object Data) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                rltProgress.setVisibility(View.GONE);
+                switch (methodName) {
+                    case REG_CUST:
+
+                        break;
+                    case FETCH_ZONE:
+
+                        break;
+                    case FETCH_DISTRICT:
+
+                        break;
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void Wsdl2CodeFinishedWithException(Exception ex) {
+        ex.printStackTrace();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                rltProgress.setVisibility(View.GONE);
+
+            }
+        });
+    }
+
+    @Override
+    public void Wsdl2CodeEndedRequest() {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.edt_gender:
+                final CharSequence[] languages = {"Male", "Female"};
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mAppContext);
+                dialogBuilder.setTitle("Select gender");
+                dialogBuilder.setItems(languages, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        edtGender.setText(languages[i]);
+                    }
+                });
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+                break;
+
+            case R.id.edt_dob:
+                showDialog(999);
+                break;
+
+            case R.id.btn_continue:
+                if(isValidationSuccessful()){
+                    createRegRequest();
+                }
+                break;
+        }
+    }
+
+    private void createRegRequest() {
+        SoapObject soapObject = new SoapObject();
+        soapObject.addProperty(getPropertyInfo("firstname", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("lastname", edtLastName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("email", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("telephone", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("input-gender", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("dob", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("franchise", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("volunteer", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("volunteer_code", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("vol", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("customer_group_id", String.valueOf(1), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("address_1", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("address_2", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("zone_do_id", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("city_id", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("postcode", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("password", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("confirm", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("newsletter", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("agree", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("service", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+    }
+
+    private PropertyInfo getPropertyInfo(String name, String value, Class type) {
+        PropertyInfo propertyInfo = new PropertyInfo();
+        propertyInfo.setType(type);
+        propertyInfo.setValue(value);
+        propertyInfo.setName(name);
+        return propertyInfo;
+    }
+
+    public boolean isValidationSuccessful() {
+        boolean validationSuccessful = true;
+
+        return validationSuccessful;
+    }
+}
+
+
+/**
+
+ > For Registration Service -
+ > 1. franchise (should be empty)
+ > 2. customer_group_id (should be 1)
+ > 3. vol and volunteer_code (will contain the volunteer id of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ > 4. volunteer (will contain the volunteer name of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ > 5. city_id (will contain the selected district id)(List of district can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ > 6. zone_do_id ( will contain the list of zone do that can be get by fetchZoneDO method)
+ > 7. newsletter (1- yes,0 - no)
+ > 8. agree (1 - yes)(to agree with terms)
+ >
+ > **To be Noted :
+ > Branch Office - Zone do
+ > Area - city / district
+ > Agency - volunteer
+
+
+ */

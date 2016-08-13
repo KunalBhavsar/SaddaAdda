@@ -226,8 +226,6 @@ public class Server {
                 eventHandler.Wsdl2CodeStartedRequest();
             }
 
-            ;
-
             @Override
             protected String doInBackground(Void... params) {
                 return fetchZoneDO(params1, headers);
