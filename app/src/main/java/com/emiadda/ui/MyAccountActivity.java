@@ -20,20 +20,26 @@ import android.widget.Toast;
 import com.emiadda.R;
 import com.emiadda.server.IWsdl2CodeEvents;
 import com.emiadda.server.Server;
+import com.emiadda.server.UpdateCustomerParams;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.AppUtils;
+import com.emiadda.wsdl.AddressModel;
 import com.emiadda.wsdl.CustomerModel;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
 
 import java.util.Calendar;
 
 public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEvents, View.OnClickListener {
 
     private static final String TAG = MyAccountActivity.class.getSimpleName();
+    private static final String UPDATE_INFO = "updateCustomerInfo";
+    private static final String GET_INFO = "fetchCustomerInfo";
 
-    private EditText edtFirstName, edtLastName, edtEmail, edtMobile, edtGender, edtDob;
+    private EditText edtFirstName, edtLastName, edtEmail, edtMobile, edtGender, edtDob, edtAddress;
     private Button btnEdit;
     private RelativeLayout rltProgress;
     private Context mAppContext;
@@ -61,6 +67,8 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         edtEmail = (EditText) findViewById(R.id.edt_email);
         edtGender = (EditText) findViewById(R.id.edt_gender);
         edtDob = (EditText) findViewById(R.id.edt_dob);
+        edtAddress = (EditText) findViewById(R.id.edt_address);
+        ;
         rltProgress = (RelativeLayout) findViewById(R.id.rlt_progress);
         btnEdit = (Button) findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
@@ -74,9 +82,9 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        if(AppUtils.isNetworkAvailable(mAppContext)) {
+        if (AppUtils.isNetworkAvailable(mAppContext)) {
 
-            if(!AppPreferences.getInstance().isUserLoggedIn()) {
+            if (!AppPreferences.getInstance().isUserLoggedIn()) {
                 return;
             }
 
@@ -88,46 +96,63 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             }
-        }
-        else {
+        } else {
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void Wsdl2CodeStartedRequest() {}
+    public void Wsdl2CodeStartedRequest() {
+    }
 
     @Override
-    public void Wsdl2CodeFinished(String methodName, final Object data) {
+    public void Wsdl2CodeFinished(final String methodName, final Object data) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 rltProgress.setVisibility(View.GONE);
-                if(data != null && !data.toString().equals("")) {
+                if (methodName.equals(GET_INFO)) {
+                    if (data != null && !data.toString().equals("")) {
                         try {
                             JSONObject jsonObject = new JSONObject(data.toString());
-                            JSONObject custJson =  jsonObject.getJSONObject("customer_info");
-                            customerModel = new Gson().fromJson(custJson.toString(), CustomerModel.class);
-                            setProfileUI(customerModel);
+                            JSONObject custJson = jsonObject.getJSONObject("customer_info");
+                            CustomerModel tempCustomerModel = new Gson().fromJson(custJson.toString(), CustomerModel.class);
+                            setProfileUI(tempCustomerModel);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                     }
+                } else if(methodName.equals(UPDATE_INFO)) {
+                    if (data != null && !data.toString().equals("")) {
+                        Toast.makeText(mAppContext, "Profile details updated successFully", Toast.LENGTH_SHORT).show();
+                    }
                 }
+            }
+
         });
-        Log.i(TAG, data.toString());
 
     }
 
-    private void setProfileUI(CustomerModel customerModel) {
-        edtFirstName.setText(customerModel.getFirstname());
-        edtLastName.setText(customerModel.getLastname());
-        edtEmail.setText(customerModel.getEmail());
-        edtMobile.setText(customerModel.getTelephone());
-        edtGender.setText(customerModel.getGender());
-        dob = customerModel.getDob();
+
+    private void setProfileUI(CustomerModel customerModel1) {
+        edtFirstName.setText(customerModel1.getFirstname());
+        edtLastName.setText(customerModel1.getLastname());
+        edtEmail.setText(customerModel1.getEmail());
+        edtMobile.setText(customerModel1.getTelephone());
+        edtGender.setText(customerModel1.getGender());
+        dob = customerModel1.getDob();
         edtDob.setText(dob);
+        if (null != customerModel.getAddress()) {
+            AddressModel addressModel = customerModel.getAddress();
+            String address = addressModel.getAddress_1() + ", " +
+                    addressModel.getCity_name() + ", " +
+                    addressModel.getDistrict_name() + ", " +
+                    addressModel.getZone() + ", " +
+                    addressModel.getCountry() + ", " + "Postcode: " +
+                    addressModel.getPostcode();
+            edtAddress.setText(address);
+        }
     }
 
     @Override
@@ -142,7 +167,8 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
     }
 
     @Override
-    public void Wsdl2CodeEndedRequest() {}
+    public void Wsdl2CodeEndedRequest() {
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -159,11 +185,13 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_edit:
-                if(isEditMode()) {
+                if (isEditMode()) {
                     setEditMode(false);
                     setEditableFields(false);
                     btnEdit.setText("Edit");
-                    //TODO: server call to update, change shared pref values
+                    setCustomerModel();
+                    AppPreferences.getInstance().setAppOwnerData(customerModel);
+                    sendDataToServer();
 
                 } else {
                     setEditMode(true);
@@ -174,13 +202,13 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
                 break;
 
             case R.id.edt_gender:
-                final CharSequence[] languages = {"Male", "Female" };
+                final CharSequence[] languages = {"Male", "Female"};
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mAppContext);
                 dialogBuilder.setTitle("Select gender");
-                dialogBuilder.setItems(languages,new DialogInterface.OnClickListener(){
+                dialogBuilder.setItems(languages, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                       edtGender.setText(languages[i]);
+                        edtGender.setText(languages[i]);
                     }
                 });
                 AlertDialog alertDialog = dialogBuilder.create();
@@ -191,6 +219,39 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
                 showDialog(999);
                 break;
         }
+    }
+
+    private void sendDataToServer() {
+        SoapObject soapObject = new SoapObject();
+        soapObject.addProperty(getPropertyInfo("customer_id", customerModel.getCustomer_id(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("firstname", customerModel.getFirstname(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("lastname", customerModel.getLastname(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("email", customerModel.getEmail(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("telephone", customerModel.getTelephone(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("gender", customerModel.getGender(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("dob", customerModel.getDob(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("service", String.valueOf(1), PropertyInfo.STRING_CLASS));
+
+        if(null != customerModel.getAddress()) {
+            soapObject.addProperty(getPropertyInfo("address_1", customerModel.getAddress().getAddress_1(), PropertyInfo.STRING_CLASS));
+            soapObject.addProperty(getPropertyInfo("address_2", customerModel.getAddress().getAddress_2(), PropertyInfo.STRING_CLASS));
+            soapObject.addProperty(getPropertyInfo("postcode", customerModel.getAddress().getPostcode(), PropertyInfo.STRING_CLASS));
+        }
+
+        UpdateCustomerParams updateCustomerParams = new UpdateCustomerParams(soapObject);
+        try {
+            new Server(this).updateCustomerInfoAsync(updateCustomerParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private PropertyInfo getPropertyInfo(String name, String value, Class type) {
+        PropertyInfo propertyInfo = new PropertyInfo();
+        propertyInfo.setType(type);
+        propertyInfo.setValue(value);
+        propertyInfo.setName(name);
+        return propertyInfo;
     }
 
     @Override
@@ -206,7 +267,7 @@ public class MyAccountActivity extends AppCompatActivity implements IWsdl2CodeEv
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
             //showDate(arg1, arg2+1, arg3);
-            edtDob.setText(arg3 + "/" + (arg2+1) + "/" + arg1);
+            edtDob.setText(arg3 + "/" + (arg2 + 1) + "/" + arg1);
         }
     };
 
