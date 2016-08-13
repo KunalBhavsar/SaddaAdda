@@ -263,6 +263,7 @@
                     android:enabled="true"
                     android:background="@drawable/register_edittext"
                     android:hint="Postcode"
+                    android:maxLength="6"
                     android:inputType="number"
                     android:padding="7dp" />
 

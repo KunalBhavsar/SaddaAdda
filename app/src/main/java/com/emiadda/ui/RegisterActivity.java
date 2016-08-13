@@ -38,6 +38,10 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     private EditText edtAddress, edtLandMark, edtSubZone, edtArea, edtPasscode;
     private EditText edtUsername, edtPassword;
 
+    private String firstName, lastName, mobileNumber, email, dateOfBirth, gender;
+    private String address, landMark, subZone, area, passcode;
+    private String username, password;
+
     private Button btnContinue;
     private RelativeLayout rltProgress;
     private Context mAppContext;
@@ -112,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     }
 
     @Override
-    public void Wsdl2CodeFinished(final String methodName, Object Data) {
+    public void Wsdl2CodeFinished(final String methodName, final Object data) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -181,7 +185,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
     private void createRegRequest() {
         SoapObject soapObject = new SoapObject();
-        soapObject.addProperty(getPropertyInfo("firstname", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("firstname", firstName, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("lastname", edtLastName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("email", edtEmail.getText().toString().trim(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("telephone", edtMobileNumber.getText().toString().trim(), PropertyInfo.STRING_CLASS));
@@ -220,9 +224,78 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     }
 
     public boolean isValidationSuccessful() {
-        boolean validationSuccessful = true;
-        //TODO: add validation checks
-        return validationSuccessful;
+        firstName = edtFirstName.getText().toString().trim();
+        lastName = edtLastName.getText().toString().trim();
+        gender = edtGender.getText().toString().trim();
+        mobileNumber = edtMobileNumber.getText().toString().trim();
+        dateOfBirth = edtDOB.getText().toString().trim();
+        address = edtAddress.getText().toString().trim();
+        lastName = edtLastName.getText().toString().trim();
+        email = edtEmail.getText().toString().trim();
+        passcode = edtPasscode.getText().toString().trim();
+        passcode = edtPassword.getText().toString().trim();
+        area = edtArea.getText().toString().trim();
+        username = edtUsername.getText().toString().trim();
+        subZone = edtSubZone.getText().toString().trim();
+
+        if(firstName.equals("")) {
+            showToast("Please enter first name");
+            return false;
+        }
+        else  if(lastName.equals("")) {
+            showToast("Please enter last name");
+            return false;
+        }
+        else  if(mobileNumber.equals("")) {
+            showToast("Please enter mobile number");
+            return false;
+        }
+        else  if(email.equals("")) {
+            showToast("Please enter email");
+            return false;
+        }
+        else  if(dateOfBirth.equals("")) {
+            showToast("Please enter date of birth");
+            return false;
+        }
+        else  if(gender.equals("")) {
+            showToast("Please select gender");
+            return false;
+        }
+        else  if(address.equals("")) {
+            showToast("Please enter address");
+            return false;
+        }
+        else  if(lastName.equals("")) {
+            showToast("Please enter landmark");
+            return false;
+        }
+        else  if(subZone.equals("")) {
+            showToast("Please select subzone");
+            return false;
+        }
+        else  if(area.equals("")) {
+            showToast("Please select area");
+            return false;
+        }
+        else  if(passcode.equals("")) {
+            showToast("Please enter postcode");
+            return false;
+        }
+        else  if(username.equals("")) {
+            showToast("Please enter username");
+            return false;
+        }
+        else  if(passcode.equals("")) {
+            showToast("Please enter password");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
