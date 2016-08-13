@@ -80,9 +80,9 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 break;
             case R.id.btn_register:
                 if(AppUtils.isNetworkAvailable(this)) {
-                    /*Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                    startActivity(intent);*/
-                    String regUrl = "http://www.mydevsystems.com/dev/emiaddanew/index.php?route=account/registercust";
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+/*                    String regUrl = "http://www.mydevsystems.com/dev/emiaddanew/index.php?route=account/registercust";
                     Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(regUrl));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setPackage("com.android.chrome");
@@ -92,7 +92,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                         // Chrome browser presumably not installed so allow user to choose instead
                         intent.setPackage(null);
                         startActivity(intent);
-                    }
+                    }*/
                 } else {
                     Toast.makeText(mActivityContext, "Please check internet connection", Toast.LENGTH_SHORT).show();
                 }
