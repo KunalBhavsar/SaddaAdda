@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,11 +22,17 @@ import com.emiadda.server.IWsdl2CodeEvents;
 import com.emiadda.server.Server;
 import com.emiadda.server.UpdateCustomerParams;
 import com.emiadda.utils.AppUtils;
+import com.emiadda.wsdl.DistrictModel;
+import com.emiadda.wsdl.RegionModel;
+import com.emiadda.wsdl.VolunteerModel;
+import com.google.gson.Gson;
 
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEvents, View.OnClickListener{
 
@@ -35,12 +42,12 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     private static final String FETCH_DISTRICT = "fetchDistrictAndVolunteer";
 
     private EditText edtFirstName, edtLastName, edtMobileNumber, edtEmail, edtDOB, edtGender;
-    private EditText edtAddress, edtLandMark, edtSubZone, edtArea, edtPasscode;
-    private EditText edtUsername, edtPassword;
+    private EditText edtAddress, edtLandMark, edtSubZone, edtArea, edtAgency, edtPasscode;
+    private EditText edtUsername, edtPassword, edtConfirmPassword;
 
     private String firstName, lastName, mobileNumber, email, dateOfBirth, gender;
-    private String address, landMark, subZone, area, passcode;
-    private String username, password;
+    private String address, landMark, passcode;
+    private String username, password, confirmPassword;
 
     private Button btnContinue;
     private RelativeLayout rltProgress;
@@ -50,6 +57,15 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     private int year, month, day;
     private String dob;
     private Calendar calendar;
+
+    private List<RegionModel> zoneModels;
+    private RegionModel selectedZone;
+
+    private List<RegionModel> districtModels;
+    private RegionModel selectedDistrict;
+
+    private List<VolunteerModel> agencyList;
+    private VolunteerModel selectedAgency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +88,20 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         edtLandMark = (EditText) findViewById(R.id.edt_landmark);
         edtSubZone = (EditText) findViewById(R.id.edt_subzone);
         edtArea = (EditText) findViewById(R.id.edt_area);
+        edtAgency = (EditText) findViewById(R.id.edt_agency);
         edtPasscode = (EditText) findViewById(R.id.edt_postcode);
 
         edtUsername = (EditText) findViewById(R.id.edt_username);
         edtPassword = (EditText) findViewById(R.id.edt_password);
+        edtConfirmPassword = (EditText) findViewById(R.id.edt_confirm_password);
         btnContinue = (Button) findViewById(R.id.btn_edit);
         rltProgress = (RelativeLayout) findViewById(R.id.rlt_progress);
         btnContinue.setOnClickListener(this);
         edtGender.setOnClickListener(this);
         edtDOB.setOnClickListener(this);
+        edtSubZone.setOnClickListener(this);
+        edtArea.setOnClickListener(this);
+        edtAgency.setOnClickListener(this);
 
         eventHandler = this;
         mAppContext = this;
@@ -91,8 +112,11 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
         if (AppUtils.isNetworkAvailable(mAppContext)) {
             rltProgress.setVisibility(View.VISIBLE);
-            new Server(eventHandler).fetchZoneDO("");
-
+            try {
+                new Server(eventHandler).fetchZoneDOAsync("");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
         }
@@ -116,20 +140,32 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     }
 
     @Override
-    public void Wsdl2CodeFinished(final String methodName, final Object data) {
+    public void Wsdl2CodeFinished(final String methodName, final Object Data) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 rltProgress.setVisibility(View.GONE);
                 switch (methodName) {
                     case REG_CUST:
-
+                        showToast("Registration successful...");
+                        finish();
                         break;
                     case FETCH_ZONE:
-
+                        String jsonResponse = new Gson().toJson(Data);
+                        jsonResponse = jsonResponse.replaceAll("\\\\", "");
+                        jsonResponse = jsonResponse.substring(2, jsonResponse.length() - 2);
+                        Log.i(TAG, jsonResponse);
+                        zoneModels =  Arrays.asList(new Gson().fromJson(jsonResponse, RegionModel[].class));
                         break;
                     case FETCH_DISTRICT:
-
+                        jsonResponse = new Gson().toJson(Data);
+                        Log.i(TAG, jsonResponse);
+                        jsonResponse = jsonResponse.replaceAll("\\\\", "").replace("\"[", "[").replace("]\"", "]");
+                        jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1);
+                        Log.i(TAG, jsonResponse);
+                        DistrictModel districtModel = new Gson().fromJson(jsonResponse, DistrictModel.class);
+                        districtModels = districtModel.getDistrictData();
+                        agencyList = districtModel.getVolunteerData();
                         break;
 
                 }
@@ -138,13 +174,13 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
     }
 
     @Override
-    public void Wsdl2CodeFinishedWithException(Exception ex) {
+    public void Wsdl2CodeFinishedWithException(final Exception ex) {
         ex.printStackTrace();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 rltProgress.setVisibility(View.GONE);
-
+                Log.e(TAG, ex.getMessage());
             }
         });
     }
@@ -156,15 +192,16 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
     @Override
     public void onClick(View v) {
+        AppUtils.hideKeyboard(this);
         switch (v.getId()) {
             case R.id.edt_gender:
-                final CharSequence[] languages = {"Male", "Female"};
+                final CharSequence[] genderStringList = {"Male", "Female"};
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mAppContext);
                 dialogBuilder.setTitle("Select gender");
-                dialogBuilder.setItems(languages, new DialogInterface.OnClickListener() {
+                dialogBuilder.setItems(genderStringList, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        edtGender.setText(languages[i]);
+                        edtGender.setText(genderStringList[i]);
                     }
                 });
                 AlertDialog alertDialog = dialogBuilder.create();
@@ -180,6 +217,84 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
                     createRegRequest();
                 }
                 break;
+            case R.id.edt_subzone:
+                if(zoneModels != null) {
+                    final String[] zoneStringList = new String[zoneModels.size()];
+                    int i = 0;
+                    for (RegionModel regionModel : zoneModels) {
+                        zoneStringList[i++] = regionModel.getRegion_name();
+                    }
+                    dialogBuilder = new AlertDialog.Builder(mAppContext);
+                    dialogBuilder.setTitle("Select Zone");
+                    dialogBuilder.setItems(zoneStringList, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            selectedZone = zoneModels.get(i);
+                            districtModels = null;
+                            selectedDistrict = null;
+                            agencyList = null;
+                            selectedAgency = null;
+                            edtSubZone.setText(selectedZone.getRegion_name());
+                            edtArea.setText("");
+                            edtAgency.setText("");
+
+                            if (AppUtils.isNetworkAvailable(mAppContext)) {
+                                rltProgress.setVisibility(View.VISIBLE);
+                                try {
+                                    new Server(eventHandler).fetchDistrictAndVolunteerAsync(selectedZone.getRegion_id());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    alertDialog = dialogBuilder.create();
+                    alertDialog.show();
+                }
+                break;
+            case R.id.edt_area:
+                if(districtModels != null) {
+                    final String[] districtStringList = new String[districtModels.size()];
+                    int i = 0;
+                    for (RegionModel regionModel : districtModels) {
+                        districtStringList[i++] = regionModel.getRegion_name();
+                    }
+                    dialogBuilder = new AlertDialog.Builder(mAppContext);
+                    dialogBuilder.setTitle("Select Area");
+                    dialogBuilder.setItems(districtStringList, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            selectedDistrict = districtModels.get(i);
+                            edtArea.setText(selectedDistrict.getRegion_name());
+                        }
+                    });
+                    alertDialog = dialogBuilder.create();
+                    alertDialog.show();
+                }
+                break;
+
+            case R.id.edt_agency:
+                if(agencyList != null) {
+                    final String[] agencyStringList = new String[agencyList.size()];
+                    int i = 0;
+                    for (VolunteerModel volunteerModel : agencyList) {
+                        agencyStringList[i++] = volunteerModel.getVol();
+                    }
+                    dialogBuilder = new AlertDialog.Builder(mAppContext);
+                    dialogBuilder.setTitle("Select Agency");
+                    dialogBuilder.setItems(agencyStringList, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            selectedAgency = agencyList.get(i);
+                            edtAgency.setText(selectedAgency.getVol());
+                        }
+                    });
+                    alertDialog = dialogBuilder.create();
+                    alertDialog.show();
+                }
+                break;
         }
     }
 
@@ -192,17 +307,17 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         soapObject.addProperty(getPropertyInfo("input-gender", gender, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("dob", dob, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("franchise", "", PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("volunteer", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("volunteer_code", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("vol", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("volunteer", selectedAgency.getVol(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("volunteer_code", selectedAgency.getVolid(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("vol", selectedAgency.getVol(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("customer_group_id", String.valueOf(1), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("address_1", address, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("address_2", landMark, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("zone_do_id", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("city_id", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("city_id", selectedDistrict.getRegion_id(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("postcode", passcode, PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("password", passcode, PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("confirm", passcode, PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("password", password, PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("confirm", confirmPassword, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("newsletter", String.valueOf(1), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("agree", String.valueOf(1), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("service", String.valueOf(1), PropertyInfo.STRING_CLASS));
@@ -227,16 +342,17 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         firstName = edtFirstName.getText().toString().trim();
         lastName = edtLastName.getText().toString().trim();
         gender = edtGender.getText().toString().trim();
+        email = edtEmail.getText().toString().trim();
         mobileNumber = edtMobileNumber.getText().toString().trim();
         dateOfBirth = edtDOB.getText().toString().trim();
+
         address = edtAddress.getText().toString().trim();
         landMark = edtLandMark.getText().toString().trim();
-        email = edtEmail.getText().toString().trim();
         passcode = edtPasscode.getText().toString().trim();
-        passcode = edtPassword.getText().toString().trim();
-        area = edtArea.getText().toString().trim();
+
         username = edtUsername.getText().toString().trim();
-        subZone = edtSubZone.getText().toString().trim();
+        password = edtPassword.getText().toString().trim();
+        confirmPassword = edtConfirmPassword.getText().toString().trim();
 
         if(firstName.equals("")) {
             showToast("Please enter first name");
@@ -270,12 +386,16 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
             showToast("Please enter landmark");
             return false;
         }
-        else  if(subZone.equals("")) {
+        else  if(selectedZone == null) {
             showToast("Please select subzone");
             return false;
         }
-        else  if(area.equals("")) {
+        else  if(selectedDistrict == null) {
             showToast("Please select area");
+            return false;
+        }
+        else  if(selectedAgency == null) {
+            showToast("Please select agency");
             return false;
         }
         else  if(passcode.equals("")) {
@@ -289,6 +409,11 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         else  if(passcode.equals("")) {
             showToast("Please enter password");
             return false;
+        }
+        else if(confirmPassword.isEmpty() || ! confirmPassword.equals(password)) {
+            showToast("Please re enter proper password");
+            edtPassword.setText("");
+            edtConfirmPassword.setText("");
         }
 
         return true;

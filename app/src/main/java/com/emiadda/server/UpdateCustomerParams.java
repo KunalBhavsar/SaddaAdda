@@ -88,8 +88,8 @@ public class UpdateCustomerParams implements KvmSerializable {
                 gender = (String) obj;
             }
         }
-        if (soapObject.hasProperty("input_gender")) {
-            Object obj = soapObject.getProperty("input_gender");
+        if (soapObject.hasProperty("input-gender")) {
+            Object obj = soapObject.getProperty("input-gender");
             if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
                 SoapPrimitive j = (SoapPrimitive) obj;
                 input_gender = j.toString();
@@ -341,7 +341,7 @@ public class UpdateCustomerParams implements KvmSerializable {
                 break;
             case 6:
                 info.type = PropertyInfo.STRING_CLASS;
-                info.name = "input_gender";
+                info.name = "input-gender";
                 break;
             case 7:
                 info.type = PropertyInfo.STRING_CLASS;

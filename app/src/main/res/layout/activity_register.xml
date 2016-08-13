@@ -8,23 +8,23 @@
     tools:context="com.emiadda.ui.PlaceOrderActivity">
 
 
-     <android.support.v7.widget.Toolbar
-         android:id="@+id/my_awesome_toolbar"
-         android:layout_width="match_parent"
-         android:layout_height="?attr/actionBarSize"
-         android:background="@color/toolbar_color"
-         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-         app:title="@string/app_name"
-         app:titleTextColor="@color/white">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_color"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/app_name"
+        app:titleTextColor="@color/white">
 
-         <ImageView
-             android:id="@+id/txt_title"
-             android:layout_width="120dp"
-             android:layout_height="match_parent"
-             android:layout_gravity="center"
-             android:src="@drawable/logo"
-             android:visibility="gone" />
-     </android.support.v7.widget.Toolbar>
+        <ImageView
+            android:id="@+id/txt_title"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/logo"
+            android:visibility="gone" />
+    </android.support.v7.widget.Toolbar>
 
     <View
         android:id="@+id/temp_view"
@@ -94,9 +94,9 @@
                         style="@style/ProfileEditTextStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:enabled="true"
                         android:layout_weight="1"
                         android:background="@drawable/register_edittext"
+                        android:enabled="true"
                         android:hint="First Name"
                         android:padding="7dp" />
 
@@ -105,13 +105,13 @@
                         android:layout_height="match_parent" />
 
                     <EditText
+                        android:id="@+id/edt_last_name"
                         style="@style/ProfileEditTextStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:enabled="true"
-                        android:id="@+id/edt_last_name"
                         android:layout_weight="1"
                         android:background="@drawable/register_edittext"
+                        android:enabled="true"
                         android:hint="Last Name"
                         android:padding="7dp" />
 
@@ -123,10 +123,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lnr1"
-                    android:enabled="true"
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:enabled="true"
                     android:hint="Mobile Number"
                     android:inputType="number"
                     android:padding="7dp" />
@@ -136,11 +136,11 @@
                     style="@style/ProfileEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="true"
                     android:layout_below="@+id/edt_mobile_number"
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:enabled="true"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:padding="7dp" />
@@ -149,25 +149,21 @@
                     android:id="@+id/edt_date_of_birth"
                     style="@style/ProfileEditTextStyle"
                     android:layout_width="match_parent"
-                    android:enabled="true"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/edt_email"
-                    android:editable="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:editable="false"
+                    android:enabled="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="Date of birth"
                     android:inputType="datetime"
                     android:padding="7dp" />
 
                 <EditText
                     android:id="@+id/edt_gender"
-                    android:editable="false"
-                    android:focusable="false"
-                    android:enabled="true"
-                    android:focusableInTouchMode="false"
                     style="@style/ProfileEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -175,6 +171,10 @@
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:editable="false"
+                    android:enabled="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="Gender"
                     android:inputType="text"
                     android:padding="7dp" />
@@ -191,9 +191,9 @@
                     android:id="@+id/txt_lable_address"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_35dp"
+                    android:enabled="true"
                     android:gravity="center_vertical"
                     android:text="Your Address"
-                    android:enabled="true"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -222,8 +222,8 @@
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
-                    android:hint="Landmark"
                     android:enabled="true"
+                    android:hint="Landmark"
                     android:inputType="text"
                     android:padding="7dp" />
 
@@ -236,6 +236,10 @@
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:editable="false"
+                    android:enabled="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="Sub Zone"
                     android:inputType="text"
                     android:padding="7dp" />
@@ -249,7 +253,28 @@
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:editable="false"
+                    android:enabled="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="Area"
+                    android:inputType="text"
+                    android:padding="7dp" />
+
+                <EditText
+                    android:id="@+id/edt_agency"
+                    style="@style/ProfileEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edt_area"
+                    android:layout_marginBottom="@dimen/_5dp"
+                    android:layout_marginTop="@dimen/_5dp"
+                    android:background="@drawable/register_edittext"
+                    android:editable="false"
+                    android:enabled="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Agency"
                     android:inputType="text"
                     android:padding="7dp" />
 
@@ -258,14 +283,14 @@
                     style="@style/ProfileEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/edt_area"
+                    android:layout_below="@+id/edt_agency"
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
-                    android:enabled="true"
                     android:background="@drawable/register_edittext"
+                    android:enabled="true"
                     android:hint="Postcode"
-                    android:maxLength="6"
                     android:inputType="number"
+                    android:maxLength="6"
                     android:padding="7dp" />
 
             </RelativeLayout>
@@ -294,9 +319,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_lable_login_details"
                     android:layout_marginBottom="@dimen/_5dp"
-                    android:enabled="true"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:enabled="true"
                     android:hint="User Name"
                     android:inputType="text"
                     android:padding="7dp" />
@@ -307,18 +332,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/edt_username"
-                    android:enabled="true"
                     android:layout_marginBottom="@dimen/_5dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:background="@drawable/register_edittext"
+                    android:enabled="true"
                     android:hint="Password"
+                    android:inputType="textPassword"
+                    android:padding="7dp" />
+
+                <EditText
+                    android:id="@+id/edt_confirm_password"
+                    style="@style/ProfileEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edt_password"
+                    android:layout_marginBottom="@dimen/_5dp"
+                    android:layout_marginTop="@dimen/_5dp"
+                    android:background="@drawable/register_edittext"
+                    android:enabled="true"
+                    android:hint="Confirm Password"
                     android:inputType="textPassword"
                     android:padding="7dp" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50dp" />
+                android:layout_height="@dimen/_20dp" />
         </LinearLayout>
     </ScrollView>
 
