@@ -14,6 +14,7 @@ package com.emiadda.server;
 //
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -101,12 +102,14 @@ public class Server {
         soapReq.addProperty("params", params);
         soapEnvelope.setOutputSoapObject(soapReq);
         HttpTransportSE httpTransport = new HttpTransportSE(url, timeOut);
+        httpTransport.debug = true;
         try {
             if (headers != null) {
                 httpTransport.call("urn:server/registerCustomer", soapEnvelope, headers);
             } else {
                 httpTransport.call("urn:server/registerCustomer", soapEnvelope);
             }
+            Log.e("SERVER", httpTransport.requestDump);
             Object retObj = soapEnvelope.bodyIn;
             if (retObj instanceof SoapFault) {
                 SoapFault fault = (SoapFault) retObj;

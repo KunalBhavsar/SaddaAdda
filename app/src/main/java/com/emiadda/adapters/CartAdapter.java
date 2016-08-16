@@ -17,6 +17,7 @@ import com.emiadda.R;
 import com.emiadda.asynctasks.ServerRequestProcessingThread;
 import com.emiadda.interafaces.ServerResponseSubscriber;
 import com.emiadda.server.ServerResponse;
+import com.emiadda.ui.CartActivity;
 import com.emiadda.ui.ProductDetailActivity;
 import com.emiadda.utils.AppPreferences;
 import com.emiadda.utils.KeyConstants;
@@ -118,6 +119,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                     cartList.remove(productModel);
                     AppPreferences.getInstance().removeProductFromCartList(productModel);
                     notifyDataSetChanged();
+                    if(cartList.isEmpty()) {
+                        ((CartActivity)context).finish();
+                    }
                     break;
 
                 case R.id.btn_edit:
