@@ -26,7 +26,10 @@ import com.emiadda.wsdl.DistrictModel;
 import com.emiadda.wsdl.RegionModel;
 import com.emiadda.wsdl.VolunteerModel;
 import com.google.gson.Gson;
+import com.google.gson.internal.Streams;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
@@ -34,7 +37,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEvents, View.OnClickListener{
+public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEvents, View.OnClickListener {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final String REG_CUST = "registerCustomer";
@@ -43,11 +46,11 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
     private EditText edtFirstName, edtLastName, edtMobileNumber, edtEmail, edtDOB, edtGender;
     private EditText edtAddress, edtLandMark, edtSubZone, edtArea, edtAgency, edtPasscode;
-    private EditText edtUsername, edtPassword, edtConfirmPassword;
+    private EditText edtPassword, edtConfirmPassword;
 
     private String firstName, lastName, mobileNumber, email, dateOfBirth, gender;
     private String address, landMark, passcode;
-    private String username, password, confirmPassword;
+    private String password, confirmPassword;
 
     private Button btnContinue;
     private RelativeLayout rltProgress;
@@ -91,7 +94,6 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         edtAgency = (EditText) findViewById(R.id.edt_agency);
         edtPasscode = (EditText) findViewById(R.id.edt_postcode);
 
-        edtUsername = (EditText) findViewById(R.id.edt_username);
         edtPassword = (EditText) findViewById(R.id.edt_password);
         edtConfirmPassword = (EditText) findViewById(R.id.edt_confirm_password);
         btnContinue = (Button) findViewById(R.id.btn_edit);
@@ -102,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         edtSubZone.setOnClickListener(this);
         edtArea.setOnClickListener(this);
         edtAgency.setOnClickListener(this);
+        landMark = "";
 
         eventHandler = this;
         mAppContext = this;
@@ -145,29 +148,50 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
             @Override
             public void run() {
                 rltProgress.setVisibility(View.GONE);
-                switch (methodName) {
-                    case REG_CUST:
-                        showToast("Registration successful...");
-                        finish();
-                        break;
-                    case FETCH_ZONE:
-                        String jsonResponse = new Gson().toJson(Data);
-                        jsonResponse = jsonResponse.replaceAll("\\\\", "");
-                        jsonResponse = jsonResponse.substring(2, jsonResponse.length() - 2);
-                        Log.i(TAG, jsonResponse);
-                        zoneModels =  Arrays.asList(new Gson().fromJson(jsonResponse, RegionModel[].class));
-                        break;
-                    case FETCH_DISTRICT:
-                        jsonResponse = new Gson().toJson(Data);
-                        Log.i(TAG, jsonResponse);
-                        jsonResponse = jsonResponse.replaceAll("\\\\", "").replace("\"[", "[").replace("]\"", "]");
-                        jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1);
-                        Log.i(TAG, jsonResponse);
-                        DistrictModel districtModel = new Gson().fromJson(jsonResponse, DistrictModel.class);
-                        districtModels = districtModel.getDistrictData();
-                        agencyList = districtModel.getVolunteerData();
-                        break;
 
+                if (Data != null && !Data.equals("")) {
+                    switch (methodName) {
+                        case REG_CUST:
+                            try {
+                                JSONObject jsonObject = new JSONObject(Data.toString());
+                                String error = (String) jsonObject.get("error_warning");
+                                showToast(error);
+
+                            } catch (Exception e) {
+                                /*try {
+                                    JSONObject jsonObject = new JSONObject(Data.toString());
+                                    String result = (String) jsonObject.get("result");
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }*/
+
+                                showToast("Registration successful...");
+                                finish();
+                            }
+
+                            break;
+                        case FETCH_ZONE:
+                            String jsonResponse = new Gson().toJson(Data);
+                            jsonResponse = jsonResponse.replaceAll("\\\\", "");
+                            jsonResponse = jsonResponse.substring(2, jsonResponse.length() - 2);
+                            Log.i(TAG, jsonResponse);
+                            zoneModels = Arrays.asList(new Gson().fromJson(jsonResponse, RegionModel[].class));
+                            break;
+                        case FETCH_DISTRICT:
+                            jsonResponse = new Gson().toJson(Data);
+                            Log.i(TAG, jsonResponse);
+                            jsonResponse = jsonResponse.replaceAll("\\\\", "").replace("\"[", "[").replace("]\"", "]");
+                            jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1);
+                            Log.i(TAG, jsonResponse);
+                            DistrictModel districtModel = new Gson().fromJson(jsonResponse, DistrictModel.class);
+                            districtModels = districtModel.getDistrictData();
+                            agencyList = districtModel.getVolunteerData();
+                            break;
+
+                    }
+                } else {
+                    Toast.makeText(mAppContext, "Some error occurred", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -213,12 +237,12 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
                 break;
 
             case R.id.btn_edit:
-                if(isValidationSuccessful()){
+                if (isValidationSuccessful()) {
                     createRegRequest();
                 }
                 break;
             case R.id.edt_subzone:
-                if(zoneModels != null) {
+                if (zoneModels != null) {
                     final String[] zoneStringList = new String[zoneModels.size()];
                     int i = 0;
                     for (RegionModel regionModel : zoneModels) {
@@ -255,7 +279,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
                 }
                 break;
             case R.id.edt_area:
-                if(districtModels != null) {
+                if (districtModels != null) {
                     final String[] districtStringList = new String[districtModels.size()];
                     int i = 0;
                     for (RegionModel regionModel : districtModels) {
@@ -276,7 +300,7 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
                 break;
 
             case R.id.edt_agency:
-                if(agencyList != null) {
+                if (agencyList != null) {
                     final String[] agencyStringList = new String[agencyList.size()];
                     int i = 0;
                     for (VolunteerModel volunteerModel : agencyList) {
@@ -309,11 +333,11 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         soapObject.addProperty(getPropertyInfo("franchise", "", PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("volunteer", selectedAgency.getVol(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("volunteer_code", selectedAgency.getVolid(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("vol", selectedAgency.getVol(), PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("customer_group_id", String.valueOf(1), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("vol", selectedAgency.getVolid(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("customer_group_id", "1", PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("address_1", address, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("address_2", landMark, PropertyInfo.STRING_CLASS));
-        soapObject.addProperty(getPropertyInfo("zone_do_id", edtFirstName.getText().toString().trim(), PropertyInfo.STRING_CLASS));
+        soapObject.addProperty(getPropertyInfo("zone_do_id", selectedZone.getRegion_id(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("city_id", selectedDistrict.getRegion_id(), PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("postcode", passcode, PropertyInfo.STRING_CLASS));
         soapObject.addProperty(getPropertyInfo("password", password, PropertyInfo.STRING_CLASS));
@@ -351,70 +375,59 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
         landMark = edtLandMark.getText().toString().trim();
         passcode = edtPasscode.getText().toString().trim();
 
-        username = edtUsername.getText().toString().trim();
         password = edtPassword.getText().toString().trim();
         confirmPassword = edtConfirmPassword.getText().toString().trim();
 
-        if(firstName.equals("")) {
+        if (firstName.equals("")) {
             showToast("Please enter first name");
             return false;
-        }
-        else  if(lastName.equals("")) {
+        } else if (lastName.equals("")) {
             showToast("Please enter last name");
             return false;
-        }
-        else  if(mobileNumber.equals("") || mobileNumber.length() < 10) {
+        } else if (mobileNumber.equals("") || mobileNumber.length() < 10) {
             showToast("Please enter valid mobile number");
             return false;
-        }
-        else  if(email.equals("") || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (email.equals("") || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             showToast("Please enter valid email");
             return false;
-        }
-        else  if(dateOfBirth.equals("")) {
+        } else if (dateOfBirth.equals("")) {
             showToast("Please enter date of birth");
             return false;
-        }
-        else  if(gender.equals("")) {
+        } else if (gender.equals("")) {
             showToast("Please select gender");
             return false;
-        }
-        else  if(address.equals("")) {
+        } else if (address.equals("")) {
             showToast("Please enter address");
             return false;
-        }
-        else  if(landMark.equals("")) {
-            showToast("Please enter landmark");
-            return false;
-        }
-        else  if(selectedZone == null) {
+        } else if (selectedZone == null) {
             showToast("Please select subzone");
             return false;
-        }
-        else  if(selectedDistrict == null) {
+        } else if (selectedDistrict == null) {
             showToast("Please select area");
             return false;
-        }
-        else  if(selectedAgency == null) {
+        } else if (selectedAgency == null) {
             showToast("Please select agency");
             return false;
-        }
-        else  if(passcode.equals("")) {
+        } else if (passcode.equals("")) {
             showToast("Please enter postcode");
             return false;
-        }
-        else  if(username.equals("")) {
-            showToast("Please enter username");
-            return false;
-        }
-        else  if(passcode.equals("")) {
+        } else if (passcode.equals("")) {
             showToast("Please enter password");
             return false;
-        }
-        else if(confirmPassword.isEmpty() || ! confirmPassword.equals(password)) {
+        } else if (confirmPassword.isEmpty() || !confirmPassword.equals(password)) {
             showToast("Please re enter proper password");
             edtPassword.setText("");
             edtConfirmPassword.setText("");
+            return false;
+        } else if (passcode.length() < 6) {
+            showToast("Your password must be at least 6 characters long. Please try another.");
+            return false;
+        } else if (address.length() < 3) {
+            showToast("Address must be at least 3 characters long.");
+            return false;
+        } else if (!landMark.equals("") && landMark.length() < 3) {
+            showToast("Landmark must be at least 3 characters long.");
+            return false;
         }
 
         return true;
@@ -445,19 +458,18 @@ public class RegisterActivity extends AppCompatActivity implements IWsdl2CodeEve
 
 
 /**
-
- > For Registration Service -
- > 1. franchise (should be empty)
- > 2. customer_group_id (should be 1)
- > 3. vol and volunteer_code (will contain the volunteer id of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
- > 4. volunteer (will contain the volunteer name of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
- > 5. city_id (will contain the selected district id)(List of district can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
- > 6. zone_do_id ( will contain the list of zone do that can be get by fetchZoneDO method)
- > 7. newsletter (1- yes,0 - no)
- > 8. agree (1 - yes)(to agree with terms)
- >
- > **To be Noted :
- > Branch Office - Zone do
- > Area - city / district
- > Agency - volunteer
+ * > For Registration Service -
+ * > 1. franchise (should be empty)
+ * > 2. customer_group_id (should be 1)
+ * > 3. vol and volunteer_code (will contain the volunteer id of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ * > 4. volunteer (will contain the volunteer name of the selected volunteer)(List of volunteers can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ * > 5. city_id (will contain the selected district id)(List of district can be get by fetchDistrictAndVolunteer Method by passing the selected zone do id)
+ * > 6. zone_do_id ( will contain the list of zone do that can be get by fetchZoneDO method)
+ * > 7. newsletter (1- yes,0 - no)
+ * > 8. agree (1 - yes)(to agree with terms)
+ * >
+ * > **To be Noted :
+ * > Branch Office - Zone do
+ * > Area - city / district
+ * > Agency - volunteer
  */

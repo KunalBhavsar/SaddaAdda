@@ -250,6 +250,15 @@ public class UpdateCustomerParams implements KvmSerializable {
                 agree = (String) obj;
             }
         }
+        if (soapObject.hasProperty("telephone")) {
+            Object obj = soapObject.getProperty("telephone");
+            if (obj != null && obj.getClass().equals(SoapPrimitive.class)) {
+                SoapPrimitive j = (SoapPrimitive) obj;
+                telephone = j.toString();
+            } else if (obj != null && obj instanceof String) {
+                telephone = (String) obj;
+            }
+        }
     }
 
     @Override
