@@ -418,7 +418,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
                 double productDownPayment = (Double.parseDouble(productModel.getDown_payment()) * Double.parseDouble(productModel.getPrice()) * productQuantity) /  100;
 
                 double productShippingCharge = shippingValueType == 1 ? (shippingCharge * productMRP) / 100 : shippingCharge;
-                double productPrice = productMRP - (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ?
+                double productPrice = (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ?
                         productEMILastPrice : productOTPLastPrice);
                 double productTax = productModel.getTax_data() != null ? productModel.getTax_data().getTax_amt() * productQuantity : 0;
 
@@ -468,7 +468,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements View.OnClic
             double productEMILastPrice = Double.parseDouble(productModel.getEmi_last_price()) * productQuantity;
             double productDownPayment = (Double.parseDouble(productModel.getDown_payment()) * productQuantity * productMRP)/100;
             double productShippingCharge = shippingValueType == 1 ? (shippingCharge * productMRP) / 100 : shippingCharge;
-            double productPrice = productMRP - (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ?
+            double productPrice = (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ?
                     productEMILastPrice : productOTPLastPrice);
             double productTax = productModel.getTax_data() != null ? productModel.getTax_data().getTax_amt() * productQuantity : 0;
 

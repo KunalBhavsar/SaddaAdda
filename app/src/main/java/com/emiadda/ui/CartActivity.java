@@ -55,9 +55,14 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     private Toolbar toolbar;
     private CartAdapter cartAdapter;
     private Button btnPlaceOrder;
-    private double subTotal;
-    private double deliveryCharges;
-    private double taxes;
+
+    double totalMrp = 0;
+    double totalAmount = 0;
+    double totalShippingCharge = 0;
+    double totalDownPayment = 0;
+    double totalEmiValue = 0;
+    double totalVat = 0;
+
     private List<ProductModel> masterProductModelList;
     private boolean inForeground;
     private Context mAppContext;
@@ -158,25 +163,34 @@ public class CartActivity extends AppCompatActivity implements ServerResponseSub
     private void refreshTotalAmount() {
         masterProductModelList = AppPreferences.getInstance().getCartList();
         cartAdapter.resetProductList(masterProductModelList);
-        subTotal = 0;
-        taxes = 0;
-        deliveryCharges = 0;
         for (ProductModel productModel : masterProductModelList) {
-            double quantity = Double.parseDouble(productModel.getQuantity());
-            double totalPrice = quantity * Double.parseDouble(productModel.getPrice());
-            subTotal += totalPrice;
-            if(productModel.getTax_data() != null) {
-                taxes += productModel.getTax_data().getTax_amt() * quantity;
-            }
-            if(productModel.getShipping_charge() != null) {
-                deliveryCharges += Double.parseDouble(productModel.getShipping_charge()) * quantity;
-            }
-        }
 
-        ((TextView)findViewById(R.id.txt_sub_total)).setText(KeyConstants.rs + formater.format(subTotal));
-        ((TextView)findViewById(R.id.txt_delivery_charges)).setText(KeyConstants.rs + formater.format(deliveryCharges));
-        ((TextView)findViewById(R.id.txt_taxes)).setText(KeyConstants.rs + formater.format(taxes));
-        ((TextView)findViewById(R.id.txt_total)).setText(KeyConstants.rs + formater.format(subTotal + deliveryCharges + taxes));
+            int productQuantity = Integer.parseInt(productModel.getQuantity());
+            int shippingValueType = Integer.parseInt(productModel.getShipping_value_type());
+
+            double shippingCharge = Double.parseDouble(productModel.getShipping_charge()) * productQuantity;
+
+            double productMRP = Double.parseDouble(productModel.getPrice()) * productQuantity;
+            double productOTPLastPrice = Double.parseDouble(productModel.getOtp_last_price()) * productQuantity;
+            double productEMILastPrice = Double.parseDouble(productModel.getEmi_last_price()) * productQuantity;
+            double productDownPayment = (Double.parseDouble(productModel.getDown_payment()) * Double.parseDouble(productModel.getPrice()) * productQuantity) / 100;
+
+            double productShippingCharge = shippingValueType == 1 ? (shippingCharge * productMRP) / 100 : shippingCharge;
+            double productPrice = (AppPreferences.getInstance().getCartType().equals(AppPreferences.CART_TYPE_VALUE_EMI) ?
+                    productEMILastPrice : productOTPLastPrice);
+            double productTax = productModel.getTax_data() != null ? productModel.getTax_data().getTax_amt() * productQuantity : 0;
+
+            totalMrp += productMRP;
+            totalAmount += productPrice;
+            totalShippingCharge += productShippingCharge;
+            totalVat += productTax;
+            totalDownPayment += productDownPayment;
+            totalEmiValue += (productPrice - productDownPayment);
+        }
+        ((TextView)findViewById(R.id.txt_sub_total)).setText(KeyConstants.rs + formater.format(totalAmount));
+        ((TextView)findViewById(R.id.txt_delivery_charges)).setText(KeyConstants.rs + formater.format(totalShippingCharge));
+        ((TextView)findViewById(R.id.txt_taxes)).setText(KeyConstants.rs + formater.format(totalVat));
+        ((TextView)findViewById(R.id.txt_total)).setText(KeyConstants.rs + formater.format(totalAmount + totalShippingCharge + totalVat));
     }
 
     @Override
