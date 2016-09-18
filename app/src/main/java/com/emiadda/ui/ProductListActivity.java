@@ -206,7 +206,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
             EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_PRODUCTS_BY_CATEGORY, GET_PRODUCT_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(selectedSubcategoryId));
         }
         else {
-            getProductListState = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+            getProductListState = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
 
             refreshEmptyListUI();
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
@@ -230,7 +230,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                     txtRetryProducts.setVisibility(View.GONE);
                     relRetryProducts.setVisibility(View.GONE);
                     recyclerViewProductList.setVisibility(View.GONE);
-                } else if (getProductListState == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED) {
+                } else if (getProductListState == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED) {
                     relRetryProducts.setVisibility(View.VISIBLE);
                     imgRetryProducts.setVisibility(View.VISIBLE);
                     txtRetryProducts.setVisibility(View.VISIBLE);
@@ -369,7 +369,7 @@ public class ProductListActivity extends AppCompatActivity implements ServerResp
                 }
             } else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR ||
                     response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
-                getProductListState = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                getProductListState = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
                 refreshEmptyListUI();
             }
         }

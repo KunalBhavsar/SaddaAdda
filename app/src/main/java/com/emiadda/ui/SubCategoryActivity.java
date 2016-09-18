@@ -173,7 +173,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                     GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(selectedMainCategoryId));
         }
         else {
-            getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+            getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
 
             refreshEmptyListUI();
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
@@ -237,7 +237,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                 }
             } else if (response.getResponseStatus() == ServerResponse.SERVER_ERROR
                     || response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
-                getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                getSubCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
                 refreshEmptyListUI();
             }
         }
@@ -251,7 +251,7 @@ public class SubCategoryActivity extends AppCompatActivity implements ServerResp
                     imgRetrySC.setVisibility(View.GONE);
                     txtRetrySC.setVisibility(View.GONE);
                     relRetrySC.setVisibility(View.GONE);
-                } else if (getSubCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED) {
+                } else if (getSubCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED) {
                     relRetrySC.setVisibility(View.VISIBLE);
                     imgRetrySC.setVisibility(View.VISIBLE);
                     txtRetrySC.setVisibility(View.VISIBLE);

@@ -21,6 +21,6 @@ public class KeyConstants {
     public static final String rs = "Rs.";
 
     public static final int SERVER_CALL_STATUS_ONGOING = 1;
-    public static final int SERVER_CALL_STATUS_ERROR_OCCURED = 2;
+    public static final int SERVER_CALL_STATUS_ERROR_OCCURRED = 2;
     public static final int SERVER_CALL_STATUS_SUCCESS = 3;
 }

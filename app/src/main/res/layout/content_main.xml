@@ -15,232 +15,232 @@
          android:nestedScrollingEnabled="true"
          app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
-    <LinearLayout
-        android:id="@+id/rel_actual_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/_5dp">
-
-        <RelativeLayout
-            android:id="@+id/rel_categories"
+        <LinearLayout
+            android:id="@+id/rel_actual_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5dp"
-            android:background="@color/white"
-            android:minHeight="@dimen/_120dp">
-
-            <View
-                android:id="@+id/temp_top_view"
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="@color/colorAccent"
-                android:visibility="gone"/>
+            android:orientation="vertical"
+            android:padding="@dimen/_5dp">
 
             <RelativeLayout
-                android:id="@+id/rel_retry_categories"
+                android:id="@+id/rel_categories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/temp_top_view"
-                android:layout_centerVertical="true">
+                android:layout_marginTop="@dimen/_5dp"
+                android:background="@color/white"
+                android:minHeight="@dimen/_120dp">
 
-                <ImageView
-                    android:id="@+id/img_retry_main_categories"
-                    android:layout_width="@dimen/_50dp"
-                    android:layout_height="@dimen/_50dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/_10dp"
-                    android:layout_marginTop="@dimen/_30dp"
-                    android:src="@drawable/ic_retry"
-                    android:visibility="gone"/>
-
-                <com.emiadda.utils.CustomTextView
-                    android:id="@+id/txt_retry_main_categories"
+                <View
+                    android:id="@+id/temp_top_view"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_100dp"
-                    android:layout_below="@+id/img_retry_main_categories"
+                    android:layout_height="3dp"
+                    android:background="@color/colorAccent"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/rel_retry_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/temp_top_view"
+                    android:layout_centerVertical="true">
+
+                    <ImageView
+                        android:id="@+id/img_retry_main_categories"
+                        android:layout_width="@dimen/_50dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/_10dp"
+                        android:layout_marginTop="@dimen/_30dp"
+                        android:src="@drawable/ic_retry"
+                        android:visibility="gone" />
+
+                    <com.emiadda.utils.CustomTextView
+                        android:id="@+id/txt_retry_main_categories"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_100dp"
+                        android:layout_below="@+id/img_retry_main_categories"
+                        android:gravity="center"
+                        android:text="@string/no_result"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        app:font="@string/font_monteserrat_regular" />
+
+                </RelativeLayout>
+
+                <com.emiadda.views.WrapHeightGridView
+                    android:id="@+id/grd_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/temp_top_view"
                     android:gravity="center"
-                    android:text="@string/no_result"
-                    android:textSize="16sp"
-                    android:visibility="gone"
-                    app:font="@string/font_monteserrat_regular"/>
-
-            </RelativeLayout>
-
-            <com.emiadda.views.WrapHeightGridView
-                android:id="@+id/grd_categories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/temp_top_view"
-                android:gravity="center"
-                android:numColumns="3"
-                android:padding="@dimen/_5dp"
-                android:stretchMode="columnWidth"
-                android:visibility="visible"/>
-
-            <RelativeLayout
-                android:id="@+id/rlt_progress_categories"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone">
-
-                <ProgressBar
-                    android:id="@+id/progressbar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rel_special_products"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5dp"
-            android:background="@color/white"
-            android:elevation="@dimen/_5dp"
-            android:minHeight="@dimen/_120dp">
-
-            <View
-                android:id="@+id/temp_top_view2"
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="@color/colorAccent"
-                android:visibility="gone"/>
-
-            <com.emiadda.utils.CustomTextView
-                android:id="@+id/txt_special_products"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_30dp"
-                android:layout_below="@+id/temp_top_view2"
-                android:layout_marginLeft="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:fontFamily="sans-serif-medium"
-                android:padding="@dimen/_5dp"
-                android:text="NEW ARRIVAL"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:font="@string/font_monteserrat_regular"/>
-
-            <Button
-                android:id="@+id/btn_view_all"
-                android:layout_width="@dimen/_100dp"
-                android:layout_height="@dimen/_30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/temp_top_view2"
-                android:layout_marginEnd="@dimen/_10dp"
-                android:layout_marginRight="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:background="@drawable/login_btn"
-                android:fontFamily="sans-serif-medium"
-                android:padding="1dp"
-                android:text="VIEW ALL"
-                android:textColor="@color/white"
-                android:textSize="14sp"/>
-
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_120dp"
-                android:layout_below="@+id/txt_special_products"
-                android:layout_marginTop="@dimen/_10dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/lin_special_product_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"/>
-            </HorizontalScrollView>
-
-            <RelativeLayout
-                android:id="@+id/btnPrevoius"
-                android:layout_width="@dimen/_40dp"
-                android:layout_height="@dimen/_120dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/txt_special_products"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="@dimen/_30dp"
-                    android:layout_height="@dimen/_50dp"
-                    android:layout_centerInParent="true"
-                    android:padding="2dp"
-                    android:src="@drawable/arrow_l"/>
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/btnNext"
-                android:layout_width="@dimen/_40dp"
-                android:layout_height="@dimen/_120dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/txt_special_products"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="@dimen/_30dp"
-                    android:layout_height="@dimen/_50dp"
-                    android:layout_centerInParent="true"
+                    android:numColumns="3"
                     android:padding="@dimen/_5dp"
-                    android:src="@drawable/arrow_r"/>
-            </RelativeLayout>
+                    android:stretchMode="columnWidth"
+                    android:visibility="visible" />
 
-            <RelativeLayout
-                android:id="@+id/rel_retry_special_product"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_special_products"
-                android:layout_centerVertical="true">
-
-                <ImageView
-                    android:id="@+id/img_retry_sp"
-                    android:layout_width="@dimen/_50dp"
-                    android:layout_height="@dimen/_50dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/_10dp"
-                    android:layout_marginTop="@dimen/_30dp"
-                    android:src="@drawable/ic_retry"
-                    android:visibility="gone"/>
-
-                <com.emiadda.utils.CustomTextView
-                    android:id="@+id/txt_retry_sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_100dp"
-                    android:layout_below="@+id/img_retry_sp"
-                    android:gravity="center"
-                    android:text="@string/no_result"
-                    android:textSize="16sp"
-                    android:visibility="gone"
-                    app:font="@string/font_monteserrat_regular"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rlt_progress_special_product"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone">
-
-                <ProgressBar
-                    android:id="@+id/progressbar_sp"
-                    style="?android:attr/progressBarStyle"
+                <RelativeLayout
+                    android:id="@+id/rlt_progress_categories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/progressbar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                </RelativeLayout>
+
             </RelativeLayout>
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rel_special_products"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5dp"
+                android:background="@color/white"
+                android:elevation="@dimen/_5dp"
+                android:minHeight="@dimen/_120dp">
+
+                <View
+                    android:id="@+id/temp_top_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="@color/colorAccent"
+                    android:visibility="gone" />
+
+                <com.emiadda.utils.CustomTextView
+                    android:id="@+id/txt_special_products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:layout_below="@+id/temp_top_view2"
+                    android:layout_marginLeft="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="@dimen/_5dp"
+                    android:text="NEW ARRIVAL"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:font="@string/font_monteserrat_regular" />
+
+                <Button
+                    android:id="@+id/btn_view_all"
+                    android:layout_width="@dimen/_100dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/temp_top_view2"
+                    android:layout_marginEnd="@dimen/_10dp"
+                    android:layout_marginRight="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:background="@drawable/login_btn"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="1dp"
+                    android:text="VIEW ALL"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <HorizontalScrollView
+                    android:id="@+id/horizontalScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_120dp"
+                    android:layout_below="@+id/txt_special_products"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/lin_special_product_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <RelativeLayout
+                    android:id="@+id/btnPrevoius"
+                    android:layout_width="@dimen/_40dp"
+                    android:layout_height="@dimen/_120dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/txt_special_products"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/_30dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:layout_centerInParent="true"
+                        android:padding="2dp"
+                        android:src="@drawable/arrow_l" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/btnNext"
+                    android:layout_width="@dimen/_40dp"
+                    android:layout_height="@dimen/_120dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/txt_special_products"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/_30dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:layout_centerInParent="true"
+                        android:padding="@dimen/_5dp"
+                        android:src="@drawable/arrow_r" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rel_retry_special_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_special_products"
+                    android:layout_centerVertical="true">
+
+                    <ImageView
+                        android:id="@+id/img_retry_sp"
+                        android:layout_width="@dimen/_50dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/_10dp"
+                        android:layout_marginTop="@dimen/_30dp"
+                        android:src="@drawable/ic_retry"
+                        android:visibility="gone" />
+
+                    <com.emiadda.utils.CustomTextView
+                        android:id="@+id/txt_retry_sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_100dp"
+                        android:layout_below="@+id/img_retry_sp"
+                        android:gravity="center"
+                        android:text="@string/no_result"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        app:font="@string/font_monteserrat_regular" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlt_progress_special_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/progressbar_sp"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                </RelativeLayout>
+
+            </RelativeLayout>
 
     </LinearLayout>
 

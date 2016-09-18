@@ -4,11 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -268,8 +264,8 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
         }
         else {
-            getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
-            getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+            getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
+            getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
 
             refreshEmptyListStatus();
             Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
@@ -373,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             }
             else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR ||
             response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
-                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
                 Log.e(TAG, "Error in fetching categories : " + response.getError());
                 refreshEmptyListStatus();
             }
@@ -406,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
             }
             else if(response.getResponseStatus() == ServerResponse.SERVER_ERROR ||
                     response.getResponseStatus() == ServerResponse.NETWORK_ERROR) {
-                getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
                 Log.e(TAG, "Error in fetching special products : " + response.getError());
                 refreshEmptyListStatus();
             }
@@ -445,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                     txtMainCategoryRetry.setVisibility(View.GONE);
                     relRetryCategories.setVisibility(View.GONE);
                 }
-                else if(getCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED) {
+                else if(getCategoriesStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED) {
                     relRetryCategories.setVisibility(View.VISIBLE);
                     imgMainCategoryRetry.setVisibility(View.VISIBLE);
                     txtMainCategoryRetry.setVisibility(View.VISIBLE);
@@ -464,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                                 EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_CATEGORY, GET_CATEGORIES_REQUEST_CODE, EAServerRequest.PRIORITY_HIGH, TAG, String.valueOf(0));
                             }
                             else {
-                                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                                getCategoriesStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
 
                                 refreshEmptyListStatus();
                                 Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
@@ -485,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                     txtSpecialProductRetry.setVisibility(View.GONE);
                     relRetrySp.setVisibility(View.GONE);
                 }
-                else if(getSPStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED) {
+                else if(getSPStatus == KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED) {
                     relRetrySp.setVisibility(View.VISIBLE);
                     imgSpecialProductRetry.setVisibility(View.VISIBLE);
                     txtSpecialProductRetry.setVisibility(View.VISIBLE);
@@ -503,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements ServerResponseSub
                                 EAApplication.makeServerRequest(ServerRequestProcessingThread.REQUEST_CODE_GET_SPECIAL_PRODUCTS, GET_SPECIAL_PRODUCTS, EAServerRequest.PRIORITY_MEDIUM, TAG);
                             }
                             else {
-                                getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURED;
+                                getSPStatus = KeyConstants.SERVER_CALL_STATUS_ERROR_OCCURRED;
 
                                 refreshEmptyListStatus();
                                 Toast.makeText(mAppContext, mAppContext.getString(R.string.no_network_toast), Toast.LENGTH_SHORT).show();
